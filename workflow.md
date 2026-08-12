@@ -2,7 +2,7 @@
 
 Hey team, here's how we're going to work together on this repo. It's simple, but let's stick to it so our history stays clean and nobody steps on anyone's toes.
 
-We have one repo with two folders: `backend` and `frontend`. I'm handling backend, and you two are on frontend. We don't need to wait for each other — backend already has the API defined in Swagger, so frontend can start building right away using the DTOs, even before an endpoint is fully done.
+We have one repo with two folders: `backend` and `frontend`. I'm handling backend, and you two are on frontend. We don't need to wait for each other ... backend already has the API defined in Swagger, so frontend can start building right away using the DTOs, even before an endpoint is fully done.
 
 ## Branch Naming
 
@@ -11,10 +11,9 @@ Every new branch comes from `main`, and the name should tell us what it is:
 ```
 feature/be-<short-description>   → backend work
 feature/fe-<short-description>   → frontend work
-fix/<short-description>          → bug fixes
+fix/fe-<short-description>          → bug fixes
 ```
 
-Example:
 
 ```
 feature/be-user-login-api
@@ -22,16 +21,17 @@ feature/fe-login-page
 fix/fe-navbar-broken-on-mobile
 ```
 
-Please don't push directly to `main`. Always work on a branch.
+Please don't push/pull directly to `main`. Always work on a branch.
 
 ## Daily Flow
 
 **1. Start a new branch from main**
 
 ```bash
-git checkout main
-git pull origin main
-git checkout -b feature/fe-login-page
+1. checkout YOURE_NAME/dev
+2. pull main
+3. create (name?) branch from YOURE_NAME/dev
+4. push to YOURE_NAME/dev
 ```
 
 Example: you're starting the login page → `feature/fe-login-page`.
@@ -76,7 +76,7 @@ Example: I just merged a change to the auth API. You rebase, and now your branch
 git push origin feature/fe-login-page
 ```
 
-Then open a PR on GitHub, targeting `main`. Write a short description of what you did.
+Then open a PR on GitHub from YOURE_NAME/dev to targeting `main`. Write a short description of what you did.
 
 Example PR title: `feat: login page UI + API integration`
 
@@ -88,7 +88,7 @@ We'll turn on branch protection on `main` so PRs can't be merged without an appr
 
 **6. Merge using Squash and Merge**
 
-This keeps `main`'s history clean — one commit per feature instead of 10 messy ones.
+This keeps `main`'s history clean .. one commit per feature instead of 10 messy ones.
 
 Example: your branch has 6 commits like "wip", "fix typo", "fix again" → after squash merge, `main` just shows one clean commit: `feat: login page UI + API integration`.
 
