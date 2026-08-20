@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Enums
+enum SourceType {
+  DIRECT
+  SOCIAL
+  SEARCH
+  EMAIL
+  OTHER
+}
+
+// models
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  email     String   @unique
+  name      String
+  password  String
+  links     Link[]
+
+  @@map("users")
+}
+
+model Link {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+  isActive    Boolean   @default(true) @map("is_active")
+  title       String?   @db.VarChar(255)
+  shortCode   String    @unique @map("short_code") @db.VarChar(20)
+  originalUrl String    @map("original_url") @db.Text
+  expiresAt   DateTime? @map("expires_at") @db.Timestamptz(6)
+  isPin       Boolean   @default(false) @map("is_pin")
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz(6)
+
+  author   User @relation(fields: [authorId], references: [id])
+  authorId Int  @map("author_id")
+
+  visits Visit[]
+
+  @@index([shortCode])
+  @@index([authorId])
+  @@index([expiresAt])
+  @@index([deletedAt])
+  @@map("links")
+}
+
+model Visit {
+  id        Int        @id @default(autoincrement())
+  visitedAt DateTime   @default(now()) @map("visited_at") @db.Timestamptz(6)
+  ipAddress String?    @map("ip_address") @db.VarChar(45)
+  country   String?    @db.VarChar(2)
+  city      String?    @db.VarChar(100)
+  device    String?
+  browser   String?
+  source    SourceType @default(OTHER) @map("source_type")
+
+  link   Link @relation(fields: [linkId], references: [id])
+  linkId Int  @map("link_id")
+
+  @@index([linkId])
+  @@index([visitedAt])
+  @@map("visits")
+}
