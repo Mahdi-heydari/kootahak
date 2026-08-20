@@ -10,9 +10,14 @@ import { Prisma, PrismaClient } from "../generated/prisma/client";
 import { getDatabaseUrl } from "../config/database-url";
 
 @Injectable()
-export class PrismaService implements OnModuleInit, OnModuleDestroy {
+export class PrismaService
+  extends PrismaClient<{
+    adapter: PrismaPg;
+    log: (Prisma.LogLevel | Prisma.LogDefinition)[];
+  }>
+  implements OnModuleInit, OnModuleDestroy
+{
   private readonly logger = new Logger(PrismaService.name);
-  readonly client: PrismaClient<"error" | "warn" | "query">;
 
   constructor() {
     const adapter = new PrismaPg({
@@ -20,52 +25,38 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     });
 
     const log: Prisma.LogDefinition[] = [
-      {
-        emit: "event",
-        level: "error",
-      },
-      {
-        emit: "event",
-        level: "warn",
-      },
+      { emit: "event", level: "error" },
+      { emit: "event", level: "warn" },
     ];
 
     if (process.env.NODE_ENV !== "production") {
-      log.push({
-        emit: "event",
-        level: "query",
-      });
+      log.push({ emit: "event", level: "query" });
     }
 
-    this.client = new PrismaClient({
-      adapter,
-      log,
-    });
+    super({ adapter, log });
   }
 
   async onModuleInit() {
-    this.client.$on("error", (event) => {
+    this.$on("error", (event) => {
       this.logger.error(`Prisma error: ${event.message}`);
     });
 
-    this.client.$on("warn", (event) => {
+    this.$on("warn", (event) => {
       this.logger.warn(`Prisma warning: ${event.message}`);
     });
 
     if (process.env.NODE_ENV !== "production") {
-      this.client.$on("query", (event) => {
+      this.$on("query", (event) => {
         this.logger.debug(`${event.duration}ms | ${event.query}`);
       });
     }
 
-    await this.client.$connect();
-
+    await this.$connect();
     this.logger.log("Prisma connected to database");
   }
 
   async onModuleDestroy() {
-    await this.client.$disconnect();
-
+    await this.$disconnect();
     this.logger.log("Prisma disconnected from database");
   }
 }
