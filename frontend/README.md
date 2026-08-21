@@ -13,30 +13,7 @@
 * Zod
 * Axios
 * ApexCharts
-├── (auth)/
-│   ├── login/
-│   │   └── page.tsx
-│   └── register/
-│       └── page.tsx
-│
-├── (dashboard)/
-│   ├── layout.tsx
-│   ├── dashboard/
-│   │   └── page.tsx
-│   ├── links/
-│   │   └── page.tsx
-│   ├── analytics/
-│   │   └── page.tsx
-│   └── settings/
-│       └── page.tsx
-app/
-├── (marketing)/
-├── (auth)/
-├── (dashboard)/
-├── [shortCode]/
-├── globals.css
-├── layout.tsx
-└── not-found.tsx
+
 ## Features
 
 * ثبت‌نام و ورود کاربران
