@@ -1,0 +1,257 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* =========================
+   DESIGN TOKENS
+   ========================= */
+
+@import "./tokens/colors.css";
+@import "./tokens/typography.css";
+@import "./tokens/radius.css";
+@import "./tokens/shadows.css";
+@import "./tokens/motion.css";
+
+
+/* =========================
+   TAILWIND THEME
+   ========================= */
+
+@theme inline {
+  /* Colors */
+
+  --color-background: var(--background);
+  --color-background-secondary: var(--background-secondary);
+
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-hover: var(--card-hover);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-border: var(--border);
+  --color-border-hover: var(--border-hover);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+  --color-info: var(--info);
+
+  /* Typography */
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* Radius */
+
+  --radius-token-sm: 6px;
+  --radius-token-md: 8px;
+  --radius-token-lg: 12px;
+  --radius-token-xl: 16px;
+
+  /* Shadows */
+
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+}
+
+
+/* =========================
+   BASE
+   ========================= */
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  code,
+  pre,
+  kbd {
+    font-family: var(--font-mono);
+  }
+
+  img,
+  svg,
+  video {
+    display: block;
+  }
+
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  ::selection {
+    background: var(--foreground);
+    color: var(--background);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--info);
+    outline-offset: 3px;
+  }
+}
+
+
+/* =========================
+   TYPOGRAPHY
+   ========================= */
+
+@layer utilities {
+  .display {
+    @apply text-5xl font-semibold leading-[1.05]
+      tracking-[-0.055em]
+      md:text-6xl
+      lg:text-7xl;
+  }
+
+  .h1 {
+    @apply text-4xl font-semibold leading-[1.1]
+      tracking-[-0.04em]
+      md:text-5xl;
+  }
+
+  .h2 {
+    @apply text-3xl font-semibold leading-tight
+      tracking-[-0.03em]
+      md:text-4xl;
+  }
+
+  .h3 {
+    @apply text-xl font-medium leading-tight
+      tracking-[-0.02em];
+  }
+
+  .body {
+    @apply text-sm leading-6;
+  }
+
+  .body-muted {
+    @apply text-sm leading-6 text-muted-foreground;
+  }
+
+  .label {
+    @apply text-xs font-medium text-muted-foreground;
+  }
+
+  .mono {
+    font-family: var(--font-mono);
+  }
+
+
+  /* =========================
+     LAYOUT
+     ========================= */
+
+  .container {
+    @apply mx-auto w-full max-w-7xl
+      px-4
+      md:px-6
+      lg:px-8;
+  }
+
+  .page {
+    @apply min-h-screen bg-background;
+  }
+
+
+  /* =========================
+     SURFACE
+     ========================= */
+
+  .surface {
+    @apply rounded-lg border
+      border-border
+      bg-card;
+  }
+
+  .surface-hover {
+    @apply transition-colors
+      duration-200
+      hover:bg-card-hover;
+  }
+
+
+  /* =========================
+     METRICS
+     ========================= */
+
+  .metric {
+    @apply font-mono text-2xl
+      font-medium
+      tracking-tight;
+  }
+
+  .metric-lg {
+    @apply font-mono text-4xl
+      font-semibold
+      tracking-[-0.04em];
+  }
+
+
+  /* =========================
+     DIVIDER
+     ========================= */
+
+  .divider {
+    @apply h-px w-full bg-border;
+  }
+
+
+  /* =========================
+     SCROLLBAR
+     ========================= */
+
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+
+/* =========================
+   REDUCED MOTION
+   ========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
