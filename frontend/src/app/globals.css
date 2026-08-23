@@ -1,15 +1,13 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* =========================
-   DESIGN TOKENS
-   ========================= */
-
+/*
+fix wrong path its causing runtime issue
 @import "./tokens/colors.css";
 @import "./tokens/typography.css";
 @import "./tokens/radius.css";
 @import "./tokens/shadows.css";
-@import "./tokens/motion.css";
+@import "./tokens/motion.css"; */
 
 
 /* =========================
