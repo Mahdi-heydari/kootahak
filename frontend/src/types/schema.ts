@@ -7,6 +7,7 @@ export const SourceType = {
 } as const;
 
 export type SourceType = (typeof SourceType)[keyof typeof SourceType];
+
 export interface User {
   id: number;
   createdAt: string;
