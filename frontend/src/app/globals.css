@@ -1,15 +1,14 @@
 @import "tailwindcss";
-@import "tw-animate-css";
 
 /* =========================
    DESIGN TOKENS
    ========================= */
 
-@import "./tokens/colors.css";
-@import "./tokens/typography.css";
-@import "./tokens/radius.css";
-@import "./tokens/shadows.css";
-@import "./tokens/motion.css";
+   @import "../styles/tokens/colors.css";
+   @import "../styles/tokens/typography.css";
+   @import "../styles/tokens/radius.css";
+   @import "../styles/tokens/shadows.css";
+   @import "../styles/tokens/motion.css";
 
 
 /* =========================
