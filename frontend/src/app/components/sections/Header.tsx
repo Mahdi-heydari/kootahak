@@ -2,96 +2,142 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Sun, Moon } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useScroll } from "@/app/hooks/use-scroll";
+import ThemeToggle from "./theme-toggle";
+import Button from "@/app/components/ui/Button";
 
-function Header() {
-  const [isDark, setIsDark] = useState(true);
-  const [isLogined, setLogined] = useState(false);
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "AboutUs" },
+  { href: "/services", label: "Services" },
+  { href: "/contact", label: "Pricing" },
+];
+
+function Header(): React.JSX.Element {
+  const [isLogined, setLogined] = useState<boolean>(false);
+  const [isMenuOpen, setMenuOpen] = useState<boolean>(false);
   const isScrolled = useScroll(70);
 
-  const toggleTheme = () => {
-    setIsDark(!isDark);
+  const handleToggleLogin = (): void => {
+    setLogined((prev) => !prev);
+  };
+
+  const handleToggleMenu = (): void => {
+    setMenuOpen((prev) => !prev);
+  };
+
+  const handleCloseMenu = (): void => {
+    setMenuOpen(false);
   };
 
   return (
     <header className="h-screen flex flex-col bg-background text-primary">
+      {/* Desktop */}
       <nav
         className={[
-          "container left-0 right-0 px-4 mx-auto border-b transition-all duration-300 text-primary",
+          "container left-0 right-0 px-4 mx-auto transition-all duration-token-normal ease-token-default text-primary",
           "fixed flex justify-between z-50 items-center p-4",
           isScrolled
-            ? "bg-[#191919]/45 backdrop-blur-md border-border hover:border-border-hover shadow-lg rounded-token-md rounded-br-none rounded-bl-none mt-2.5"
-            : "bg-transparent border-b",
+            ? "bg-card/80 backdrop-blur-md border-border hover:border-border-hover shadow-token-md rounded-token-md rounded-br-none rounded-bl-none mt-2.5"
+            : "bg-transparent border-transparent",
+          isMenuOpen ? "border-b-0" : "border-b",
         ].join(" ")}
       >
         <div className="shrink-0">
-          <Link href="/" className="text-xl font-bold tracking-wide">
+          <Link
+            href="/"
+            className="text-token-xl font-weight-token-bold tracking-token-tight"
+          >
             KOOTAHAK
           </Link>
-          <span className="text-violet-500 font-bold text-xl mr-2">/</span>
+          <span className="text-info font-weight-token-bold text-token-xl mr-2">
+            /
+          </span>
         </div>
 
-        <ul className="hidden md:flex tracking-wider items-center gap-8 text-sm text-[#edededa8]">
-          <li>
-            <Link href="/" className="hover:text-primary transition-colors">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/about"
-              className="hover:text-primary transition-colors"
-            >
-              AboutUs
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/services"
-              className="hover:text-primary transition-colors"
-            >
-              Services
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/contact"
-              className="hover:text-primary transition-colors"
-            >
-              Pricing
-            </Link>
-          </li>
+        <ul className="hidden md:flex tracking-wider items-center gap-8 text-token-sm text-muted-foreground">
+          {navLinks.map((link) => (
+            <li key={link.href}>
+              <Link
+                href={link.href}
+                className="hover:text-primary transition-colors"
+              >
+                {link.label}
+              </Link>
+            </li>
+          ))}
         </ul>
 
-        <div className="flex items-center gap-3">
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-token-md hover:bg-[#2a2a2a] transition-colors"
-          >
-            {isDark ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
+        <div className="hidden md:flex items-center gap-3">
+          <ThemeToggle />
 
           {/* just for testing */}
           {isLogined ? (
-            <button
-              onClick={() => setLogined(!isLogined)}
-              className="px-4 py-2 text-sm rounded-token-sm bg-muted hover:bg-muted-foreground transition-colors"
-            >
+            <Button variant="secondary" size="md" onClick={handleToggleLogin}>
               LogIn
-            </button>
+            </Button>
           ) : (
-            <button
-              onClick={() => setLogined(!isLogined)}
-              className="px-4 py-2 text-sm rounded-token-sm bg-muted hover:bg-muted-foreground transition-colors"
-            >
+            <Button variant="primary" size="md" onClick={handleToggleLogin}>
               SignUp
-            </button>
+            </Button>
           )}
         </div>
+
+        <button
+          type="button"
+          onClick={handleToggleMenu}
+          className="md:hidden p-2 rounded-token-sm hover:bg-muted transition-colors"
+          aria-label="Toggle menu"
+          aria-expanded={isMenuOpen}
+        >
+          {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
       </nav>
 
-      <div className="grow mt-17 grid place-items-center text-primary text-7xl">
+      {/* Mobile */}
+      <div
+        className={[
+          "md:hidden fixed left-0 right-0 z-40 container mx-auto px-4 transition-all duration-token-normal ease-token-default overflow-hidden",
+          isScrolled ? "top-24" : "top-17",
+          isMenuOpen
+            ? "max-h-96 opacity-100"
+            : "max-h-0 opacity-0 pointer-events-none",
+        ].join(" ")}
+      >
+        <div className="bg-card/95 backdrop-blur-md border border-border rounded-token-md shadow-token-md p-4 flex flex-col gap-4">
+          <ul className="flex flex-col gap-4 text-token-sm text-muted-foreground">
+            {navLinks.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  onClick={handleCloseMenu}
+                  className="hover:text-primary transition-colors"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <div className="flex items-center justify-between pt-2 border-t border-border">
+            <ThemeToggle />
+
+            {/* just for testing */}
+            {isLogined ? (
+              <Button variant="secondary" size="md" onClick={handleToggleLogin}>
+                LogIn
+              </Button>
+            ) : (
+              <Button variant="primary" size="md" onClick={handleToggleLogin}>
+                SignUp
+              </Button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="grow mt-17 grid place-items-center text-primary text-token-7xl">
         Hero Section & ...
       </div>
     </header>

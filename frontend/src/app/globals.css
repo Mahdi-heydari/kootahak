@@ -1,23 +1,14 @@
 @import "tailwindcss";
 
-/* =========================
-   DESIGN TOKENS
-   ========================= */
+@import "../styles/tokens/colors.css";
+@import "../styles/tokens/typography.css";
+@import "../styles/tokens/radius.css";
+@import "../styles/tokens/shadows.css";
+@import "../styles/tokens/motion.css";
 
-   @import "../styles/tokens/colors.css";
-   @import "../styles/tokens/typography.css";
-   @import "../styles/tokens/radius.css";
-   @import "../styles/tokens/shadows.css";
-   @import "../styles/tokens/motion.css";
-
-
-/* =========================
-   TAILWIND THEME
-   ========================= */
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
-  /* Colors */
-
   --color-background: var(--background);
   --color-background-secondary: var(--background-secondary);
 
@@ -40,28 +31,52 @@
   --color-error: var(--error);
   --color-info: var(--info);
 
-  /* Typography */
-
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* Radius */
+  --text-token-xs: var(--text-xs);
+  --text-token-sm: var(--text-sm);
+  --text-token-base: var(--text-base);
+  --text-token-lg: var(--text-lg);
+  --text-token-xl: var(--text-xl);
+  --text-token-2xl: var(--text-2xl);
+  --text-token-3xl: var(--text-3xl);
+  --text-token-4xl: var(--text-4xl);
+  --text-token-5xl: var(--text-5xl);
+  --text-token-6xl: var(--text-6xl);
+  --text-token-7xl: var(--text-7xl);
 
-  --radius-token-sm: 6px;
-  --radius-token-md: 8px;
-  --radius-token-lg: 12px;
-  --radius-token-xl: 16px;
+  --leading-token-tight: var(--leading-tight);
+  --leading-token-snug: var(--leading-snug);
+  --leading-token-normal: var(--leading-normal);
+  --leading-token-relaxed: var(--leading-relaxed);
 
-  /* Shadows */
+  --font-weight-token-normal: var(--font-weight-normal);
+  --font-weight-token-medium: var(--font-weight-medium);
+  --font-weight-token-semibold: var(--font-weight-semibold);
+  --font-weight-token-bold: var(--font-weight-bold);
 
-  --shadow-sm: var(--shadow-sm);
-  --shadow-md: var(--shadow-md);
+  --tracking-token-tight: var(--tracking-tight);
+  --tracking-token-tighter: var(--tracking-tighter);
+  --tracking-token-display: var(--tracking-display);
+
+  --radius-token-sm: var(--radius-sm);
+  --radius-token-md: var(--radius-md);
+  --radius-token-lg: var(--radius-lg);
+  --radius-token-xl: var(--radius-xl);
+  --radius-token-full: var(--radius-full);
+
+  --shadow-token-sm: var(--shadow-sm);
+  --shadow-token-md: var(--shadow-md);
+
+  --duration-token-fast: var(--duration-fast);
+  --duration-token-normal: var(--duration-normal);
+  --duration-token-slow: var(--duration-slow);
+
+  --ease-token-default: var(--ease-default);
+  --ease-token-in: var(--ease-in);
+  --ease-token-out: var(--ease-out);
 }
-
-
-/* =========================
-   BASE
-   ========================= */
 
 @layer base {
   * {
@@ -115,11 +130,6 @@
   }
 }
 
-
-/* =========================
-   TYPOGRAPHY
-   ========================= */
-
 @layer utilities {
   .display {
     @apply text-5xl font-semibold leading-[1.05]
@@ -161,7 +171,6 @@
     font-family: var(--font-mono);
   }
 
-
   /* =========================
      LAYOUT
      ========================= */
@@ -176,7 +185,6 @@
   .page {
     @apply min-h-screen bg-background;
   }
-
 
   /* =========================
      SURFACE
@@ -194,7 +202,6 @@
       hover:bg-card-hover;
   }
 
-
   /* =========================
      METRICS
      ========================= */
@@ -211,7 +218,6 @@
       tracking-[-0.04em];
   }
 
-
   /* =========================
      DIVIDER
      ========================= */
@@ -219,7 +225,6 @@
   .divider {
     @apply h-px w-full bg-border;
   }
-
 
   /* =========================
      SCROLLBAR
@@ -234,11 +239,6 @@
     display: none;
   }
 }
-
-
-/* =========================
-   REDUCED MOTION
-   ========================= */
 
 @media (prefers-reduced-motion: reduce) {
   html {
