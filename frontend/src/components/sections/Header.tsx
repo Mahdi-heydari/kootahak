@@ -3,16 +3,12 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import { useScroll } from "@/app/hooks/use-scroll";
-import ThemeToggle from "./theme-toggle";
-import Button from "@/app/components/ui/Button";
+import { useScroll } from "@/hooks/use-scroll";
+import ThemeToggle from "../ui/theme-toggle";
+import Button from "@/components/ui/Button";
+import { navLinks } from "@/contents/landing";
 
-const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "AboutUs" },
-  { href: "/services", label: "Services" },
-  { href: "/contact", label: "Pricing" },
-];
+
 
 function Header(): React.JSX.Element {
   const [isLogined, setLogined] = useState<boolean>(false);
@@ -39,7 +35,7 @@ function Header(): React.JSX.Element {
           "container left-0 right-0 px-4 mx-auto transition-all duration-token-normal ease-token-default text-primary",
           "fixed flex justify-between z-50 items-center p-4",
           isScrolled
-            ? "bg-card/80 backdrop-blur-md border-border hover:border-border-hover shadow-token-md rounded-token-md rounded-br-none rounded-bl-none mt-2.5"
+            ? "bg-card/80 backdrop-blur-md border-border hover:border-border-hover shadow-token-md rounded-token-lg "
             : "bg-transparent border-transparent",
           isMenuOpen ? "border-b-0" : "border-b",
         ].join(" ")}
@@ -74,11 +70,11 @@ function Header(): React.JSX.Element {
 
           {/* just for testing */}
           {isLogined ? (
-            <Button variant="secondary" size="md" onClick={handleToggleLogin}>
+            <Button variant="secondary" size="sm" onClick={handleToggleLogin}>
               LogIn
             </Button>
           ) : (
-            <Button variant="primary" size="md" onClick={handleToggleLogin}>
+            <Button variant="primary" size="sm" onClick={handleToggleLogin}>
               SignUp
             </Button>
           )}
