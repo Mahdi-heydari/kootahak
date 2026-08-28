@@ -8,8 +8,6 @@ import ThemeToggle from "../ui/theme-toggle";
 import Button from "@/components/ui/Button";
 import { navLinks } from "@/contents/landing";
 
-
-
 function Header(): React.JSX.Element {
   const [isLogined, setLogined] = useState<boolean>(false);
   const [isMenuOpen, setMenuOpen] = useState<boolean>(false);

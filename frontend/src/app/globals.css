@@ -6,6 +6,32 @@
 @import "../styles/tokens/shadows.css";
 @import "../styles/tokens/motion.css";
 
+:root {
+  --theme-change-x: 0;
+  --theme-change-y: 0;
+  --theme-change-duration: 500ms;
+}
+@supports (view-transition-name: none) {
+  ::view-transition-old(root) {
+    animation-delay: var(--theme-change-duration);
+  }
+
+  ::view-transition-new(root) {
+    animation: circle-in var(--theme-change-duration);
+    transform-origin: var(--theme-change-x) var(--theme-change-y);
+    animation-timing-function: cubic-bezier(1, 0.01, 1, 0.987);
+  }
+
+  @keyframes circle-in {
+    from {
+      clip-path: circle(0% at var(--theme-change-x) var(--theme-change-y));
+    }
+    to {
+      clip-path: circle(150% at var(--theme-change-x) var(--theme-change-y));
+    }
+  }
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
