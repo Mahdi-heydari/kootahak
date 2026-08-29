@@ -1,5 +1,6 @@
 :root {
-  --background: #ffffff;
+  /* previos value : #ffffff */
+  --background: #F7F7F7;
   --background-secondary: #fafafa;
 
   --foreground: #111111;
@@ -7,13 +8,13 @@
   --card: #ffffff;
   --card-hover: #fafafa;
 
-  --muted: #f5f5f5;
+  --muted: #e2e0e0;
   --muted-foreground: #737373;
 
   --border: #eaeaea;
   --border-hover: #d4d4d4;
 
-  --primary: #111111;
+  --primary: #242424;
   --primary-foreground: #ffffff;
 
   /* Semantic colors */
@@ -29,15 +30,15 @@
        DARK THEME
        ========================= */
 
-  --background: #000000;
-  --background-secondary: #0a0a0a;
+  --background: #191919;
+  --background-secondary: #242424;
 
   --foreground: #ededed;
 
   --card: #111111;
   --card-hover: #181818;
 
-  --muted: #1f1f1f;
+  --muted: #363636;
   --muted-foreground: #a1a1a1;
 
   --border: #262626;

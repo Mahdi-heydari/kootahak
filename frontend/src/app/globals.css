@@ -57,8 +57,7 @@
   --color-error: var(--error);
   --color-info: var(--info);
 
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-iranyekan: var(--font-iranyekan-x);
 
   --text-token-xs: var(--text-xs);
   --text-token-sm: var(--text-sm);
@@ -110,7 +109,7 @@
   }
 
   html {
-    font-family: var(--font-sans);
+    font-family: var(--font-iranyekan);
     scroll-behavior: smooth;
   }
 
