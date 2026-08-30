@@ -1,0 +1,22 @@
+# Normalize line endings: store as LF in the repo, check out as LF on every OS.
+# This takes precedence over each developer's core.autocrlf setting.
+* text=auto eol=lf
+
+# OS-locked scripts keep their required line endings.
+*.sh   text eol=lf
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+
+# Binary files — never normalize or diff.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+*.woff  binary
+*.woff2 binary
+*.pdf  binary
+
+# Lockfiles: keep review diffs collapsed.
+package-lock.json linguist-generated=true -diff
