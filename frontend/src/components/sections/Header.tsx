@@ -6,8 +6,9 @@ import { Menu, User, X } from "lucide-react";
 import { useScroll } from "@/hooks/use-scroll";
 import ThemeToggle from "@/components/ui/theme-toggle";
 import Button from "@/components/ui/Button";
-import { navLinks } from "@/contents/landing";
+import { mockUser, navLinks } from "@/contents/landing";
 import Profile from "@/components/ui/Profile";
+import Hero from "./Hero";
 
 function Header(): React.JSX.Element {
   const [isLogined, setLogined] = useState<boolean>(false);
@@ -27,7 +28,7 @@ function Header(): React.JSX.Element {
   };
 
   return (
-    <header className="h-screen flex flex-col bg-background text-primary">
+    <header className="min-h-screen bg-background text-primary">
       {/* Desktop */}
       <nav
         aria-hidden={isMenuOpen}
@@ -68,7 +69,7 @@ function Header(): React.JSX.Element {
           {isLogined ? (
             <div className="relative group">
               <User />
-              <Profile user={{ name: "زانیار رحمانی", phone: "09145562747" }} />
+              <Profile user={mockUser} />
             </div>
           ) : (
             <Button variant="outline" size="md" onClick={handleToggleLogin}>
@@ -117,9 +118,7 @@ function Header(): React.JSX.Element {
             {isLogined ? (
               <div className="relative group w-full">
                 {/* <User /> */}
-                <Profile
-                  user={{ name: "زانیار رحمانی", phone: "09145562747" }}
-                />
+                <Profile user={mockUser} />
               </div>
             ) : (
               <Button
@@ -137,8 +136,8 @@ function Header(): React.JSX.Element {
         </div>
       </div>
 
-      <div className="grow mt-17 text-center grid place-items-center text-primary text-token-7xl">
-        هیرو سکشن & ...
+      <div className="container">
+        <Hero />
       </div>
     </header>
   );
