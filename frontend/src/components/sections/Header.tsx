@@ -136,9 +136,7 @@ function Header(): React.JSX.Element {
         </div>
       </div>
 
-      <div className="container">
-        <Hero />
-      </div>
+      <Hero />
     </header>
   );
 }

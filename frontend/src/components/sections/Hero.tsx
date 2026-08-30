@@ -40,7 +40,7 @@ const trustItems = [
 ];
 const Hero = (): React.JSX.Element => {
   return (
-    <section className="flex flex-col-reverse gap-y-10 lg:gap-y-0 lg:flex-row items-center justify-between pb-10 sm:pb-16 lg:pb-20 pt-44">
+    <section className="container min-h-screen flex flex-col-reverse gap-y-10 lg:gap-y-0 lg:flex-row items-center justify-between pb-10 sm:pb-16 lg:pb-20 pt-34 lg:pt-22">
       {/* Right Content */}
       <div className="flex flex-col gap-y-8 md:gap-y-10 w-full lg:w-125 xl:w-140">
         <div className="cursor-default mx-auto lg:ml-0 text-center lg:text-right">
