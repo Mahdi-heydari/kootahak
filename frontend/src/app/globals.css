@@ -1,23 +1,40 @@
 @import "tailwindcss";
 
-/* =========================
-   DESIGN TOKENS
-   ========================= */
+@import "../styles/tokens/colors.css";
+@import "../styles/tokens/typography.css";
+@import "../styles/tokens/radius.css";
+@import "../styles/tokens/shadows.css";
+@import "../styles/tokens/motion.css";
 
-   @import "../styles/tokens/colors.css";
-   @import "../styles/tokens/typography.css";
-   @import "../styles/tokens/radius.css";
-   @import "../styles/tokens/shadows.css";
-   @import "../styles/tokens/motion.css";
+:root {
+  --theme-change-x: 0;
+  --theme-change-y: 0;
+  --theme-change-duration: 500ms;
+}
+@supports (view-transition-name: none) {
+  ::view-transition-old(root) {
+    animation-delay: var(--theme-change-duration);
+  }
 
+  ::view-transition-new(root) {
+    animation: circle-in var(--theme-change-duration);
+    transform-origin: var(--theme-change-x) var(--theme-change-y);
+    animation-timing-function: cubic-bezier(1, 0.01, 1, 0.987);
+  }
 
-/* =========================
-   TAILWIND THEME
-   ========================= */
+  @keyframes circle-in {
+    from {
+      clip-path: circle(0% at var(--theme-change-x) var(--theme-change-y));
+    }
+    to {
+      clip-path: circle(150% at var(--theme-change-x) var(--theme-change-y));
+    }
+  }
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
-  /* Colors */
-
   --color-background: var(--background);
   --color-background-secondary: var(--background-secondary);
 
@@ -40,28 +57,51 @@
   --color-error: var(--error);
   --color-info: var(--info);
 
-  /* Typography */
+  --font-iranyekan: var(--font-iranyekan-x);
 
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --text-token-xs: var(--text-xs);
+  --text-token-sm: var(--text-sm);
+  --text-token-base: var(--text-base);
+  --text-token-lg: var(--text-lg);
+  --text-token-xl: var(--text-xl);
+  --text-token-2xl: var(--text-2xl);
+  --text-token-3xl: var(--text-3xl);
+  --text-token-4xl: var(--text-4xl);
+  --text-token-5xl: var(--text-5xl);
+  --text-token-6xl: var(--text-6xl);
+  --text-token-7xl: var(--text-7xl);
 
-  /* Radius */
+  --leading-token-tight: var(--leading-tight);
+  --leading-token-snug: var(--leading-snug);
+  --leading-token-normal: var(--leading-normal);
+  --leading-token-relaxed: var(--leading-relaxed);
 
-  --radius-token-sm: 6px;
-  --radius-token-md: 8px;
-  --radius-token-lg: 12px;
-  --radius-token-xl: 16px;
+  --font-weight-token-normal: var(--font-weight-normal);
+  --font-weight-token-medium: var(--font-weight-medium);
+  --font-weight-token-semibold: var(--font-weight-semibold);
+  --font-weight-token-bold: var(--font-weight-bold);
 
-  /* Shadows */
+  --tracking-token-tight: var(--tracking-tight);
+  --tracking-token-tighter: var(--tracking-tighter);
+  --tracking-token-display: var(--tracking-display);
 
-  --shadow-sm: var(--shadow-sm);
-  --shadow-md: var(--shadow-md);
+  --radius-token-sm: var(--radius-sm);
+  --radius-token-md: var(--radius-md);
+  --radius-token-lg: var(--radius-lg);
+  --radius-token-xl: var(--radius-xl);
+  --radius-token-full: var(--radius-full);
+
+  --shadow-token-sm: var(--shadow-sm);
+  --shadow-token-md: var(--shadow-md);
+
+  --duration-token-fast: var(--duration-fast);
+  --duration-token-normal: var(--duration-normal);
+  --duration-token-slow: var(--duration-slow);
+
+  --ease-token-default: var(--ease-default);
+  --ease-token-in: var(--ease-in);
+  --ease-token-out: var(--ease-out);
 }
-
-
-/* =========================
-   BASE
-   ========================= */
 
 @layer base {
   * {
@@ -69,7 +109,7 @@
   }
 
   html {
-    font-family: var(--font-sans);
+    font-family: var(--font-iranyekan);
     scroll-behavior: smooth;
   }
 
@@ -115,11 +155,6 @@
   }
 }
 
-
-/* =========================
-   TYPOGRAPHY
-   ========================= */
-
 @layer utilities {
   .display {
     @apply text-5xl font-semibold leading-[1.05]
@@ -161,7 +196,6 @@
     font-family: var(--font-mono);
   }
 
-
   /* =========================
      LAYOUT
      ========================= */
@@ -176,7 +210,6 @@
   .page {
     @apply min-h-screen bg-background;
   }
-
 
   /* =========================
      SURFACE
@@ -194,7 +227,6 @@
       hover:bg-card-hover;
   }
 
-
   /* =========================
      METRICS
      ========================= */
@@ -211,7 +243,6 @@
       tracking-[-0.04em];
   }
 
-
   /* =========================
      DIVIDER
      ========================= */
@@ -219,7 +250,6 @@
   .divider {
     @apply h-px w-full bg-border;
   }
-
 
   /* =========================
      SCROLLBAR
@@ -234,11 +264,6 @@
     display: none;
   }
 }
-
-
-/* =========================
-   REDUCED MOTION
-   ========================= */
 
 @media (prefers-reduced-motion: reduce) {
   html {
