@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, User, X } from "lucide-react";
 import { useScroll } from "@/hooks/use-scroll";
-import ThemeToggle from "../ui/theme-toggle";
+import ThemeToggle from "@/components/ui/theme-toggle";
 import Button from "@/components/ui/Button";
 import { navLinks } from "@/contents/landing";
+import Profile from "@/components/ui/Profile";
 
 function Header(): React.JSX.Element {
   const [isLogined, setLogined] = useState<boolean>(false);
@@ -64,9 +65,16 @@ function Header(): React.JSX.Element {
         <div className="hidden md:flex items-center gap-3">
           <ThemeToggle />
 
-          <Button variant="outline" size="md" onClick={handleToggleLogin}>
-            ورود  |  ثبت نام
-          </Button>
+          {isLogined ? (
+            <div className="relative group">
+              <User />
+              <Profile user={{ name: "زانیار رحمانی", phone: "09145562747" }} />
+            </div>
+          ) : (
+            <Button variant="outline" size="md" onClick={handleToggleLogin}>
+              ورود | ثبت نام
+            </Button>
+          )}
         </div>
 
         <button
@@ -84,10 +92,9 @@ function Header(): React.JSX.Element {
       <div
         aria-hidden={!isMenuOpen}
         className={[
-          "md:hidden fixed left-0 right-0 z-40 container mx-auto px-4 transition-all duration-token-normal ease-token-default overflow-hidden",
-          isScrolled ? "top-24" : "top-22",
+          "md:hidden fixed left-0 right-0 top-22 z-40 container mx-auto px-4 transition-all duration-token-normal ease-token-default overflow-hidden ",
           isMenuOpen
-            ? "max-h-96 opacity-100"
+            ? "max-h-fit opacity-100"
             : "max-h-0 opacity-0 pointer-events-none",
         ].join(" ")}
       >
@@ -106,18 +113,32 @@ function Header(): React.JSX.Element {
             ))}
           </ul>
 
-          <div className="flex items-center justify-between pt-2 border-t border-border">
-            <ThemeToggle />
+          <div className="flex flex-col items-center justify-between gap-2 w-full pt-2 border-t border-border">
+            {isLogined ? (
+              <div className="relative group w-full">
+                {/* <User /> */}
+                <Profile
+                  user={{ name: "زانیار رحمانی", phone: "09145562747" }}
+                />
+              </div>
+            ) : (
+              <Button
+                variant="outline"
+                size="md"
+                className="w-full"
+                onClick={handleToggleLogin}
+              >
+                ورود | ثبت نام
+              </Button>
+            )}
 
-            <Button variant="outline" size="md" onClick={handleToggleLogin}>
-              ورود | ثبت نام
-            </Button>
+            <ThemeToggle />
           </div>
         </div>
       </div>
 
       <div className="grow mt-17 text-center grid place-items-center text-primary text-token-7xl">
-        Hero Section & ...
+        هیرو سکشن & ...
       </div>
     </header>
   );

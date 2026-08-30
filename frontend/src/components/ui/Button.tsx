@@ -31,14 +31,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variants: Record<ButtonVariant, string> = {
       primary:
-        "bg-primary text-primary-foreground hover:opacity-90 focus-visible:ring-primary",
+        "bg-primary text-primary-foreground hover:opacity-90 focus-visible:ring-primary cursor-pointer",
       secondary:
-        "bg-muted text-info hover:bg-border-hover focus-visible:ring-border",
+        "bg-muted text-primary hover:bg-border-hover focus-visible:ring-border cursor-pointer",
       outline:
-        "border border-info/30 bg-transparent text-info hover:bg-info/10 focus-visible:ring-border",
+        "border border-info/30 bg-transparent text-info hover:bg-info/10 focus-visible:ring-border cursor-pointer",
       ghost:
         "bg-transparent text-muted-foreground hover:bg-muted hover:text-primary focus-visible:ring-border",
-      danger: "bg-error text-white hover:opacity-90 focus-visible:ring-error",
+      danger: "bg-error text-white hover:opacity-90 focus-visible:ring-error cursor-pointer",
     };
 
     const sizes: Record<ButtonSize, string> = {

@@ -34,7 +34,7 @@ function ThemeToggle() {
     <button
       ref={buttonRef}
       onClick={themeChange}
-      className="btn p-2 rounded-token-md hover:bg-muted transition-colors"
+      className="btn p-2 w-full flex justify-center items-center md:w-auto bg-muted md:bg-transparent md:rounded-token-md rounded-token-sm md:hover:bg-muted transition-colors"
     >
       <div className="block dark:hidden">
         <Sun size={18} />
