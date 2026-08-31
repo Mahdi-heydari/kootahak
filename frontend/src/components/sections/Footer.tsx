@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Link2 } from "lucide-react";
+import { Link2, Globe, Clock } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { usefulLinks, statistics } from "@/contents/landing";
 
@@ -131,13 +131,13 @@ const Footer = (): React.JSX.Element => {
                   </a>
                 </div>
                 <div className="flex items-center justify-between flex-wrap gap-x-3 gap-y-1.5">
-                  <span className="font-token-normal">ساعات پاسخگویی</span>
-                  <a
-                    href="mailto:"
-                    className="font-token-normal  mr-auto hover:text-info transition-colors"
-                  >
-                    9 صبح الی 6 عصر
-                  </a>
+                  <span className="flex items-center gap-x-1.5 font-token-normal">
+                    <Clock size={14} className="text-info" />
+                    ساعات پاسخگویی
+                  </span>
+                  <span className="font-token-normal mr-auto hover:text-info transition-colors">
+                    ۹ صبح الی ۶ عصر
+                  </span>
                 </div>
               </div>
               <Button size="md" variant="secondary">
@@ -151,29 +151,9 @@ const Footer = (): React.JSX.Element => {
       {/* Footer Bottom */}
       <div className="w-full mx-auto mt-4 bg-card border border-border p-2 shadow-token-md">
         {/* Footer Bottom */}
-        <div className="flex items-center justify-between gap-x-4 gap-y-3 flex-wrap p-4 bg-muted/30 text-muted-foreground text-token-sm rounded-token-sm">
+        <div className="flex items-center justify-between gap-x-4 gap-y-3 flex-wrap p-4 text-muted-foreground text-token-sm ">
           <div className="flex items-center gap-x-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 16 16"
-              className="size-4"
-              fill="none"
-            >
-              <path
-                d="M7.9987 14.6668C4.3187 14.6668 1.33203 11.6802 1.33203 8.00016C1.33203 4.32016 4.3187 1.3335 7.9987 1.3335C11.6787 1.3335 14.6654 4.32016 14.6654 8.00016C14.6654 11.6802 11.6787 14.6668 7.9987 14.6668Z"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M9.91886 10.0002C9.44553 10.4135 8.83219 10.6668 8.15885 10.6668C6.68552 10.6668 5.49219 9.4735 5.49219 8.00016C5.49219 6.52683 6.68552 5.3335 8.15885 5.3335C8.83219 5.3335 9.44553 5.58683 9.91886 6.00016"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <Globe size={16} />
             <p className="font-token-normal">
               تمامی حقوق مادی و معنوی این وب‌سایت متعلق به{" "}
               <span className="text-info font-token-semibold">کوتاهک</span>{" "}
