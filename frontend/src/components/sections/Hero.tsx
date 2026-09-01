@@ -1,4 +1,3 @@
-// components/sections/Hero.tsx
 import {
   ArrowLeftFromLine,
   Link,
@@ -30,11 +29,11 @@ const features = [
 
 const trustItems = [
   {
-    icon: <Sparkles size={12} className="text-info" />,
+    icon: <Sparkles size={12} className="text-brand" />,
     text: heroContent.trustItems[0],
   },
   {
-    icon: <Clock size={12} className="text-info" />,
+    icon: <Clock size={12} className="text-brand" />,
     text: heroContent.trustItems[1],
   },
 ];
@@ -47,7 +46,7 @@ const Hero = (): React.JSX.Element => {
           {/* Title */}
           <div className="text-token-3xl sm:text-token-4xl md:text-token-5xl font-token-bold text-foreground leading-token-tight">
             <div className="flex items-center justify-center lg:justify-start gap-x-2.5 flex-wrap">
-              <div className="relative inline-flex items-center justify-center px-2 sm:px-3 h-14 sm:h-15 text-info bg-info/10 border border-border">
+              <div className="relative inline-flex items-center justify-center px-2 sm:px-3 h-14 sm:h-15 text-brand bg-brand/10 border border-border">
                 <h1 className="block">{heroContent.titleHighlight}</h1>
               </div>
               <span>{heroContent.title}</span>
@@ -79,9 +78,9 @@ const Hero = (): React.JSX.Element => {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="flex items-center gap-x-3 p-3 rounded-token-sm bg-card border border-border hover:border-info/30 hover:bg-info/5 transition-all duration-300 cursor-default group"
+              className="flex items-center gap-x-3 p-3 rounded-token-sm bg-card border border-border hover:border-brand/30 hover:bg-brand/5 transition-all duration-300 cursor-default group"
             >
-              <div className="p-1.5 rounded-token-sm bg-info/10 text-info group-hover:bg-info/20 transition-colors">
+              <div className="p-1.5 rounded-token-sm bg-brand/10 text-brand group-hover:bg-brand/20 transition-colors">
                 {feature.icon}
               </div>
               <div>
@@ -109,8 +108,8 @@ const Hero = (): React.JSX.Element => {
 
       {/* Image Placeholder */}
       <div className="w-2/3 sm:w-1/2 lg:w-[40%]">
-        <div className="w-full aspect-square bg-info/5 rounded-token-xl border border-border flex items-center justify-center relative overflow-hidden">
-          <div className="absolute inset-0 bg-info/5" />
+        <div className="w-full aspect-square bg-brand/5 rounded-token-xl border border-border flex items-center justify-center relative overflow-hidden">
+          <div className="absolute inset-0 bg-brand/5" />
 
           <div className="relative z-10 flex flex-col items-center gap-y-4">
             <span className="text-token-2xl text-foreground font-token-bold tracking-token-tight">
@@ -123,14 +122,14 @@ const Hero = (): React.JSX.Element => {
 
           {/* Decorative dots */}
           <div className="absolute top-4 right-4 flex gap-x-1">
-            <div className="size-1.5 rounded-full bg-info/30" />
-            <div className="size-1.5 rounded-full bg-info/20" />
-            <div className="size-1.5 rounded-full bg-info/10" />
+            <div className="size-1.5 rounded-full bg-brand/30" />
+            <div className="size-1.5 rounded-full bg-brand/20" />
+            <div className="size-1.5 rounded-full bg-brand/10" />
           </div>
           <div className="absolute bottom-4 left-4 flex gap-x-1">
-            <div className="size-1.5 rounded-full bg-info/10" />
-            <div className="size-1.5 rounded-full bg-info/20" />
-            <div className="size-1.5 rounded-full bg-info/30" />
+            <div className="size-1.5 rounded-full bg-brand/10" />
+            <div className="size-1.5 rounded-full bg-brand/20" />
+            <div className="size-1.5 rounded-full bg-brand/30" />
           </div>
         </div>
       </div>

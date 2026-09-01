@@ -46,7 +46,7 @@ function Header(): React.JSX.Element {
             <Link href="/" className="">
               کوتاهک
             </Link>
-            <span className="text-info mr-2">/</span>
+            <span className="text-brand mr-2">/</span>
           </div>
 
           <ul className="hidden md:flex items-center  text-token-sm font-token-medium text-primary/60">
