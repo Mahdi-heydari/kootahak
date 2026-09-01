@@ -62,7 +62,7 @@ const Footer = (): React.JSX.Element => {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-x-1.5 font-token-normal text-token-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
-                      <span className="block w-1.5 h-0.5 bg-info rounded-full" />
+                      <span className="block w-1.5 h-0.5 bg-brand rounded-full" />
                       {link.label}
                     </a>
                   ) : (
@@ -70,7 +70,7 @@ const Footer = (): React.JSX.Element => {
                       href={link.href}
                       className="inline-flex items-center gap-x-1.5 font-token-normal text-token-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
-                      <span className="block w-1.5 h-0.5 bg-info rounded-full" />
+                      <span className="block w-1.5 h-0.5 bg-brand rounded-full" />
                       {link.label}
                     </Link>
                   )}
@@ -93,7 +93,7 @@ const Footer = (): React.JSX.Element => {
                   <span className="font-token-normal text-token-sm text-muted-foreground group-hover:text-foreground transition-colors">
                     {stat.label}
                   </span>
-                  <span className="font-token-bold text-token-sm text-info bg-info/10 px-3 py-1 rounded-token-sm group-hover:bg-info/20 transition-colors">
+                  <span className="font-token-bold text-token-sm text-brand bg-brand/10 px-3 py-1 rounded-token-sm group-hover:bg-brand/20 transition-colors">
                     {stat.value}
                   </span>
                 </li>
@@ -115,7 +115,7 @@ const Footer = (): React.JSX.Element => {
                     target="_blank"
                     rel="noopener noreferrer"
                     dir="ltr"
-                    className="font-token-normal mr-auto hover:text-info transition-colors"
+                    className="font-token-normal mr-auto hover:text-brand transition-colors"
                   >
                     @kootahak-sup
                   </a>
@@ -125,17 +125,17 @@ const Footer = (): React.JSX.Element => {
                   <a
                     href="mailto:"
                     dir="ltr"
-                    className="font-token-normal mr-auto hover:text-info transition-colors"
+                    className="font-token-normal mr-auto hover:text-brand transition-colors"
                   >
                     info@kootahak.ir
                   </a>
                 </div>
                 <div className="flex items-center justify-between flex-wrap gap-x-3 gap-y-1.5">
                   <span className="flex items-center gap-x-1.5 font-token-normal">
-                    <Clock size={14} className="text-info" />
+                    <Clock size={14} className="text-brand" />
                     ساعات پاسخگویی
                   </span>
-                  <span className="font-token-normal mr-auto hover:text-info transition-colors">
+                  <span className="font-token-normal mr-auto hover:text-brand transition-colors">
                     ۹ صبح الی ۶ عصر
                   </span>
                 </div>
@@ -156,7 +156,7 @@ const Footer = (): React.JSX.Element => {
             <Globe size={16} />
             <p className="font-token-normal">
               تمامی حقوق مادی و معنوی این وب‌سایت متعلق به{" "}
-              <span className="text-info font-token-semibold">کوتاهک</span>{" "}
+              <span className="text-brand font-token-semibold">کوتاهک</span>{" "}
               میباشد.
             </p>
           </div>
@@ -172,7 +172,7 @@ const Footer = (): React.JSX.Element => {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center size-10 bg-muted hover:bg-info/20 transition-colors text-muted-foreground hover:text-info rounded-token-sm"
+                  className="flex items-center justify-center size-10 bg-muted hover:bg-brand/20 transition-colors text-muted-foreground hover:text-brand rounded-token-sm"
                   aria-label={social.label}
                 >
                   {social.icon}
