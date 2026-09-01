@@ -1,12 +1,11 @@
 import Footer from "@/components/sections/Footer";
 import Header from "../components/sections/Header";
+import { Main } from "@/components/sections/Main";
 export default function Home() {
   return (
     <>
       <Header />
-      <main className="h-200 bg-background text-7xl grid place-items-center border-t-4 border-border">
-        مین
-      </main>
+      <Main />
       <Footer />
     </>
   );
