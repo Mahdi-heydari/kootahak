@@ -38,7 +38,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         "border border-brand/30 bg-transparent text-brand hover:bg-brand/10 focus-visible:ring-border cursor-pointer",
       ghost:
         "bg-transparent text-muted-foreground hover:bg-muted hover:text-primary focus-visible:ring-border",
-      danger: "bg-error text-white hover:opacity-90 focus-visible:ring-error cursor-pointer",
+      danger:
+        "bg-error text-white hover:opacity-90 focus-visible:ring-error cursor-pointer",
     };
 
     const sizes: Record<ButtonSize, string> = {

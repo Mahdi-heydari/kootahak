@@ -1,2 +1,2 @@
-export * from "./schema"
-export * from "./landing"
+export * from "./schema";
+export * from "./landing";

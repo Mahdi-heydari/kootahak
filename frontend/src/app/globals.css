@@ -36,7 +36,7 @@
 
 @theme inline {
   --color-brand: var(--info);
-  
+
   --color-background: var(--background);
   --color-background-secondary: var(--background-secondary);
 
