@@ -4,23 +4,23 @@
 
 ## Tech Stack
 
-* Next.js
-* React
-* TypeScript
-* Tailwind CSS
-* TanStack Query
-* React Hook Form
-* Zod
-* Axios
-* ApexCharts
+- Next.js
+- React
+- TypeScript
+- Tailwind CSS
+- TanStack Query
+- React Hook Form
+- Zod
+- Axios
+- ApexCharts
 
 ## Features
 
-* ثبت‌نام و ورود کاربران
-* ساخت و مدیریت لینک کوتاه
-* داشبورد کاربر
-* مشاهده آمار و Analytics
-* مدیریت لینک‌ها
+- ثبت‌نام و ورود کاربران
+- ساخت و مدیریت لینک کوتاه
+- داشبورد کاربر
+- مشاهده آمار و Analytics
+- مدیریت لینک‌ها
 
 ## Getting Started
 
