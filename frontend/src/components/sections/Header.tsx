@@ -8,14 +8,17 @@ import ThemeToggle from "@/components/ui/theme-toggle";
 import Button from "@/components/ui/Button";
 import { navLinks } from "@/contents/landing";
 import Profile from "@/components/ui/Profile";
+import { useRouter } from "next/navigation";
 
 function Header(): React.JSX.Element {
   const [isLogined, setLogined] = useState<boolean>(false);
   const [isMenuOpen, setMenuOpen] = useState<boolean>(false);
   const isScrolled = useScroll(70);
+  const router = useRouter()
 
   const handleToggleLogin = (): void => {
     setLogined((prev) => !prev);
+    router.push("/login")
   };
 
   const handleToggleMenu = (): void => {
