@@ -13,10 +13,11 @@ description: Full project vision, architecture, database schema, auth strategy, 
 
 This project is a **URL shortener with a special focus on visit analytics** (similar to bit.ly, but with more detailed stats: device, geographic location, referral source).
 
-**The project's goal is resume-building, not a real commercial product.** This means:
+**The project's goal is resume-building AND it is meant to actually be deployed to production — it will also be open-sourced.** This means:
 - Code quality, readability, and clean architecture matter more than aggressive development speed.
 - The project should demonstrate that the team (me + two frontend developers) can coordinate on a real, multi-service system (NestJS + Postgres + Redis + Worker).
-- **Avoid over-engineering for a scale that will never happen.** This is a demo for presenting, not a service with millions of users.
+- **Correctness and production-readiness are not optional.** Real race conditions (e.g. cache stampede on hot cache keys, stale cache after a link is edited/deleted, the atomic `clickCount` rule in section 4) must be handled with actual best practices, not skipped for simplicity.
+- **Still avoid engineering for imaginary scale** (e.g. sharding, multi-region, premature microservices, distributed caching topologies) — this guidance is about not chasing scale this project will never see, not an excuse to skip legitimate correctness or best-practice concerns.
 
 ## 2. Roles and Claude Code's scope
 
@@ -74,7 +75,7 @@ Even though the project's name talks about "real-time analytics," this **only me
 
 ## 5. Database model (synced to the actual current Prisma schema)
 
-> The developer's original document had a schema that had drifted from the real `prisma/schema.prisma`. Per the developer's decision, this section reflects the actual current schema (read from `backend/prisma/schema.prisma`) rather than the original plan. Differences from the original plan, worth remembering: `clickCount` does not exist yet on `Link`, even though section 4's atomic-increment rule depends on it; `title` is nullable (not required); `Visit.location` was split into separate `country`/`city` fields instead of one `location` string; the generator uses `prisma-client` (not `prisma-client-js`) with a custom `output` path and `moduleFormat = "cjs"`; and `Link` has two extra indexes (`expiresAt`, `deletedAt`).
+> The developer's original document had a schema that had drifted from the real `prisma/schema.prisma`. Per the developer's decision, this section reflects the actual current schema (read from `backend/prisma/schema.prisma`) rather than the original plan. Differences from the original plan, worth remembering: `clickCount` does not exist yet on `Link`, even though section 4's atomic-increment rule depends on it; `title` is required (`@IsNotEmpty` in the DTO, `NOT NULL` in the schema) — if the frontend doesn't collect a title from the user, the frontend itself must supply one (e.g. derived from `originalUrl`) before calling `POST /links`, since the backend will reject an empty/missing title; `Visit.location` was split into separate `country`/`city` fields instead of one `location` string; the generator uses `prisma-client` (not `prisma-client-js`) with a custom `output` path and `moduleFormat = "cjs"`; and `Link` has two extra indexes (`expiresAt`, `deletedAt`).
 
 ```prisma
 generator client {
@@ -113,7 +114,7 @@ model Link {
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
   isActive    Boolean   @default(true) @map("is_active")
-  title       String?   @db.VarChar(255)
+  title       String    @db.VarChar(255)
   shortCode   String    @unique @map("short_code") @db.VarChar(20)
   originalUrl String    @map("original_url") @db.Text
   expiresAt   DateTime? @map("expires_at") @db.Timestamptz(6)
@@ -182,6 +183,12 @@ Redis has exactly two roles, no more:
 2. **Async queue for visit processing** by the Worker (full explanation in section 4)
 
 **Caching full link metadata or summary stats is currently out of scope** — this decision was made to keep cache-invalidation complexity under control.
+
+**Cache correctness rules (non-negotiable, per section 1 — this is a production system):**
+- **Cache key:** `link:{shortCode}` — derived only from data available at redirect time (the shortCode from the URL param), never from the DB-only `id`.
+- **Cache value:** a JSON string with at least `{ originalUrl, linkId }`, written with `SET key value EX <ttl>` (value + TTL in one atomic call). `linkId` must be present so a cache **hit** can still enqueue the visit-processing job without a DB round-trip.
+- **Cache invalidation is mandatory, not optional:** any endpoint that changes a link's `originalUrl`, `isActive`, `deletedAt`, or `expiresAt` must `DEL link:{shortCode}` as part of that same operation. Without this, edited/deleted links keep serving stale data from Redis until TTL expiry — a real correctness bug, not just a performance nuance.
+- **Cache stampede (concurrent misses on a hot key):** plain concurrent re-population is safe here (all concurrent readers get the same DB answer, so redundant writes aren't corrupting — unlike the `clickCount` increment case). A `SETNX`-based single-flight lock (`lock:link:{shortCode}`) is the standard fix if stampede protection is wanted for hot/viral links; not required for a first correct implementation, but a legitimate follow-up, not something to dismiss as over-engineering.
 
 ## 9. Testing rules
 
