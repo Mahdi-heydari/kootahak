@@ -1,22 +1,25 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { LoggerModule } from 'nestjs-pino';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { PrismaModule } from './prismaClient/prisma.module';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/users.module';
+import { Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
+import { LoggerModule } from "nestjs-pino";
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
+import { PrismaModule } from "./prismaClient/prisma.module";
+import { AuthModule } from "./auth/auth.module";
+import { UsersModule } from "./users/users.module";
+import { LinksModule } from "./links/links.module";
+import { ShortCodeModule } from "./short-code/short-code.module";
+import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     LoggerModule.forRoot({
       pinoHttp: {
-        level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+        level: process.env.NODE_ENV === "production" ? "info" : "debug",
         transport:
-          process.env.NODE_ENV !== 'production'
+          process.env.NODE_ENV !== "production"
             ? {
-                target: 'pino-pretty',
+                target: "pino-pretty",
                 options: {
                   singleLine: true,
                   colorize: true,
@@ -28,6 +31,9 @@ import { UsersModule } from './users/users.module';
     PrismaModule,
     AuthModule,
     UsersModule,
+    LinksModule,
+    ShortCodeModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [AppService],
