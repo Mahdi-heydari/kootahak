@@ -1,14 +1,87 @@
+import type { Link } from "@/types/links";
+
 export const sidebarItems = [
-    {
-      label: "داشبورد",
-      href: "/dashboard",
-    },
-    {
-      label: "لینک‌های من",
-      href: "/dashboard/links",
-    },
-    {
-      label: "آمار",
-      href: "/dashboard/analytics",
-    },
-  ];
+  { label: "داشبورد", href: "/dashboard" },
+  { label: "لینک‌های من", href: "/links" },
+  { label: "آمار", href: "/analytics" },
+];
+
+export const mockLinks: Link[] = [
+  {
+    id: 1,
+    title: "مقاله آموزش React",
+    shortCode: "react-guide",
+    originalUrl: "https://example.com/react-complete-guide",
+    createdAt: "2026-09-01T10:30:00.000Z",
+    updatedAt: "2026-09-01T10:30:00.000Z",
+    isActive: true,
+    isPin: true,
+    expiresAt: null,
+    deletedAt: null,
+    authorId: 1,
+    visits: [
+      {
+        id: 1,
+        visitedAt: "2026-09-01T12:00:00.000Z",
+        ipAddress: "127.0.0.1",
+        country: "Iran",
+        city: "Tehran",
+        device: "Desktop",
+        browser: "Chrome",
+        source: "DIRECT",
+        linkId: 1,
+      },
+      {
+        id: 2,
+        visitedAt: "2026-09-01T13:00:00.000Z",
+        ipAddress: "127.0.0.1",
+        country: "Iran",
+        city: "Tehran",
+        device: "Mobile",
+        browser: "Safari",
+        source: "SOCIAL",
+        linkId: 1,
+      },
+    ],
+  },
+  {
+    id: 2,
+    title: "پروفایل گیتهاب",
+    shortCode: "github",
+    originalUrl: "https://github.com/erfantolou00",
+    createdAt: "2026-08-30T09:00:00.000Z",
+    updatedAt: "2026-08-30T09:00:00.000Z",
+    isActive: true,
+    isPin: false,
+    expiresAt: null,
+    deletedAt: null,
+    authorId: 1,
+    visits: [
+      {
+        id: 3,
+        visitedAt: "2026-08-31T09:00:00.000Z",
+        ipAddress: "127.0.0.1",
+        country: "Iran",
+        city: "Arak",
+        device: "Desktop",
+        browser: "Edge",
+        source: "SEARCH",
+        linkId: 2,
+      },
+    ],
+  },
+  {
+    id: 3,
+    title: "کانال تلگرام",
+    shortCode: "telegram",
+    originalUrl: "https://t.me/example",
+    createdAt: "2026-08-28T15:20:00.000Z",
+    updatedAt: "2026-08-28T15:20:00.000Z",
+    isActive: false,
+    isPin: false,
+    expiresAt: null,
+    deletedAt: null,
+    authorId: 1,
+    visits: [],
+  },
+];

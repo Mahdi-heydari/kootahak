@@ -1,8 +1,19 @@
-// just filling out the file to pass build err docker (it will change)
-export default function Dashboard2() {
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
+import LinkToolbar from "@/components/dashboard/LinkToolbar";
+import LinkList from "@/components/dashboard/LinkList";
+
+import { mockLinks } from "@/contents/dashboard";
+
+export default function DashboardPage() {
   return (
     <div>
-      <p>Dashboard2</p>
+      <DashboardHeader />
+
+      <main className="space-y-8 p-6">
+        <LinkToolbar />
+
+        <LinkList links={mockLinks} />
+      </main>
     </div>
   );
 }

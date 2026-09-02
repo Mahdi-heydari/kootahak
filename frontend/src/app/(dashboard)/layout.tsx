@@ -1,9 +1,20 @@
-// just filling out the file to pass build err docker (it will change)
+import { ReactNode } from "react";
+import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 
-export default function Dashboard() {
+interface DashboardLayoutProps {
+  children: ReactNode;
+}
+
+export default function DashboardLayout({
+  children,
+}: DashboardLayoutProps) {
   return (
-    <div>
-      <p>dashboard</p>
+    <div className="flex min-h-screen bg-background">
+      <DashboardSidebar />
+
+      <main className="flex-1">
+        {children}
+      </main>
     </div>
   );
 }
