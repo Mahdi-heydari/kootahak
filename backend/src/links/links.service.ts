@@ -1,12 +1,16 @@
 import {
   ConflictException,
+  Inject,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from "@nestjs/common";
-import { CreateLinkDto } from "./dto";
+import { CreateLinkDto, getLinkDto } from "./dto";
 import { PrismaService } from "../prismaClient/prisma.service";
 import { Link, Prisma, User } from "../generated/prisma/client";
 import { ShortCodeService } from "../short-code/short-code.service";
+import { REDIS_CLIENT, LINK_CACHE_TTL_SECONDS } from "../redis/redis.constants";
+import Redis from "ioredis";
 
 const MAX_GENERATION_ATTEMPTS = 5;
 const UNIQUE_CONSTRAINT_ERROR_CODE = "P2002";
@@ -17,6 +21,7 @@ type LinkDataWithoutCode = Omit<Prisma.LinkCreateInput, "shortCode">;
 @Injectable()
 export class LinksService {
   constructor(
+    @Inject(REDIS_CLIENT) private redis: Redis,
     private readonly prisma: PrismaService,
     private readonly shortCodeService: ShortCodeService,
   ) {}
@@ -92,5 +97,33 @@ export class LinksService {
       err instanceof Prisma.PrismaClientKnownRequestError &&
       err.code === UNIQUE_CONSTRAINT_ERROR_CODE
     );
+  }
+
+  async visitLink(getData: getLinkDto) {
+    const shortCodeExist = await this.redis.get(`link:${getData.shortCode}`);
+
+    if (shortCodeExist) {
+      return shortCodeExist;
+    } else {
+      const link = await this.prisma.link.findUnique({
+        where: { shortCode: getData.shortCode },
+      });
+
+      if (!link) {
+        throw new NotFoundException("کد کوتاه نامعبتر است.");
+      }
+
+      await this.redis.set(
+        `link:${link?.shortCode}`,
+        link.originalUrl,
+        "EX",
+        LINK_CACHE_TTL_SECONDS,
+        "NX",
+      );
+
+      return link.originalUrl;
+    }
+
+    // return orginal link and set workers
   }
 }

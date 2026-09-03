@@ -44,10 +44,12 @@ This project is a **URL shortener with a special focus on visit analytics** (sim
 3. The link record is saved to Postgres.
 
 ### Redirect flow (performance-sensitive part)
+0. **Entrypoint:** `GET /:shortCode`, served by `RedirectController`, mounted at the application **root** — outside the global `api` prefix (`main.ts` uses `setGlobalPrefix('api', { exclude: [{ path: ':shortCode', method: GET }] })`) so short links stay genuinely short (`domain.com/abc123`). This route is **public/anonymous** — it must never sit behind the JWT guard. It responds with an HTTP **302** redirect to `originalUrl`. This is a stable public API contract the frontend depends on (per section 2).
 1. A visitor clicks the short link.
 2. Backend first checks Redis (**cache-aside pattern**): if the `shortCode` is cached, redirect immediately.
 3. If not cached, read from Postgres, cache it in Redis, then redirect.
 4. **The user is never blocked on analytics processing.** Immediately after or concurrently with the redirect, a job (containing IP, User-Agent, Referer, `linkId`, timestamp) is pushed onto the Redis queue.
+   > Implementation status: `LinksService.visitLink()` currently does the cache-aside lookup and redirect only. The visit-processing enqueue, and the `isActive` / `expiresAt` / `deletedAt` filtering on the DB read, are still TODO.
 5. A **separate Worker** (an independent queue consumer) processes this job asynchronously:
    - Parses the User-Agent → detects device/browser
    - Converts IP → geographic location (the geo-IP service/library hasn't been chosen yet — see section 8)
@@ -167,8 +169,10 @@ The main dashboard page (after login) has two parts:
 2. A list of the user's link cards; clicking a card → that link's detail page
 
 **This means:**
-- The list-links endpoint (`GET /links`) must support query params for search, filter, pagination, and sort.
-- The link-details endpoint (`GET /links/:id`) must return both the link's own info and its related stats/visits.
+- The list-links endpoint (`GET /api/links`) must support query params for search, filter, pagination, and sort.
+- The link-details endpoint (`GET /api/links/:id`) must return both the link's own info and its related stats/visits.
+
+> Note on prefixes: all dashboard/CRUD endpoints live under the `api` prefix (`/api/links`, ...). The **only** exception is the public redirect route `GET /:shortCode` (section 4), which is deliberately mounted at the root.
 
 ### About the "public page" (an important contradiction with the original idea)
 The project's original idea was for every user to have a public page showing their links. **This was ultimately dropped.** Per the final decision:
@@ -184,10 +188,18 @@ Redis has exactly two roles, no more:
 
 **Caching full link metadata or summary stats is currently out of scope** — this decision was made to keep cache-invalidation complexity under control.
 
+**Redis wiring (how the client is provided):**
+- A single `ioredis` client is exposed as a NestJS provider under the token `REDIS_CLIENT` (`src/redis/redis.constants.ts`), built by `redisProvider` (`src/redis/redis.provider.ts`) from a `useFactory` that reads `REDIS_HOST` / `REDIS_PORT` via `ConfigService`.
+- `RedisModule` provides and exports `REDIS_CLIENT`; consumers (e.g. `LinksModule`) import `RedisModule` and inject with `@Inject(REDIS_CLIENT) private redis: Redis`.
+- Env vars: `REDIS_HOST`, `REDIS_PORT` (see `.env.example`).
+- `RedisService` is currently an empty placeholder class — the real usage is the injected `REDIS_CLIENT`, not a service wrapper. The queue library (BullMQ, section 14) is still unconfirmed and not wired.
+
 **Cache correctness rules (non-negotiable, per section 1 — this is a production system):**
 - **Cache key:** `link:{shortCode}` — derived only from data available at redirect time (the shortCode from the URL param), never from the DB-only `id`.
-- **Cache value:** a JSON string with at least `{ originalUrl, linkId }`, written with `SET key value EX <ttl>` (value + TTL in one atomic call). `linkId` must be present so a cache **hit** can still enqueue the visit-processing job without a DB round-trip.
-- **Cache invalidation is mandatory, not optional:** any endpoint that changes a link's `originalUrl`, `isActive`, `deletedAt`, or `expiresAt` must `DEL link:{shortCode}` as part of that same operation. Without this, edited/deleted links keep serving stale data from Redis until TTL expiry — a real correctness bug, not just a performance nuance.
+- **TTL:** `LINK_CACHE_TTL_SECONDS` in `src/redis/redis.constants.ts` — currently **12 hours**. This closes the section-14 open decision on cache TTL.
+- **Cache value (current implementation):** the raw `originalUrl` string, written with `SET key value EX <LINK_CACHE_TTL_SECONDS> NX` (value + TTL in one atomic call).
+  > Known gap vs. the original design: the value should really be a JSON string carrying at least `{ originalUrl, linkId }`, so a cache **hit** can enqueue the visit-processing job without a DB round-trip. Storing the bare URL makes that impossible. Revisit when `visitLink()` gains the enqueue step.
+- **Cache invalidation is mandatory, not optional:** any endpoint that changes a link's `originalUrl`, `isActive`, `deletedAt`, or `expiresAt` must `DEL link:{shortCode}` as part of that same operation. Without this, edited/deleted links keep serving stale data from Redis until TTL expiry — a real correctness bug, not just a performance nuance. (Not yet implemented — no link-edit/delete endpoint exists yet.)
 - **Cache stampede (concurrent misses on a hot key):** plain concurrent re-population is safe here (all concurrent readers get the same DB answer, so redundant writes aren't corrupting — unlike the `clickCount` increment case). A `SETNX`-based single-flight lock (`lock:link:{shortCode}`) is the standard fix if stampede protection is wanted for hot/viral links; not required for a first correct implementation, but a legitimate follow-up, not something to dismiss as over-engineering.
 
 ## 9. Testing rules
@@ -243,7 +255,7 @@ Claude Code should not decide these on its own; if they come up, ask first:
 - [ ] `shortCode` generation algorithm (proposed: `nanoid`) and its exact length
 - [ ] Can the user pick a custom alias for `shortCode`, or is it auto-generated only?
 - [ ] Redis queue library (proposed: BullMQ) — unconfirmed
-- [ ] Exact Redis cache TTL for shortCodes
+- [x] Exact Redis cache TTL for shortCodes → **12 hours** (`LINK_CACHE_TTL_SECONDS`, `src/redis/redis.constants.ts`)
 - [ ] Exact cache-invalidation procedure when a link is edited/deleted
 - [ ] geo-IP service/library for converting IP to geographic location
 - [ ] Is a Refresh Token needed, or is a simple Access Token enough?

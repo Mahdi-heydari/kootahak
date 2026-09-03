@@ -55,3 +55,13 @@ export class CreateLinkDto {
   @IsDateString({}, { message: "تاریخ انقضا باید در قالب معتبر تاریخ باشد" })
   expiresAt?: string;
 }
+
+export class getLinkDto {
+  @ApiProperty({
+    description: "short code",
+    example: "user short code",
+  })
+  @IsNotEmpty({ message: "کد کوتاه الزامی است" })
+  @IsString({ message: "کد کوتاه باید متن باشد" })
+  shortCode: string;
+}

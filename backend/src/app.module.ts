@@ -8,7 +8,7 @@ import { AuthModule } from "./auth/auth.module";
 import { UsersModule } from "./users/users.module";
 import { LinksModule } from "./links/links.module";
 import { ShortCodeModule } from "./short-code/short-code.module";
-import { RedisModule } from './redis/redis.module';
+import { RedisModule } from "./redis/redis.module";
 
 @Module({
   imports: [
