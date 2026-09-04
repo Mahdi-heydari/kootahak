@@ -9,6 +9,8 @@ import { UsersModule } from "./users/users.module";
 import { LinksModule } from "./links/links.module";
 import { ShortCodeModule } from "./short-code/short-code.module";
 import { RedisModule } from "./redis/redis.module";
+import { BullMqModule } from "./bullmq/bullMq.module";
+import { VisitsModule } from './visits/visits.module';
 
 @Module({
   imports: [
@@ -34,6 +36,8 @@ import { RedisModule } from "./redis/redis.module";
     LinksModule,
     ShortCodeModule,
     RedisModule,
+    BullMqModule,
+    VisitsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

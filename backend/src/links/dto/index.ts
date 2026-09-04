@@ -10,6 +10,16 @@ import {
   MinLength,
 } from "class-validator";
 
+export type VisitContext = {
+  ip: string;
+  userAgent: string;
+  referer: string;
+};
+
+export type CachedLink = {
+  id: number;
+  originalUrl: string;
+};
 export class CreateLinkDto {
   @ApiProperty({
     description: "User original URL to be shortened",

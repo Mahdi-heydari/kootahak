@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Redirect } from "@nestjs/common";
+import { Controller, Get, Param, Redirect, Req } from "@nestjs/common";
 import {
   ApiExcludeController,
   ApiFoundResponse,
@@ -7,7 +7,8 @@ import {
   ApiParam,
 } from "@nestjs/swagger";
 import { LinksService } from "./links.service";
-import { getLinkDto } from "./dto";
+import { getLinkDto, VisitContext } from "./dto";
+import type { Request } from "express";
 
 /**
  * Public redirect entrypoint for short links.
@@ -31,9 +32,17 @@ export class RedirectController {
   @ApiParam({ name: "shortCode", example: "abc123" })
   @ApiFoundResponse({ description: "Redirects (302) to the original URL" })
   @ApiNotFoundResponse({ description: "No link exists for this short code" })
-  async redirect(@Param("shortCode") shortCode: string) {
-    const getData: getLinkDto = { shortCode };
-    const originalUrl = await this.linksService.visitLink(getData);
+  async redirect(@Param() getData: getLinkDto, @Req() request: Request) {
+    const visitContext: VisitContext = {
+      ip: request.ip ?? "unknown",
+      userAgent: request.headers["user-agent"] ?? "unknown",
+      referer: request.headers["referer"] ?? "unknown",
+    };
+
+    const originalUrl = await this.linksService.visitLink(
+      visitContext,
+      getData,
+    );
 
     return { url: originalUrl, statusCode: 302 };
   }

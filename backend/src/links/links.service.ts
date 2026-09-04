@@ -5,12 +5,15 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from "@nestjs/common";
-import { CreateLinkDto, getLinkDto } from "./dto";
-import { PrismaService } from "../prismaClient/prisma.service";
-import { Link, Prisma, User } from "../generated/prisma/client";
-import { ShortCodeService } from "../short-code/short-code.service";
-import { REDIS_CLIENT, LINK_CACHE_TTL_SECONDS } from "../redis/redis.constants";
+import { Queue } from "bullmq";
 import Redis from "ioredis";
+import { PinoLogger } from "nestjs-pino";
+import { VISIT_QUEUE } from "../bullmq/bullMq.constant";
+import { Link, Prisma, User } from "../generated/prisma/client";
+import { PrismaService } from "../prismaClient/prisma.service";
+import { LINK_CACHE_TTL_SECONDS, REDIS_CLIENT } from "../redis/redis.constants";
+import { ShortCodeService } from "../short-code/short-code.service";
+import { CachedLink, CreateLinkDto, getLinkDto, VisitContext } from "./dto";
 
 const MAX_GENERATION_ATTEMPTS = 5;
 const UNIQUE_CONSTRAINT_ERROR_CODE = "P2002";
@@ -22,9 +25,13 @@ type LinkDataWithoutCode = Omit<Prisma.LinkCreateInput, "shortCode">;
 export class LinksService {
   constructor(
     @Inject(REDIS_CLIENT) private redis: Redis,
+    @Inject(VISIT_QUEUE) private bullMQ: Queue,
     private readonly prisma: PrismaService,
     private readonly shortCodeService: ShortCodeService,
-  ) {}
+    private readonly logger: PinoLogger,
+  ) {
+    this.logger.setContext(LinksService.name);
+  }
 
   async createUserLink(
     createData: CreateLinkDto,
@@ -99,31 +106,63 @@ export class LinksService {
     );
   }
 
-  async visitLink(getData: getLinkDto) {
-    const shortCodeExist = await this.redis.get(`link:${getData.shortCode}`);
+  async visitLink(userRequest: VisitContext, getData: getLinkDto) {
+    const shortCodeExistString = await this.redis.get(
+      `link:${getData.shortCode}`,
+    );
 
-    if (shortCodeExist) {
-      return shortCodeExist;
+    let userData: CachedLink;
+
+    if (shortCodeExistString) {
+      const shortCodeExist = JSON.parse(shortCodeExistString) as CachedLink;
+
+      userData = shortCodeExist;
     } else {
-      const link = await this.prisma.link.findUnique({
-        where: { shortCode: getData.shortCode },
+      const link = await this.prisma.link.findFirst({
+        where: {
+          shortCode: getData.shortCode,
+          isActive: true,
+          deletedAt: null,
+          OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+        },
       });
 
       if (!link) {
         throw new NotFoundException("کد کوتاه نامعبتر است.");
       }
 
+      userData = { id: link.id, originalUrl: link.originalUrl };
+
       await this.redis.set(
         `link:${link?.shortCode}`,
-        link.originalUrl,
+        JSON.stringify({ id: link.id, originalUrl: link.originalUrl }),
         "EX",
         LINK_CACHE_TTL_SECONDS,
         "NX",
       );
-
-      return link.originalUrl;
     }
 
-    // return orginal link and set workers
+    this.bullMQ
+      .add(
+        "recordVisit",
+        { ...userRequest, ...userData },
+        {
+          removeOnComplete: 100,
+          removeOnFail: 100,
+          attempts: 3,
+          backoff: {
+            type: "exponential",
+            delay: 1000,
+          },
+        },
+      )
+      .catch((err: unknown) => {
+        this.logger.error(
+          { err, shortCode: getData.shortCode },
+          "failed to enqueue visit-processing job",
+        );
+      });
+
+    return userData.originalUrl;
   }
 }
