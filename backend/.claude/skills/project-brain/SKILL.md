@@ -34,7 +34,9 @@ This project is a **URL shortener with a special focus on visit analytics** (sim
 | Database | PostgreSQL |
 | ORM | Prisma |
 | Cache + async queue | Redis |
-| Queue monitor (proposed, unconfirmed) | BullMQ (`@nestjs/bullmq`) — the standard NestJS ecosystem choice for Redis-backed queues |
+| Queue library | BullMQ (raw `bullmq` package, wired with custom Nest providers in `src/bullmq/` — not the `@nestjs/bullmq` wrapper) |
+| Geo-IP lookup | `ip-geolocation-api-sdk-typescript` (ipgeolocation.io) |
+| User-Agent parsing | `ua-parser-js` |
 
 ## 4. Overall architecture — the most important section of the project
 
@@ -48,14 +50,15 @@ This project is a **URL shortener with a special focus on visit analytics** (sim
 1. A visitor clicks the short link.
 2. Backend first checks Redis (**cache-aside pattern**): if the `shortCode` is cached, redirect immediately.
 3. If not cached, read from Postgres, cache it in Redis, then redirect.
-4. **The user is never blocked on analytics processing.** Immediately after or concurrently with the redirect, a job (containing IP, User-Agent, Referer, `linkId`, timestamp) is pushed onto the Redis queue.
-   > Implementation status: `LinksService.visitLink()` currently does the cache-aside lookup and redirect only. The visit-processing enqueue, and the `isActive` / `expiresAt` / `deletedAt` filtering on the DB read, are still TODO.
-5. A **separate Worker** (an independent queue consumer) processes this job asynchronously:
-   - Parses the User-Agent → detects device/browser
-   - Converts IP → geographic location (the geo-IP service/library hasn't been chosen yet — see section 8)
+4. **The user is never blocked on analytics processing.** Right after the cache read/write resolves, `LinksService.visitLink()` calls `bullMQ.add("recordVisit", { ip, userAgent, referer, id, originalUrl }, ...)` on the `visit` queue **without awaiting it** (fire-and-forget) — a failure to enqueue is logged via `PinoLogger` and never reaches the caller, so a Redis/queue hiccup can't turn into an unhandled rejection or block the redirect.
+   > Implementation status: done. `visitLink()` does the cache-aside lookup, the `isActive` / `deletedAt` / `expiresAt` filtering on the DB read (link must be active, not soft-deleted, and not expired — otherwise treated as not-found, same as an unknown `shortCode`), the redirect, and the fire-and-forget enqueue.
+5. A **BullMQ Worker** (`src/bullmq/visitWorker.provider.ts`) — a distinct queue consumer, decoupled from the request-handling code path — processes this job asynchronously:
+   - Parses the User-Agent → detects device/browser (`ua-parser-js`)
+   - Converts IP → geographic location (`ip-geolocation-api-sdk-typescript`, see section 8)
    - Converts Referer → `SourceType` enum (`DIRECT` / `SOCIAL` / `SEARCH` / `EMAIL` / `OTHER`)
    - Creates a new `Visit` record
-   - Updates `clickCount` on `Link`
+   - Updates `clickCount` on `Link` — **not yet implemented**, see the note right below
+   > Deployment note: this Worker currently runs in the same Node process as the API (bootstrapped via Nest DI inside `AppModule`, alongside the HTTP server), not as a separately deployed service/container. That's a deliberate choice for this project's scale, not a gap — "separate Worker" above means a logically distinct queue consumer (its own `Worker` instance, its own concurrency/retry lifecycle, decoupled from request handling), not necessarily a separate OS process.
 
 ### ⚠️ Strict rule: atomic increment
 `clickCount` must **always** be updated with this pattern:
@@ -192,15 +195,20 @@ Redis has exactly two roles, no more:
 - A single `ioredis` client is exposed as a NestJS provider under the token `REDIS_CLIENT` (`src/redis/redis.constants.ts`), built by `redisProvider` (`src/redis/redis.provider.ts`) from a `useFactory` that reads `REDIS_HOST` / `REDIS_PORT` via `ConfigService`.
 - `RedisModule` provides and exports `REDIS_CLIENT`; consumers (e.g. `LinksModule`) import `RedisModule` and inject with `@Inject(REDIS_CLIENT) private redis: Redis`.
 - Env vars: `REDIS_HOST`, `REDIS_PORT` (see `.env.example`).
-- `RedisService` is currently an empty placeholder class — the real usage is the injected `REDIS_CLIENT`, not a service wrapper. The queue library (BullMQ, section 14) is still unconfirmed and not wired.
+- There is no `RedisService` wrapper class — it was removed as dead code. The only way to talk to Redis is the injected `REDIS_CLIENT`.
 
 **Cache correctness rules (non-negotiable, per section 1 — this is a production system):**
 - **Cache key:** `link:{shortCode}` — derived only from data available at redirect time (the shortCode from the URL param), never from the DB-only `id`.
 - **TTL:** `LINK_CACHE_TTL_SECONDS` in `src/redis/redis.constants.ts` — currently **12 hours**. This closes the section-14 open decision on cache TTL.
-- **Cache value (current implementation):** the raw `originalUrl` string, written with `SET key value EX <LINK_CACHE_TTL_SECONDS> NX` (value + TTL in one atomic call).
-  > Known gap vs. the original design: the value should really be a JSON string carrying at least `{ originalUrl, linkId }`, so a cache **hit** can enqueue the visit-processing job without a DB round-trip. Storing the bare URL makes that impossible. Revisit when `visitLink()` gains the enqueue step.
-- **Cache invalidation is mandatory, not optional:** any endpoint that changes a link's `originalUrl`, `isActive`, `deletedAt`, or `expiresAt` must `DEL link:{shortCode}` as part of that same operation. Without this, edited/deleted links keep serving stale data from Redis until TTL expiry — a real correctness bug, not just a performance nuance. (Not yet implemented — no link-edit/delete endpoint exists yet.)
+- **Cache value:** a JSON string, `{ id, originalUrl }` (`id` is the link's DB id, used as `linkId` downstream), written with `SET key value EX <LINK_CACHE_TTL_SECONDS> NX`. This lets a cache **hit** enqueue the visit-processing job (needs the id) without a DB round-trip.
+- **Cache invalidation is mandatory, not optional:** any endpoint that changes a link's `originalUrl`, `isActive`, `deletedAt`, or `expiresAt` must `DEL link:{shortCode}` as part of that same operation. Without this, edited/deleted links keep serving stale data from Redis until TTL expiry — a real correctness bug, not just a performance nuance. (Not yet implemented — no link-edit/delete endpoint exists yet. Note the gap this leaves today: the `isActive`/`deletedAt`/`expiresAt` checks only run on a cache **miss** — a link deactivated/expired/deleted after being cached keeps serving from cache until TTL expiry, since nothing invalidates it yet.)
 - **Cache stampede (concurrent misses on a hot key):** plain concurrent re-population is safe here (all concurrent readers get the same DB answer, so redundant writes aren't corrupting — unlike the `clickCount` increment case). A `SETNX`-based single-flight lock (`lock:link:{shortCode}`) is the standard fix if stampede protection is wanted for hot/viral links; not required for a first correct implementation, but a legitimate follow-up, not something to dismiss as over-engineering.
+
+**Visit-queue wiring (role 2 — how jobs actually flow):**
+- Queue name `"visit"`, job name `"recordVisit"`. `VISIT_QUEUE` token (`src/bullmq/bullMq.constant.ts`) resolves to a `bullmq` `Queue` built by `bullMQProvider` (`src/bullmq/bullMq.provider.ts`) from `REDIS_HOST`/`REDIS_PORT`. `LinksModule` imports `BullMqModule` and injects with `@Inject(VISIT_QUEUE) private bullMQ: Queue`.
+- Job options: `attempts: 3`, exponential backoff (1s base), `removeOnComplete: 100`, `removeOnFail: 100` (bounds how many finished/failed jobs Redis retains).
+- The consumer side (`VISIT_WORKER` token, `src/bullmq/visitWorker.provider.ts`) builds a `bullmq` `Worker` on the same `"visit"` queue and delegates each job to `VisitsService.visitProcess()` (`src/visits/visits.service.ts`), which does the UA parsing, geo-IP lookup, `SourceType` classification, and `Visit` creation described in section 4. `BullMqModule` imports `VisitsModule` for this.
+- Geo-IP client: `GEOLOCATION_CLIENT` token (`src/visits/geolocation.constants.ts`), built by `geolocationProvider` from `ip-geolocation-api-sdk-typescript` using `GEOLOCATION_TOKEN`. Outside production, the real visitor IP (often `127.0.0.1` locally, which the API rejects) is swapped for `GEO_FALLBACK_IP` (see `.env.example`) so the pipeline is testable end to end; production always uses the real IP.
 
 ## 9. Testing rules
 
@@ -219,6 +227,27 @@ Claude Code **should not** add these without explicit confirmation:
 
 > This is a sensible default based on common NestJS convention, not a locked-in decision — it can change.
 
+Actual current structure (diverged from the original proposal below — no `common/` yet, no dedicated `worker/`; the queue+worker live in `bullmq/`):
+
+```
+backend/
+├── src/
+│   ├── auth/
+│   ├── users/
+│   ├── links/           ← LinksController (POST /links), RedirectController (GET /:shortCode), LinksService
+│   ├── short-code/       ← ShortCodeService (nanoid generation)
+│   ├── redis/            ← REDIS_CLIENT provider (cache-aside)
+│   ├── bullmq/            ← VISIT_QUEUE (Queue) + VISIT_WORKER (Worker), both for the "visit" queue
+│   ├── visits/             ← VisitsService (UA parsing, geo-IP, SourceType, Visit creation)
+│   ├── prismaClient/        ← PrismaService
+│   └── main.ts
+├── prisma/
+│   └── schema.prisma
+├── Dockerfile
+└── .env
+```
+
+Original proposal (kept for reference; not what actually exists):
 ```
 backend/
 ├── src/
@@ -252,12 +281,12 @@ Every Controller and DTO must be fully documented:
 
 Claude Code should not decide these on its own; if they come up, ask first:
 
-- [ ] `shortCode` generation algorithm (proposed: `nanoid`) and its exact length
-- [ ] Can the user pick a custom alias for `shortCode`, or is it auto-generated only?
-- [ ] Redis queue library (proposed: BullMQ) — unconfirmed
+- [x] `shortCode` generation algorithm → **`nanoid`** (`customAlphabet`, alphanumeric only), length scales with total link count via `ShortCodeService.calculateCodeLength()`: 4 chars under 1k links, 5 under 100k, 6 under 5M, 7 beyond.
+- [x] Can the user pick a custom alias for `shortCode`? → **Yes, both are supported.** `CreateLinkDto.suggestedCode` (optional) — if provided, checked for uniqueness (409 `ConflictException` on collision) and used as-is; if omitted, a code is generated and retried up to `MAX_GENERATION_ATTEMPTS` (5) on a unique-constraint collision.
+- [x] Redis queue library → **BullMQ**, confirmed and implemented (raw `bullmq` package, not `@nestjs/bullmq`) in `src/bullmq/`.
 - [x] Exact Redis cache TTL for shortCodes → **12 hours** (`LINK_CACHE_TTL_SECONDS`, `src/redis/redis.constants.ts`)
-- [ ] Exact cache-invalidation procedure when a link is edited/deleted
-- [ ] geo-IP service/library for converting IP to geographic location
+- [ ] Exact cache-invalidation procedure when a link is edited/deleted — still open; no edit/delete endpoint exists yet, so nothing calls `DEL link:{shortCode}` today.
+- [x] geo-IP service/library → **`ip-geolocation-api-sdk-typescript`** (ipgeolocation.io), via `GEOLOCATION_TOKEN`; see section 8's "Visit-queue wiring".
 - [ ] Is a Refresh Token needed, or is a simple Access Token enough?
 - [ ] Rate limiting strategy to prevent abuse of the shortening service
 
