@@ -6,6 +6,8 @@
 @import "../styles/tokens/shadows.css";
 @import "../styles/tokens/motion.css";
 
+@import "../styles/kutahak-graph.css";
+
 :root {
   --theme-change-x: 0;
   --theme-change-y: 0;
