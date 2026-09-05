@@ -30,7 +30,7 @@ const problems = [
 
 const Problems = (): React.JSX.Element => {
   return (
-    <section className="w-full py-20" id="problems">
+    <section className="w-full pb-20 pt-25" id="problems">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-center gap-x-3 sm:gap-x-7 mb-12">

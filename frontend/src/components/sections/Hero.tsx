@@ -7,22 +7,8 @@ import {
   Clock,
 } from "lucide-react";
 import Button from "../ui/Button";
-// import { heroContent } from "@/contents/landing";
+import { heroContent } from "@/contents/landing";
 import GradientWaves  from "./GradientWaves";
-export const heroContent = {
-  preTitle: "لینک های",
-  titleHighlightWords: ["طولانی", "شلوغ", "بی‌نظم", "پیچیده"],
-  title: "رو کوتاه و مدیریت کن !",
-  description:
-    "با کوتاهک، لینک‌های طولانی رو در چند ثانیه کوتاه کن. آمار دقیق بازدید، امنیت بالا و مدیریت آسان لینک‌ها، همه در یک پلتفرم ساده و حرفه‌ای.",
-  placeholder: "... لینک خود را وارد کنید",
-  features: [
-    { title: "کوتاه‌سازی", description: "لینک‌های طولانی" },
-    { title: "آمار دقیق", description: "لحظه‌ای و کامل" },
-    { title: "فلان فلان", description: "مطمئن و پایدار" },
-  ],
-  trustItems: ["محبوب در بین کاربران", "پاسخگویی آنی"],
-};
 
 // کپی کلمه‌ی اول در انتهای آرایه، برای اینکه لوپ انیمیشن بدون پرش دیده بشه
 const flipWordsLoop = [
@@ -32,17 +18,17 @@ const flipWordsLoop = [
 
 const features = [
   {
-    icon: <Link size={16} strokeWidth={1.5} />,
+    icon: <Link size={25} strokeWidth={1.5} />,
     title: heroContent.features[0].title,
     description: heroContent.features[0].description,
   },
   {
-    icon: <BarChart3 size={16} strokeWidth={1.5} />,
+    icon: <BarChart3 size={25} strokeWidth={1.5} />,
     title: heroContent.features[1].title,
     description: heroContent.features[1].description,
   },
   {
-    icon: <ShieldCheck size={16} strokeWidth={1.5} />,
+    icon: <ShieldCheck size={25} strokeWidth={1.5} />,
     title: heroContent.features[2].title,
     description: heroContent.features[2].description,
   },
@@ -50,11 +36,11 @@ const features = [
 
 const trustItems = [
   {
-    icon: <Sparkles size={12} className="text-brand" />,
+    icon: <Sparkles size={16} className="text-brand" />,
     text: heroContent.trustItems[0],
   },
   {
-    icon: <Clock size={12} className="text-brand" />,
+    icon: <Clock size={16} className="text-brand" />,
     text: heroContent.trustItems[1],
   },
 ];
@@ -110,7 +96,7 @@ const Hero = (): React.JSX.Element => {
             {heroContent.description}
           </p>
 
-          {/* فرم ورودی - حالا کاملاً در راست قرار دارد */}
+          {/* فرم ترغیب کننده کاربر */}
           <form className="mt-8 flex items-center justify-between gap-x-4 w-full max-w-lg bg-card border border-border py-2.5 pr-5 pl-2.5 rounded-token-md shadow-token-sm transition-all duration-300 focus-within:border-brand/50 focus-within:shadow-token-md">
             <input
               type="text"
@@ -123,12 +109,12 @@ const Hero = (): React.JSX.Element => {
             </Button>
           </form>
 
-          {/* ویژگی‌ها - حالا در راست کامل */}
+          {/* ویژگی‌ها */}
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 w-full max-w-3xl">
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="flex items-center gap-x-3 p-3 rounded-token-sm bg-card border border-border hover:border-brand/30 hover:bg-brand/5 transition-all duration-300 cursor-default group"
+                className="flex items-center gap-x-3 p-3 rounded-token-sm bg-card border border-border hover:border-brand/30 hover:bg-brand/10 transition-all duration-300 cursor-default group"
               >
                 <div className="p-1.5 rounded-token-sm bg-brand/10 text-brand group-hover:bg-brand/20 transition-colors">
                   {feature.icon}
@@ -145,8 +131,8 @@ const Hero = (): React.JSX.Element => {
             ))}
           </div>
 
-          {/* نشان اعتماد - حالا در راست */}
-          <div className="mt-8 flex items-center justify-center gap-x-6 text-token-xs text-muted-foreground/70">
+          {/* نشان اعتماد */}
+          <div className="mt-8 flex items-center justify-center gap-x-6 text-token-xs text-primary/70">
             {trustItems.map((item, index) => (
               <span key={index} className="flex items-center gap-x-1">
                 {item.icon}

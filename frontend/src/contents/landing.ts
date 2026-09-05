@@ -33,9 +33,9 @@ export const statistics = [
 ];
 // Hero Content
 export const heroContent = {
-  titleHighlight: "لینک‌های طولانی",
-  title: "رو کوتاه کن",
-  subtitle: "و لینک‌هات رو مدیریت کن!",
+  preTitle: "لینک های",
+  titleHighlightWords: ["طولانی", "شلوغ", "بی‌نظم", "پیچیده"],
+  title: "رو کوتاه و مدیریت کن !",
   description:
     "با کوتاهک، لینک‌های طولانی رو در چند ثانیه کوتاه کن. آمار دقیق بازدید، امنیت بالا و مدیریت آسان لینک‌ها، همه در یک پلتفرم ساده و حرفه‌ای.",
   placeholder: "... لینک خود را وارد کنید",

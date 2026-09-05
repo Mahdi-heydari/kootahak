@@ -34,7 +34,7 @@ function Header(): React.JSX.Element {
         aria-hidden={isMenuOpen}
         className={[
           "container left-0 right-0 px-4 mx-auto transition-all duration-token-normal ease-token-default",
-          "fixed flex justify-between z-50 items-center p-4 ",
+          "fixed flex justify-between z-50 items-center p-4",
           isScrolled
             ? "bg-background-secondary/50 md:mt-4 backdrop-blur-md shadow-token-md rounded-token-sm rounded-bl-none rounded-br-none"
             : "bg-transparent",
