@@ -8,20 +8,26 @@ import {
 } from "lucide-react";
 import Button from "../ui/Button";
 import { heroContent } from "@/contents/landing";
+import GradientWaves from "./GradientWaves";
+
+const flipWordsLoop = [
+  ...heroContent.titleHighlightWords,
+  heroContent.titleHighlightWords[0],
+];
 
 const features = [
   {
-    icon: <Link size={16} strokeWidth={1.5} />,
+    icon: <Link size={25} strokeWidth={1.5} />,
     title: heroContent.features[0].title,
     description: heroContent.features[0].description,
   },
   {
-    icon: <BarChart3 size={16} strokeWidth={1.5} />,
+    icon: <BarChart3 size={25} strokeWidth={1.5} />,
     title: heroContent.features[1].title,
     description: heroContent.features[1].description,
   },
   {
-    icon: <ShieldCheck size={16} strokeWidth={1.5} />,
+    icon: <ShieldCheck size={25} strokeWidth={1.5} />,
     title: heroContent.features[2].title,
     description: heroContent.features[2].description,
   },
@@ -29,107 +35,106 @@ const features = [
 
 const trustItems = [
   {
-    icon: <Sparkles size={12} className="text-brand" />,
+    icon: <Sparkles size={16} className="text-brand" />,
     text: heroContent.trustItems[0],
   },
   {
-    icon: <Clock size={12} className="text-brand" />,
+    icon: <Clock size={16} className="text-brand" />,
     text: heroContent.trustItems[1],
   },
 ];
+
 const Hero = (): React.JSX.Element => {
   return (
-    <section className="container min-h-screen flex flex-col-reverse gap-y-10 lg:gap-y-0 lg:flex-row items-center justify-between pb-10 sm:pb-16 lg:pb-20 pt-34 lg:pt-22">
-      {/* Right Content */}
-      <div className="flex flex-col gap-y-8 md:gap-y-10 w-full lg:w-125 xl:w-140">
-        <div className="cursor-default mx-auto lg:ml-0 text-center lg:text-right">
-          {/* Title */}
-          <div className="text-token-3xl sm:text-token-4xl md:text-token-5xl font-token-bold text-foreground leading-token-tight">
-            <div className="flex items-center justify-center lg:justify-start gap-x-2.5 flex-wrap">
-              <div className="relative inline-flex items-center justify-center px-2 sm:px-3 h-14 sm:h-15 text-brand bg-brand/10 border border-border">
-                <h1 className="block">{heroContent.titleHighlight}</h1>
-              </div>
-              <span>{heroContent.title}</span>
-            </div>
-            <p className="mt-1">{heroContent.subtitle}</p>
-          </div>
+    <section className="min-h-screen relative isolate flex flex-col items-center justify-center gap-y-8 md:gap-y-10 lg:gap-y-12 py-16 md:py-20">
+      <GradientWaves
+        horizonColor="#5227FF"
+        waveColor="#FF9FFC"
+        crestColor="#FFFFFF"
+        speed={0.4}
+        amplitude={1.7}
+        waveScale={0.6}
+        waveRatio={0.9}
+        swell={35}
+        turbulence={20}
+        tilt={1.11}
+        zoom={1.65}
+        height={5.5}
+        fogDepth={23}
+        detail="low"
+        brightness={1.25}
+        opacity={0.68}
+        mouseInteraction={true}
+        parallaxStrength={0.5}
+        grain
+        grainIntensity={0.05}
+      />
+      <div className="container">
+        {/* محتوای اصلی (متمرکز) */}
+        <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
+          {/* عنوان اصلی - حالا با کلمه‌ی متحرک flip-words */}
+          <h1 className="text-token-4xl sm:text-token-5xl md:text-token-6xl lg:text-token-7xl font-token-bold text-foreground leading-token-tight">
+            {heroContent.preTitle}{" "}
+            <span className="flip-words-wrapper">
+              <span className="flip-words-track">
+                {flipWordsLoop.map((word, index) => (
+                  <span key={index} className="flip-word">
+                    {word}
+                  </span>
+                ))}
+              </span>
+            </span>{" "}
+            {heroContent.title}
+          </h1>
 
-          {/* Description */}
-          <p className="text-token-sm sm:text-token-base font-token-normal text-muted-foreground mt-4 leading-token-relaxed max-w-lg mx-auto lg:mx-0">
+          {/* توضیحات */}
+          <p className="mt-4 text-token-sm sm:text-token-base font-token-normal text-muted-foreground/80 leading-token-relaxed max-w-xl">
             {heroContent.description}
           </p>
-        </div>
 
-        {/* Start Form */}
-        <form className="flex items-center justify-between gap-x-4 bg-card border border-border py-2.5 pr-5 pl-2.5 rounded-token-md shadow-token-sm">
-          <input
-            type="text"
-            dir="ltr"
-            className="w-full placeholder:text-end text-token-sm sm:text-token-base placeholder:font-token-normal placeholder:text-muted-foreground bg-transparent outline-none text-foreground"
-            placeholder={heroContent.placeholder}
-          />
-          <Button type="submit" variant="primary">
-            <ArrowLeftFromLine size={18} />
-          </Button>
-        </form>
+          {/* فرم ترغیب کننده کاربر */}
+          <form className="mt-8 flex items-center justify-between gap-x-4 w-full max-w-lg bg-card border border-border py-2.5 pr-5 pl-2.5 rounded-token-md shadow-token-sm transition-all duration-300 focus-within:border-brand/50 focus-within:shadow-token-md">
+            <input
+              type="text"
+              dir="ltr"
+              className="w-full placeholder:text-end text-token-sm sm:text-token-base placeholder:font-token-normal placeholder:text-muted-foreground bg-transparent outline-none text-foreground"
+              placeholder={heroContent.placeholder}
+            />
+            <Button type="submit" variant="primary">
+              <ArrowLeftFromLine size={18} />
+            </Button>
+          </form>
 
-        {/* Features */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mt-2">
-          {features.map((feature, index) => (
-            <div
-              key={index}
-              className="flex items-center gap-x-3 p-3 rounded-token-sm bg-card border border-border hover:border-brand/30 hover:bg-brand/5 transition-all duration-300 cursor-default group"
-            >
-              <div className="p-1.5 rounded-token-sm bg-brand/10 text-brand group-hover:bg-brand/20 transition-colors">
-                {feature.icon}
+          {/* ویژگی‌ها */}
+          <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 w-full max-w-3xl">
+            {features.map((feature, index) => (
+              <div
+                key={index}
+                className="flex items-center gap-x-3 p-3 rounded-token-sm bg-card border border-border hover:border-brand/30 hover:bg-brand/10 transition-all duration-300 cursor-default group"
+              >
+                <div className="p-1.5 rounded-token-sm bg-brand/10 text-brand group-hover:bg-brand/20 transition-colors">
+                  {feature.icon}
+                </div>
+                <div className="text-right">
+                  <p className="text-token-xs font-token-medium text-foreground">
+                    {feature.title}
+                  </p>
+                  <p className="text-token-xs text-muted-foreground">
+                    {feature.description}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p className="text-token-xs font-token-medium text-foreground">
-                  {feature.title}
-                </p>
-                <p className="text-token-xs text-muted-foreground">
-                  {feature.description}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Trust Badge */}
-        <div className="flex items-center justify-center lg:justify-start gap-x-6 text-token-xs text-muted-foreground/70">
-          {trustItems.map((item, index) => (
-            <span key={index} className="flex items-center gap-x-1">
-              {item.icon}
-              {item.text}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* Image Placeholder */}
-      <div className="w-2/3 sm:w-1/2 lg:w-[40%]">
-        <div className="w-full aspect-square bg-brand/5 rounded-token-xl border border-border flex items-center justify-center relative overflow-hidden">
-          <div className="absolute inset-0 bg-brand/5" />
-
-          <div className="relative z-10 flex flex-col items-center gap-y-4">
-            <span className="text-token-2xl text-foreground font-token-bold tracking-token-tight">
-              کوتاهک
-            </span>
-            <span className="text-token-xs text-muted-foreground font-token-normal">
-              کوتاه‌ترین مسیر
-            </span>
+            ))}
           </div>
 
-          {/* Decorative dots */}
-          <div className="absolute top-4 right-4 flex gap-x-1">
-            <div className="size-1.5 rounded-full bg-brand/30" />
-            <div className="size-1.5 rounded-full bg-brand/20" />
-            <div className="size-1.5 rounded-full bg-brand/10" />
-          </div>
-          <div className="absolute bottom-4 left-4 flex gap-x-1">
-            <div className="size-1.5 rounded-full bg-brand/10" />
-            <div className="size-1.5 rounded-full bg-brand/20" />
-            <div className="size-1.5 rounded-full bg-brand/30" />
+          {/* نشان اعتماد */}
+          <div className="mt-8 flex items-center justify-center gap-x-6 text-token-xs text-primary/70">
+            {trustItems.map((item, index) => (
+              <span key={index} className="flex items-center gap-x-1">
+                {item.icon}
+                {item.text}
+              </span>
+            ))}
           </div>
         </div>
       </div>
