@@ -81,7 +81,7 @@ export default function KutahakGraph(): React.JSX.Element {
                 strokeWidth={1.6}
               />
             </div>
-            <span className="mt-2.5 block text-center text-token-base text-muted-foreground">
+            <span className="mt-2.5 block text-center text-token-sm md:text-token-base text-muted-foreground">
               kut.ac/x1
             </span>
           </div>
@@ -105,7 +105,7 @@ export default function KutahakGraph(): React.JSX.Element {
                 strokeWidth={1.6}
               />
             </div>
-            <span className="mt-2.5 block text-center text-token-base text-muted-foreground">
+            <span className="mt-2.5 block text-center text-token-sm md:text-token-base text-muted-foreground">
               kut.ac/x2
             </span>
           </div>
@@ -129,7 +129,7 @@ export default function KutahakGraph(): React.JSX.Element {
                 strokeWidth={1.6}
               />
             </div>
-            <span className="mt-2.5 block text-center text-token-base text-muted-foreground">
+            <span className="mt-2.5 block text-center text-token-sm md:text-token-base text-muted-foreground">
               kut.ac/x3
             </span>
           </div>
@@ -145,10 +145,10 @@ export default function KutahakGraph(): React.JSX.Element {
           }}
         >
           <div className="flex aspect-150/78 w-full flex-col items-center justify-center rounded-token-xl border border-info bg-card text-center">
-            <div className="text-token-lg font-token-semibold leading-token-snug text-foreground">
+            <div className="text-token-base md:text-token-lg font-token-semibold leading-token-snug text-foreground">
               کوتاهک
             </div>
-            <div className="mt-1 text-token-xs leading-token-snug text-muted-foreground">
+            <div className="mt-1 text-[10px] md:text-token-xs leading-token-snug text-muted-foreground">
               مدیریت و تغیر مسیر درخواست
             </div>
           </div>
@@ -160,9 +160,9 @@ export default function KutahakGraph(): React.JSX.Element {
           data-node="dest1"
           className="absolute z-10 cursor-pointer"
           style={{
-            left: `${(28 / 340) * 100}%`,
+            left: `${(22 / 340) * 100}%`,
             top: `${(448 / 620) * 100}%`,
-            width: `${(60 / 340) * 100}%`,
+            width: `${(70 / 340) * 100}%`,
           }}
         >
           <div className="w-full">
@@ -172,7 +172,7 @@ export default function KutahakGraph(): React.JSX.Element {
                 strokeWidth={1.6}
               />
             </div>
-            <span className="mt-2.5 block text-center text-token-base text-muted-foreground whitespace-nowrap">
+            <span className="mt-2.5 block text-center text-token-sm md:text-token-base text-muted-foreground whitespace-nowrap">
               لینک اصلی ۱
             </span>
           </div>
@@ -184,9 +184,9 @@ export default function KutahakGraph(): React.JSX.Element {
           data-node="dest2"
           className="absolute z-10 cursor-pointer"
           style={{
-            left: `${(140 / 340) * 100}%`,
+            left: `${(134 / 340) * 100}%`,
             top: `${(448 / 620) * 100}%`,
-            width: `${(60 / 340) * 100}%`,
+            width: `${(70 / 340) * 100}%`,
           }}
         >
           <div className="w-full">
@@ -196,7 +196,7 @@ export default function KutahakGraph(): React.JSX.Element {
                 strokeWidth={1.6}
               />
             </div>
-            <span className="mt-2.5 block text-center text-token-base text-muted-foreground whitespace-nowrap">
+            <span className="mt-2.5 block text-center text-token-sm md:text-token-base text-muted-foreground whitespace-nowrap">
               لینک اصلی ۲
             </span>
           </div>
@@ -208,9 +208,9 @@ export default function KutahakGraph(): React.JSX.Element {
           data-node="dest3"
           className="absolute z-10 cursor-pointer"
           style={{
-            left: `${(252 / 340) * 100}%`,
+            left: `${(246 / 340) * 100}%`,
             top: `${(448 / 620) * 100}%`,
-            width: `${(60 / 340) * 100}%`,
+            width: `${(70 / 340) * 100}%`,
           }}
         >
           <div className="w-full">
@@ -220,7 +220,7 @@ export default function KutahakGraph(): React.JSX.Element {
                 strokeWidth={1.6}
               />
             </div>
-            <span className="mt-2.5 block text-center text-token-sm text-muted-foreground whitespace-nowrap">
+            <span className="mt-2.5 block text-center text-token-sm md:text-token-base text-muted-foreground whitespace-nowrap">
               لینک اصلی ۳
             </span>
           </div>
