@@ -8,9 +8,8 @@ import {
 } from "lucide-react";
 import Button from "../ui/Button";
 import { heroContent } from "@/contents/landing";
-import GradientWaves  from "./GradientWaves";
+import GradientWaves from "./GradientWaves";
 
-// کپی کلمه‌ی اول در انتهای آرایه، برای اینکه لوپ انیمیشن بدون پرش دیده بشه
 const flipWordsLoop = [
   ...heroContent.titleHighlightWords,
   heroContent.titleHighlightWords[0],
@@ -48,41 +47,38 @@ const trustItems = [
 const Hero = (): React.JSX.Element => {
   return (
     <section className="min-h-screen relative isolate flex flex-col items-center justify-center gap-y-8 md:gap-y-10 lg:gap-y-12 py-16 md:py-20">
-        <GradientWaves
-          horizonColor="#5227FF"
-          waveColor="#FF9FFC"
-          crestColor="#FFFFFF"
-          speed={0.4}
-          amplitude={1.7}
-          waveScale={0.6}
-          waveRatio={0.9}
-          swell={35}
-          turbulence={20}
-          tilt={1.11}
-          zoom={1.65}
-          height={5.5}
-          fogDepth={23}
-          detail="low"
-          brightness={1.25}
-          opacity={.68}
-          mouseInteraction={true}
-          parallaxStrength={0.5}
-          grain
-          grainIntensity={0.05}
-        />
+      <GradientWaves
+        horizonColor="#5227FF"
+        waveColor="#FF9FFC"
+        crestColor="#FFFFFF"
+        speed={0.4}
+        amplitude={1.7}
+        waveScale={0.6}
+        waveRatio={0.9}
+        swell={35}
+        turbulence={20}
+        tilt={1.11}
+        zoom={1.65}
+        height={5.5}
+        fogDepth={23}
+        detail="low"
+        brightness={1.25}
+        opacity={0.68}
+        mouseInteraction={true}
+        parallaxStrength={0.5}
+        grain
+        grainIntensity={0.05}
+      />
       <div className="container">
         {/* محتوای اصلی (متمرکز) */}
         <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
           {/* عنوان اصلی - حالا با کلمه‌ی متحرک flip-words */}
           <h1 className="text-token-4xl sm:text-token-5xl md:text-token-6xl lg:text-token-7xl font-token-bold text-foreground leading-token-tight">
             {heroContent.preTitle}{" "}
-            <span className="relative inline-block h-[1.2em] overflow-hidden align-bottom">
-              <span className="flex flex-col h-[1.2em] animate-flip-words">
+            <span className="flip-words-wrapper">
+              <span className="flip-words-track">
                 {flipWordsLoop.map((word, index) => (
-                  <span
-                    key={index}
-                    className="h-[1.2em] leading-[1.2em] text-brand shrink-0"
-                  >
+                  <span key={index} className="flip-word">
                     {word}
                   </span>
                 ))}
