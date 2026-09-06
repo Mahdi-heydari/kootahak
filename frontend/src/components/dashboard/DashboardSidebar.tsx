@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { sidebarItems } from "@/contents/dashboard";
+import { Settings } from "lucide-react";
 
 export function DashboardSidebar() {
   const pathname = usePathname();
@@ -12,9 +13,7 @@ export function DashboardSidebar() {
       {/* Logo */}
       <div className="mb-8 px-3">
         <h1 className="text-xl font-bold">کوتاهک</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          مدیریت لینک‌ها
-        </p>
+        <p className="mt-1 text-sm text-muted-foreground">مدیریت لینک‌ها</p>
       </div>
 
       {/* Navigation */}
@@ -44,10 +43,10 @@ export function DashboardSidebar() {
       {/* Footer */}
       <div className="border-t pt-4">
         <Link
-          href="/dashboard/settings"
+          href="/settings"
           className="block rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         >
-          تنظیمات
+          <Settings />
         </Link>
       </div>
     </aside>

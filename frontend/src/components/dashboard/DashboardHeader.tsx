@@ -1,10 +1,11 @@
 "use client";
 
 import { Bell, Search } from "lucide-react";
+import ThemeToggle from "../ui/theme-toggle";
 
 export default function DashboardHeader() {
   return (
-    <header className="flex h-16 items-center justify-between border-b px-6">
+    <header className="flex h-20 items-center justify-between border-b px-6">
       <div>
         <h1 className="text-xl font-semibold">داشبورد</h1>
         <p className="text-sm text-muted-foreground">
@@ -28,6 +29,8 @@ export default function DashboardHeader() {
         >
           <Bell className="size-5" />
         </button>
+
+        <ThemeToggle />
       </div>
     </header>
   );

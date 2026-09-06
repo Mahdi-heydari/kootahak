@@ -11,7 +11,7 @@ export default function LinkToolbar() {
         <input
           type="text"
           placeholder="جستجوی لینک..."
-          className="h-11 w-full rounded-xl border bg-background pe-10 ps-4 text-sm outline-none transition placeholder:text-muted-foreground focus:border-primary"
+          className="h-11 w-full rounded-xl border bg-background pe-10 pr-10 text-sm outline-none transition placeholder:text-muted-foreground focus:border-primary"
         />
       </div>
 
