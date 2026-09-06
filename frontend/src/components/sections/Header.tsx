@@ -38,7 +38,6 @@ function Header(): React.JSX.Element {
           isScrolled
             ? "bg-background-secondary/50 md:mt-4 backdrop-blur-md shadow-token-md rounded-token-sm rounded-bl-none rounded-br-none"
             : "bg-transparent",
-          isMenuOpen ? "border-b-0" : "border-b",
         ].join(" ")}
       >
         <div className="flex items-center gap-15">

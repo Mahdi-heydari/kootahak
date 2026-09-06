@@ -34,7 +34,7 @@ export interface GradientWavesProps {
   zoom?: number;
   height?: number;
   fogDepth?: number;
-  detail?: "low" | "medium" | "high";
+  detail?: "ultra-low" | "low" | "medium" | "high";
   brightness?: number;
   opacity?: number;
   mouseInteraction?: boolean;

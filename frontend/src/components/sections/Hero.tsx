@@ -9,6 +9,7 @@ import {
 import Button from "../ui/Button";
 import { heroContent } from "@/contents/landing";
 import GradientWaves from "./GradientWaves";
+import { useDeviceInfo, gradientWavesPresets } from "@/hooks/useDeviceInfo";
 
 const flipWordsLoop = [
   ...heroContent.titleHighlightWords,
@@ -45,6 +46,9 @@ const trustItems = [
 ];
 
 const Hero = (): React.JSX.Element => {
+  const { tier } = useDeviceInfo();
+  const perfPreset = gradientWavesPresets[tier];
+
   return (
     <section className="min-h-screen relative isolate flex flex-col items-center justify-center gap-y-8 md:gap-y-10 lg:gap-y-12 py-16 md:py-20">
       <GradientWaves
@@ -61,18 +65,15 @@ const Hero = (): React.JSX.Element => {
         zoom={1.65}
         height={5.5}
         fogDepth={23}
-        detail="low"
         brightness={1.25}
-        opacity={0.68}
-        mouseInteraction={true}
-        parallaxStrength={0.5}
-        grain
+        opacity={1}
         grainIntensity={0.05}
+        {...perfPreset}
       />
       <div className="container">
         {/* محتوای اصلی (متمرکز) */}
         <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
-          {/* عنوان اصلی - حالا با کلمه‌ی متحرک flip-words */}
+          {/* flip-words */}
           <h1 className="text-token-4xl sm:text-token-5xl md:text-token-6xl lg:text-token-7xl font-token-bold text-foreground leading-token-tight">
             {heroContent.preTitle}{" "}
             <span className="flip-words-wrapper">

@@ -1,20 +1,29 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo, useCallback } from "react";
 import { Renderer, Program, Mesh, Triangle } from "ogl";
 import type { GradientWavesProps, Context, Uniforms } from "@/types";
 
+const colorCache = new Map<string, [number, number, number]>();
+
 const hexToRgb = (hex: string): [number, number, number] => {
+  if (colorCache.has(hex)) return colorCache.get(hex)!;
+
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   if (!result) return [1, 1, 1];
-  return [
+
+  const rgb: [number, number, number] = [
     parseInt(result[1], 16) / 255,
     parseInt(result[2], 16) / 255,
     parseInt(result[3], 16) / 255,
   ];
+
+  colorCache.set(hex, rgb);
+  return rgb;
 };
 
 const detailToSteps = (detail: string): number => {
-  if (detail === "low") return 40.0;
-  if (detail === "high") return 110.0;
+  if (detail === "ultra-low") return 10.0;
+  if (detail === "low") return 20.0;
+  if (detail === "medium") return 40.0;
   return 70.0;
 };
 
@@ -61,17 +70,17 @@ float hash21(vec2 p) {
 }
 
 float plasma(vec3 r, vec2 freq, vec4 tc) {
-  float mx = r.x + tc.x;
-  mx += uSwell * sin((r.y + mx) / 20.0 + tc.y);
-  float my = r.y - tc.z;
-  my += uTurbulence * cos(r.x / 23.0 + tc.w);
-  return r.z - (sin(mx * freq.x) * uAmplitude + sin(my * freq.y) * uAmplitude + uHeight);
+  float mx = r.x + tc.x + uSwell * sin((r.y + r.x + tc.x) / 20.0 + tc.y);
+  float my = r.y - tc.z + uTurbulence * cos(r.x / 23.0 + tc.w);
+  // استفاده از uAmplitude یک بار به جای دو بار
+  return r.z - uAmplitude * (sin(mx * freq.x) + sin(my * freq.y)) - uHeight;
 }
 
 float raymarch(vec3 pos, vec3 dir, vec2 freq, vec4 tc) {
   float dist = 0.0;
+  int steps = int(uSteps);
   for (int i = 0; i < 128; i++) {
-    if (float(i) >= uSteps) break;
+    if (i >= steps) break;
     float dscene = plasma(pos + dist * dir, freq, tc);
     if (abs(dscene) < 0.1) break;
     dist += 0.9 * dscene;
@@ -129,7 +138,6 @@ void main() {
   fragColor = vec4(col * alpha, alpha);
 }
 `;
-
 const ctxMap = new WeakMap<HTMLDivElement, Context>();
 
 const GradientWaves: React.FC<GradientWavesProps> = ({
@@ -157,6 +165,28 @@ const GradientWaves: React.FC<GradientWavesProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const enableMouseRef = useRef(mouseInteraction);
+
+  const steps = useMemo(() => detailToSteps(detail), [detail]);
+
+  const setSize = useCallback(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const ctx = ctxMap.get(container);
+    if (!ctx) return;
+
+    const { renderer, program, mesh } = ctx;
+    const gl = renderer.gl;
+
+    const rect = container.getBoundingClientRect();
+    const w = Math.max(1, Math.floor(rect.width));
+    const h = Math.max(1, Math.floor(rect.height));
+    renderer.setSize(w, h);
+
+    const res = (program.uniforms as Uniforms).iResolution.value;
+    res[0] = gl.drawingBufferWidth;
+    res[1] = gl.drawingBufferHeight;
+  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -212,17 +242,6 @@ const GradientWaves: React.FC<GradientWavesProps> = ({
     const mesh = new Mesh(gl, { geometry, program });
     ctxMap.set(container, { renderer, program, mesh });
 
-    const setSize = () => {
-      const rect = container.getBoundingClientRect();
-      const w = Math.max(1, Math.floor(rect.width));
-      const h = Math.max(1, Math.floor(rect.height));
-      renderer.setSize(w, h);
-      const res = (program.uniforms as Uniforms).iResolution.value;
-      res[0] = gl.drawingBufferWidth;
-      res[1] = gl.drawingBufferHeight;
-      renderer.render({ scene: mesh });
-    };
-
     const ro = new ResizeObserver(setSize);
     ro.observe(container);
     setSize();
@@ -235,10 +254,12 @@ const GradientWaves: React.FC<GradientWavesProps> = ({
       targetMouse[0] = (e.clientX - rect.left) / rect.width;
       targetMouse[1] = 1.0 - (e.clientY - rect.top) / rect.height;
     };
+
     const onPointerLeave = () => {
       targetMouse[0] = 0.5;
       targetMouse[1] = 0.5;
     };
+
     canvas.addEventListener("pointermove", onPointerMove);
     canvas.addEventListener("pointerleave", onPointerLeave);
 
@@ -261,9 +282,11 @@ const GradientWaves: React.FC<GradientWavesProps> = ({
     };
 
     const tryStart = () => {
-      if (isVisible && isPageVisible && raf === 0)
+      if (isVisible && isPageVisible && raf === 0) {
         raf = requestAnimationFrame(loop);
+      }
     };
+
     const tryStop = () => {
       if (raf !== 0) {
         cancelAnimationFrame(raf);
@@ -303,13 +326,14 @@ const GradientWaves: React.FC<GradientWavesProps> = ({
       }
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
-  }, []);
-
+  }, [setSize]);
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+
     const ctx = ctxMap.get(container);
     if (!ctx) return;
+
     const { program } = ctx;
     const u = program.uniforms as Uniforms;
 
@@ -325,19 +349,22 @@ const GradientWaves: React.FC<GradientWavesProps> = ({
     u.uZoom.value = zoom;
     u.uHeight.value = height;
     u.uFogDepth.value = fogDepth;
-    u.uSteps.value = detailToSteps(detail);
+    u.uSteps.value = steps;
     u.uBrightness.value = brightness;
     u.uOpacity.value = opacity;
     u.uGrain.value = grain ? 1.0 : 0.0;
     u.uGrainIntensity.value = grainIntensity;
     u.uParallax.value = parallaxStrength;
     u.uEnableMouse.value = mouseInteraction;
+
     const hc = u.uHorizonColor.value;
     const wc = u.uWaveColor.value;
     const cc = u.uCrestColor.value;
+
     const h = hexToRgb(horizonColor);
     const w = hexToRgb(waveColor);
     const cr = hexToRgb(crestColor);
+
     hc[0] = h[0];
     hc[1] = h[1];
     hc[2] = h[2];
@@ -361,7 +388,7 @@ const GradientWaves: React.FC<GradientWavesProps> = ({
     zoom,
     height,
     fogDepth,
-    detail,
+    steps,
     brightness,
     opacity,
     grain,
