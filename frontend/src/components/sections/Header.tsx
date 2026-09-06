@@ -14,11 +14,11 @@ function Header(): React.JSX.Element {
   const [isLogined, setLogined] = useState<boolean>(false);
   const [isMenuOpen, setMenuOpen] = useState<boolean>(false);
   const isScrolled = useScroll(70);
-  const router = useRouter()
+  const router = useRouter();
 
   const handleToggleLogin = (): void => {
     setLogined((prev) => !prev);
-    router.push("/login")
+    router.push("/login");
   };
 
   const handleToggleMenu = (): void => {
@@ -68,16 +68,15 @@ function Header(): React.JSX.Element {
         <div className="hidden md:flex items-center gap-3">
           <ThemeToggle />
 
-          {isLogined ? (
-            <div className="relative group">
-              <User />
-              <Profile user={{ name: "زانیار رحمانی", phone: "09145562747" }} />
-            </div>
-          ) : (
-            <Button variant="outline" size="md" onClick={handleToggleLogin}>
-              ورود | ثبت نام
-            </Button>
-          )}
+          {/* بعدا از این تمپلیت استفاده میکنیم صرفا کامنت کردم که تاگل غیرفعال بشه  */}
+          {/* <div className="relative group">
+            <User />
+            <Profile user={{ name: "زانیار رحمانی", phone: "09145562747" }} />
+          </div> */}
+
+          <Button variant="outline" size="md" onClick={handleToggleLogin}>
+            ورود | ثبت نام
+          </Button>
         </div>
 
         <button
@@ -117,23 +116,19 @@ function Header(): React.JSX.Element {
           </ul>
 
           <div className="flex flex-col items-center justify-between gap-2 w-full pt-2 border-t border-border">
-            {isLogined ? (
-              <div className="relative group w-full">
-                {/* <User /> */}
-                <Profile
-                  user={{ name: "زانیار رحمانی", phone: "09145562747" }}
-                />
-              </div>
-            ) : (
-              <Button
-                variant="outline"
-                size="md"
-                className="w-full"
-                onClick={handleToggleLogin}
-              >
-                ورود | ثبت نام
-              </Button>
-            )}
+            {/* بعدا از این تمپلیت استفاده میکنیم صرفا کامنت کردم که تاگل غیرفعال بشه  */}
+            {/* <div className="relative group w-full">
+              <Profile user={{ name: "زانیار رحمانی", phone: "09145562747" }} />
+            </div> */}
+
+            <Button
+              variant="outline"
+              size="md"
+              className="w-full"
+              onClick={handleToggleLogin}
+            >
+              ورود | ثبت نام
+            </Button>
 
             <ThemeToggle />
           </div>
