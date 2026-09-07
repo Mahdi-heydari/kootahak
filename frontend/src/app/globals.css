@@ -6,6 +6,9 @@
 @import "../styles/tokens/shadows.css";
 @import "../styles/tokens/motion.css";
 
+@import "../styles/kutahak-graph.css";
+@import "../styles/GradientWaves.css";
+
 :root {
   --theme-change-x: 0;
   --theme-change-y: 0;
@@ -278,5 +281,59 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+.flip-words-wrapper {
+  --flip-word-height: 1.2em; /* ارتفاع هر کلمه/خط - اگه فونت عوض شد این باید دوباره تنظیم بشه*/
+  --flip-cycle-duration: 20s;
+  --flip-easing: cubic-bezier(1, 0, 0.471, 0.998);
+
+  position: relative;
+  display: inline-block;
+  height: var(--flip-word-height);
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.flip-words-track {
+  display: flex;
+  flex-direction: column;
+  height: var(--flip-word-height);
+  animation: flip-words var(--flip-cycle-duration) var(--flip-easing) infinite;
+}
+
+.flip-word {
+  height: var(--flip-word-height);
+  line-height: var(--flip-word-height);
+  flex-shrink: 0;
+  color: var(--brand, #5227ff);
+}
+
+@keyframes flip-words {
+  0%,
+  18.75% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(calc(var(--flip-word-height) * -1));
+  }
+  43.75% {
+    transform: translateY(calc(var(--flip-word-height) * -1));
+  }
+  50% {
+    transform: translateY(calc(var(--flip-word-height) * -2));
+  }
+  68.75% {
+    transform: translateY(calc(var(--flip-word-height) * -2));
+  }
+  75% {
+    transform: translateY(calc(var(--flip-word-height) * -3));
+  }
+  93.75% {
+    transform: translateY(calc(var(--flip-word-height) * -3));
+  }
+  100% {
+    transform: translateY(calc(var(--flip-word-height) * -4));
   }
 }
