@@ -1,0 +1,157 @@
+.kutahak-graphic .line {
+  stroke: var(--color-muted);
+  stroke-width: 2.5;
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+
+.kutahak-graphic .pulse-path {
+  stroke: var(--info);
+  stroke-width: 2.8;
+  fill: none;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 0.14 1.4;
+  stroke-dashoffset: 0.14;
+  opacity: 0;
+  animation: kutahak-travel 6s linear infinite;
+  filter: drop-shadow(0 0 5px color-mix(in srgb, var(--info) 45%, transparent));
+}
+
+.kutahak-graphic [data-pulse="branch1"] .pulse-path {
+  animation-delay: 0.2s;
+}
+.kutahak-graphic [data-pulse="branch2"] .pulse-path {
+  animation-delay: 1.3s;
+}
+.kutahak-graphic [data-pulse="branch3"] .pulse-path {
+  animation-delay: 2.5s;
+}
+
+@keyframes kutahak-travel {
+  0% {
+    stroke-dashoffset: 0.14;
+    opacity: 0;
+  }
+  4% {
+    opacity: 1;
+  }
+  52% {
+    stroke-dashoffset: -1.26;
+    opacity: 1;
+  }
+  56% {
+    opacity: 0;
+  }
+  100% {
+    stroke-dashoffset: -1.26;
+    opacity: 0;
+  }
+}
+
+.kutahak-graphic [data-kutahak-node]:hover .node-box {
+  border-color: var(--info);
+  background: var(--card-hover);
+}
+
+.kutahak-graphic:has([data-kutahak-node]:hover) [data-connection] {
+  opacity: 0.2;
+  transition: opacity 0.3s ease;
+}
+
+.kutahak-graphic:has([data-kutahak-node]:hover) [data-pulse] {
+  opacity: 0 !important;
+  transition: opacity 0.3s ease;
+}
+
+.kutahak-graphic:has([data-kutahak-node]:hover) [data-kutahak-node] {
+  filter: brightness(0.8);
+  transition: filter 0.3s ease;
+}
+
+.kutahak-graphic:has([data-kutahak-node]:hover) [data-kutahak-node]:hover {
+  filter: none;
+}
+
+.kutahak-graphic:has([data-node="link1"]:hover)
+  [data-connection][data-branch="1"],
+.kutahak-graphic:has([data-node="dest1"]:hover)
+  [data-connection][data-branch="1"],
+.kutahak-graphic:has([data-node="link1"]:hover) [data-pulse][data-branch="1"],
+.kutahak-graphic:has([data-node="dest1"]:hover) [data-pulse][data-branch="1"] {
+  opacity: 1 !important;
+}
+.kutahak-graphic:has([data-node="link1"]:hover) [data-node="link1"],
+.kutahak-graphic:has([data-node="link1"]:hover) [data-node="dest1"],
+.kutahak-graphic:has([data-node="dest1"]:hover) [data-node="link1"],
+.kutahak-graphic:has([data-node="dest1"]:hover) [data-node="dest1"] {
+  filter: none !important;
+}
+
+.kutahak-graphic:has([data-node="link2"]:hover)
+  [data-connection][data-branch="2"],
+.kutahak-graphic:has([data-node="dest2"]:hover)
+  [data-connection][data-branch="2"],
+.kutahak-graphic:has([data-node="link2"]:hover) [data-pulse][data-branch="2"],
+.kutahak-graphic:has([data-node="dest2"]:hover) [data-pulse][data-branch="2"] {
+  opacity: 1 !important;
+}
+.kutahak-graphic:has([data-node="link2"]:hover) [data-node="link2"],
+.kutahak-graphic:has([data-node="link2"]:hover) [data-node="dest2"],
+.kutahak-graphic:has([data-node="dest2"]:hover) [data-node="link2"],
+.kutahak-graphic:has([data-node="dest2"]:hover) [data-node="dest2"] {
+  filter: none !important;
+}
+
+.kutahak-graphic:has([data-node="link3"]:hover)
+  [data-connection][data-branch="3"],
+.kutahak-graphic:has([data-node="dest3"]:hover)
+  [data-connection][data-branch="3"],
+.kutahak-graphic:has([data-node="link3"]:hover) [data-pulse][data-branch="3"],
+.kutahak-graphic:has([data-node="dest3"]:hover) [data-pulse][data-branch="3"] {
+  opacity: 1 !important;
+}
+.kutahak-graphic:has([data-node="link3"]:hover) [data-node="link3"],
+.kutahak-graphic:has([data-node="link3"]:hover) [data-node="dest3"],
+.kutahak-graphic:has([data-node="dest3"]:hover) [data-node="link3"],
+.kutahak-graphic:has([data-node="dest3"]:hover) [data-node="dest3"] {
+  filter: none !important;
+}
+
+.kutahak-graphic:has([data-node="link1"]:hover)
+  [data-pulse="branch1"]
+  .pulse-path,
+.kutahak-graphic:has([data-node="dest1"]:hover)
+  [data-pulse="branch1"]
+  .pulse-path,
+.kutahak-graphic:has([data-node="link2"]:hover)
+  [data-pulse="branch2"]
+  .pulse-path,
+.kutahak-graphic:has([data-node="dest2"]:hover)
+  [data-pulse="branch2"]
+  .pulse-path,
+.kutahak-graphic:has([data-node="link3"]:hover)
+  [data-pulse="branch3"]
+  .pulse-path,
+.kutahak-graphic:has([data-node="dest3"]:hover)
+  [data-pulse="branch3"]
+  .pulse-path {
+  animation-duration: 1.5s;
+  stroke-width: 3.6;
+  filter: drop-shadow(0 0 12px var(--info));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kutahak-graphic .pulse-path {
+    animation: none !important;
+    opacity: 0.25 !important;
+    stroke-dasharray: none;
+  }
+
+  .kutahak-graphic [data-kutahak-node],
+  .kutahak-graphic .node-box,
+  .kutahak-graphic [data-connection],
+  .kutahak-graphic [data-pulse] {
+    transition: none !important;
+  }
+}

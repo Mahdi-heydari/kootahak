@@ -1,17 +1,16 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { ThemeProvider } from "next-themes";
+import localFont from "next/font/local";
 
 import "./globals.css";
 import { Providers } from "@/providers/providers";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const iranyekanX = localFont({
+  src: "../../public/fonts/IRANYekanXVFaNumVF.DBKnep-K.woff2",
+  variable: "--font-iranyekan-x",
+  display: "swap",
+  weight: "100 900",
+  style: "normal",
 });
 
 export const metadata: Metadata = {
@@ -31,9 +30,14 @@ export default function RootLayout({
     <html
       lang="fa"
       dir="rtl"
-      className={`${geistSans.variable} ${geistMono.variable}`}
+      className={`${iranyekanX.variable}`}
+      suppressHydrationWarning
     >
-      <body>  <Providers>{children}</Providers></body>
+      <body>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+        </ThemeProvider>
+      </body>
     </html>
   );
 }
