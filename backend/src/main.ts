@@ -4,12 +4,18 @@ import cookieParser from "cookie-parser";
 import { RequestMethod, ValidationPipe } from "@nestjs/common";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { Logger } from "nestjs-pino";
+import helmet from "helmet";
+import type { Express } from "express";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   });
   app.useLogger(app.get(Logger));
+  app.use(helmet());
+  const expressApp = app.getHttpAdapter().getInstance() as Express;
+  expressApp.disable("x-powered-by");
+
   // The redirect entrypoint (`GET /:shortCode`, RedirectController) must live at
   // the root so short links stay short — keep it out of the global `api` prefix.
   app.setGlobalPrefix("api", {
@@ -20,6 +26,7 @@ async function bootstrap() {
     origin: process.env.FRONT_END_URL,
     credentials: true,
   });
+
   app.use(cookieParser());
 
   app.useGlobalPipes(
