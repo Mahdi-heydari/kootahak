@@ -9,6 +9,7 @@ import {
 import { LinksService } from "./links.service";
 import { getLinkDto, VisitContext } from "./dto";
 import type { Request } from "express";
+import { Throttle } from "@nestjs/throttler";
 
 /**
  * Public redirect entrypoint for short links.
@@ -32,6 +33,7 @@ export class RedirectController {
   @ApiParam({ name: "shortCode", example: "abc123" })
   @ApiFoundResponse({ description: "Redirects (302) to the original URL" })
   @ApiNotFoundResponse({ description: "No link exists for this short code" })
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
   async redirect(@Param() getData: getLinkDto, @Req() request: Request) {
     const visitContext: VisitContext = {
       ip: request.ip ?? "unknown",

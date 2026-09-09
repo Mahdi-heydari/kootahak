@@ -18,8 +18,11 @@ async function bootstrap() {
   // --- Security middleware (must run before routing) ---
   app.use(helmet());
   app.use(cookieParser());
+  const expressInstance = app.getHttpAdapter().getInstance() as Express;
   // Don't advertise the framework to clients.
-  (app.getHttpAdapter().getInstance() as Express).disable("x-powered-by");
+  expressInstance.disable("x-powered-by");
+  // Trust the first proxy hop (nginx) so req.ip is the real client IP used by the rate limiter.
+  expressInstance.set("trust proxy", 1);
 
   app.enableCors({
     origin: process.env.FRONT_END_URL,

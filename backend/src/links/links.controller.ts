@@ -9,6 +9,7 @@ import {
 } from "@nestjs/swagger";
 import { LinksService } from "./links.service";
 import { CreateLinkDto } from "./dto";
+import { Throttle } from "@nestjs/throttler";
 import { JwtAuthGuard } from "../auth/jwt/jwt-auth.guard";
 import { CurrentUser } from "../auth/jwt/current-user.decorator";
 import type { User } from "../generated/prisma/client";
@@ -21,6 +22,7 @@ export class LinksController {
   constructor(private readonly linksService: LinksService) {}
 
   @Post()
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
   @ApiOperation({ summary: "Create a new shortened link for the current user" })
   @ApiCreatedResponse({ description: "The link was created successfully" })
   @ApiConflictResponse({

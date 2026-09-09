@@ -11,6 +11,9 @@ import { ShortCodeModule } from "./short-code/short-code.module";
 import { RedisModule } from "./redis/redis.module";
 import { BullMqModule } from "./bullmq/bullMq.module";
 import { VisitsModule } from "./visits/visits.module";
+import { APP_GUARD } from "@nestjs/core";
+import { ThrottlerGuard } from "@nestjs/throttler";
+import { throttlerConfig } from "./redis/throttler.provider";
 
 @Module({
   imports: [
@@ -38,8 +41,9 @@ import { VisitsModule } from "./visits/visits.module";
     RedisModule,
     BullMqModule,
     VisitsModule,
+    throttlerConfig,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],
 })
 export class AppModule {}
