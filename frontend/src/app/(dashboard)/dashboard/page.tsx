@@ -1,19 +1,23 @@
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import LinkToolbar from "@/components/dashboard/LinkToolbar";
-import LinkList from "@/components/dashboard/LinkList";
+﻿import { Suspense } from "react";
+import DashboardLinksSection from "@/components/dashboard/DashboardLinksSection";
 
-import { mockLinks } from "@/contents/dashboard";
+function DashboardLinksFallback() {
+  return (
+    <div className="space-y-6">
+      <div className="h-24 rounded-token-md bg-muted animate-pulse" />
+      <div className="h-48 rounded-token-md bg-muted animate-pulse" />
+    </div>
+  );
+}
 
 export default function DashboardPage() {
   return (
-    <div>
-      <DashboardHeader />
-
-      <main className="space-y-8 p-6">
-        <LinkToolbar />
-
-        <LinkList links={mockLinks} />
-      </main>
+    <div className="space-y-6 p-4 sm:space-y-8 sm:p-6">
+      <Suspense fallback={<DashboardLinksFallback />}>
+        <div className="space-y-6 sm:space-y-8">
+          <DashboardLinksSection />
+        </div>
+      </Suspense>
     </div>
   );
 }

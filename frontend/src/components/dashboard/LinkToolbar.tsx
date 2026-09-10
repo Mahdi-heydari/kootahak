@@ -1,44 +1,129 @@
 "use client";
 
 import { Filter, Plus, Search, SlidersHorizontal } from "lucide-react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import Button from "../ui/Button";
 
-export default function LinkToolbar() {
+const SEARCH_DEBOUNCE_MS = 350;
+
+const inputClassName =
+  "h-11 w-full rounded-token-md border border-border bg-card px-4 text-token-sm text-foreground shadow-token-sm transition-colors duration-token-normal placeholder:text-muted-foreground focus:border-brand/30 focus:outline-none sm:h-12";
+
+interface LinkToolbarProps {
+  onCreateClick?: () => void;
+}
+
+export default function LinkToolbar({ onCreateClick }: LinkToolbarProps) {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const urlSearch = searchParams.get("search") || "";
+  const status = searchParams.get("status") || "";
+  const sort = searchParams.get("sort") || "";
+
+  const [localSearch, setLocalSearch] = useState(urlSearch);
+
+  useEffect(() => {
+    setLocalSearch(urlSearch);
+  }, [urlSearch]);
+
+  const createQuery = useCallback(
+    (updates: Record<string, string>) => {
+      const params = new URLSearchParams(searchParams.toString());
+      for (const [key, value] of Object.entries(updates)) {
+        if (value) {
+          params.set(key, value);
+        } else {
+          params.delete(key);
+        }
+      }
+      const query = params.toString();
+      return query ? `?${query}` : "";
+    },
+    [searchParams],
+  );
+
+  const pushQuery = useCallback(
+    (updates: Record<string, string>) => {
+      router.replace(`${pathname}${createQuery(updates)}`, { scroll: false });
+    },
+    [router, pathname, createQuery],
+  );
+
+  useEffect(() => {
+    if (localSearch === urlSearch) return;
+
+    const timer = setTimeout(() => {
+      pushQuery({ search: localSearch });
+    }, SEARCH_DEBOUNCE_MS);
+
+    return () => clearTimeout(timer);
+  }, [localSearch, urlSearch, pushQuery]);
+
+  const toggleStatus = () => {
+    const next = status === "active" ? "inactive" : status === "inactive" ? "" : "active";
+    pushQuery({ status: next });
+  };
+
+  const cycleSort = () => {
+    const next = sort === "newest" ? "oldest" : sort === "oldest" ? "popular" : sort === "popular" ? "" : "newest";
+    pushQuery({ sort: next });
+  };
+
+  const sortLabel =
+    sort === "oldest" ? "قدیمی‌ترین" : sort === "popular" ? "محبوب‌ترین" : sort === "newest" ? "جدیدترین" : "مرتب‌سازی";
+
+  const statusLabel =
+    status === "inactive" ? "غیرفعال" : status === "active" ? "فعال" : "وضعیت";
+
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <div className="relative flex-1 sm:max-w-md">
+    <div className="flex flex-col gap-3">
+      <div className="relative w-full">
         <Search className="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
 
         <input
           type="text"
           placeholder="جستجوی لینک..."
-          className="h-11 w-full rounded-xl border bg-background pe-10 pr-10 text-sm outline-none transition placeholder:text-muted-foreground focus:border-primary"
+          value={localSearch}
+          onChange={(e) => setLocalSearch(e.target.value)}
+          className={`${inputClassName} pe-10 pr-10`}
         />
       </div>
 
-      <div className="flex items-center gap-2">
-        <button
+      <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
+        <Button
           type="button"
-          className="flex h-11 items-center gap-2 rounded-xl border px-4 text-sm transition hover:bg-muted"
+          variant={status ? "outline" : "secondary"}
+          size="sm"
+          onClick={toggleStatus}
+          className="min-h-11 w-full gap-2 sm:w-auto"
         >
-          <Filter className="size-4" />
-          <span>وضعیت</span>
-        </button>
+          <Filter className="size-4 shrink-0" />
+          <span className="truncate">{statusLabel}</span>
+        </Button>
 
-        <button
+        <Button
           type="button"
-          className="flex h-11 items-center gap-2 rounded-xl border px-4 text-sm transition hover:bg-muted"
+          variant={sort ? "outline" : "secondary"}
+          size="sm"
+          onClick={cycleSort}
+          className="min-h-11 w-full gap-2 sm:w-auto"
         >
-          <SlidersHorizontal className="size-4" />
-          <span>مرتب‌سازی</span>
-        </button>
+          <SlidersHorizontal className="size-4 shrink-0" />
+          <span className="truncate">{sortLabel}</span>
+        </Button>
 
-        <button
+        <Button
           type="button"
-          className="flex h-11 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+          size="sm"
+          onClick={onCreateClick}
+          className="col-span-2 min-h-11 w-full gap-2 sm:col-span-1 sm:ms-auto sm:w-auto"
         >
-          <Plus className="size-4" />
+          <Plus className="size-4 shrink-0" />
           <span>لینک جدید</span>
-        </button>
+        </Button>
       </div>
     </div>
   );

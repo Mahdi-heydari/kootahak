@@ -1,9 +1,9 @@
-"use client";
+﻿"use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Button from "@/components/ui/Button";
 
 const profileSchema = z.object({
   name: z.string().min(2, "نام حداقل ۲ کاراکتر"),
@@ -24,139 +24,135 @@ const passwordSchema = z
 type ProfileForm = z.infer<typeof profileSchema>;
 type PasswordForm = z.infer<typeof passwordSchema>;
 
-export default function SettingsPage() {
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+const inputClassName =
+  "h-12 w-full rounded-token-md border border-border bg-card px-4 text-token-sm text-foreground shadow-token-sm transition-colors duration-token-normal placeholder:text-muted-foreground focus:border-border-hover focus:outline-none disabled:cursor-not-allowed disabled:opacity-60";
 
+export default function SettingsPage() {
   const profileForm = useForm<ProfileForm>({
     resolver: zodResolver(profileSchema),
-    defaultValues: { name: "", email: "" }, // بعداً از user واقعی
+    defaultValues: { name: "", email: "" },
   });
 
   const passwordForm = useForm<PasswordForm>({
     resolver: zodResolver(passwordSchema),
   });
 
-  const onAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setAvatarPreview(URL.createObjectURL(file));
-    // بعداً آپلود به API
-  };
-
   return (
-    <main className="mx-auto max-w-2xl space-y-10 p-6">
+    <div className="mx-auto max-w-2xl space-y-8 p-4 sm:space-y-10 sm:p-6">
       <div>
-        <h1 className="text-2xl font-bold">تنظیمات</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+        <h1 className="h2">تنظیمات</h1>
+        <p className="mt-1 text-token-sm text-muted-foreground">
           مدیریت پروفایل و امنیت حساب
         </p>
       </div>
 
-      {/* عکس پروفایل */}
-      <section className="rounded-2xl border p-6 space-y-4">
-        <h2 className="font-semibold">عکس پروفایل</h2>
-        <div className="flex items-center gap-4">
-          <div className="size-20 overflow-hidden rounded-full bg-muted">
-            {avatarPreview ? (
-              <img src={avatarPreview} alt="avatar" className="size-full object-cover" />
-            ) : (
-              <div className="flex size-full items-center justify-center text-muted-foreground">
-                بدون عکس
-              </div>
-            )}
-          </div>
-          <label className="cursor-pointer rounded-lg border px-4 py-2 text-sm hover:bg-muted">
-            انتخاب عکس
-            <input type="file" accept="image/*" className="hidden" onChange={onAvatarChange} />
-          </label>
-        </div>
-      </section>
-
-      {/* اطلاعات پروفایل */}
-      <section className="rounded-2xl border p-6 space-y-4">
-        <h2 className="font-semibold">اطلاعات حساب</h2>
+      {/* اطلاعات حساب */}
+      <section className="surface rounded-token-xl p-6 shadow-token-sm">
+        <h2 className="h3">اطلاعات حساب</h2>
         <form
           onSubmit={profileForm.handleSubmit((data) => {
             console.log("profile", data);
-            // API update profile
           })}
-          className="space-y-4"
+          className="mt-4 space-y-4"
+          noValidate
         >
-          <div>
-            <label className="text-sm">نام</label>
+          <div className="space-y-2">
+            <label className="label block text-foreground" htmlFor="name">
+              نام
+            </label>
             <input
+              id="name"
               {...profileForm.register("name")}
-              className="mt-1 w-full rounded-lg border bg-background px-3 py-2"
+              className={inputClassName}
+              aria-invalid={Boolean(profileForm.formState.errors.name)}
             />
             {profileForm.formState.errors.name && (
-              <p className="mt-1 text-sm text-red-500">
+              <p className="text-token-xs font-token-medium text-error">
                 {profileForm.formState.errors.name.message}
               </p>
             )}
           </div>
-          <div>
-            <label className="text-sm">ایمیل</label>
+          <div className="space-y-2">
+            <label className="label block text-foreground" htmlFor="email">
+              ایمیل
+            </label>
             <input
+              id="email"
               type="email"
+              autoComplete="email"
               {...profileForm.register("email")}
-              className="mt-1 w-full rounded-lg border bg-background px-3 py-2"
+              className={inputClassName}
+              aria-invalid={Boolean(profileForm.formState.errors.email)}
             />
             {profileForm.formState.errors.email && (
-              <p className="mt-1 text-sm text-red-500">
+              <p className="text-token-xs font-token-medium text-error">
                 {profileForm.formState.errors.email.message}
               </p>
             )}
           </div>
-          <button type="submit" className="rounded-lg bg-primary px-4 py-2 text-primary-foreground">
+          <Button type="submit" size="sm">
             ذخیره تغییرات
-          </button>
+          </Button>
         </form>
       </section>
 
       {/* تغییر رمز */}
-      <section className="rounded-2xl border p-6 space-y-4">
-        <h2 className="font-semibold">تغییر رمز عبور</h2>
+      <section className="surface rounded-token-xl p-6 shadow-token-sm">
+        <h2 className="h3">تغییر رمز عبور</h2>
         <form
           onSubmit={passwordForm.handleSubmit((data) => {
             console.log("password", data);
-            // API change password
           })}
-          className="space-y-4"
+          className="mt-4 space-y-4"
+          noValidate
         >
-          <div>
-            <label className="text-sm">رمز فعلی</label>
+          <div className="space-y-2">
+            <label className="label block text-foreground" htmlFor="currentPassword">
+              رمز فعلی
+            </label>
             <input
+              id="currentPassword"
               type="password"
+              autoComplete="current-password"
               {...passwordForm.register("currentPassword")}
-              className="mt-1 w-full rounded-lg border bg-background px-3 py-2"
+              className={inputClassName}
             />
           </div>
-          <div>
-            <label className="text-sm">رمز جدید</label>
+          <div className="space-y-2">
+            <label className="label block text-foreground" htmlFor="newPassword">
+              رمز جدید
+            </label>
             <input
+              id="newPassword"
               type="password"
+              autoComplete="new-password"
               {...passwordForm.register("newPassword")}
-              className="mt-1 w-full rounded-lg border bg-background px-3 py-2"
+              className={inputClassName}
             />
           </div>
-          <div>
-            <label className="text-sm">تکرار رمز جدید</label>
+          <div className="space-y-2">
+            <label className="label block text-foreground" htmlFor="confirmPassword">
+              تکرار رمز جدید
+            </label>
             <input
+              id="confirmPassword"
               type="password"
+              autoComplete="new-password"
               {...passwordForm.register("confirmPassword")}
-              className="mt-1 w-full rounded-lg border bg-background px-3 py-2"
+              className={inputClassName}
+              aria-invalid={Boolean(passwordForm.formState.errors.confirmPassword)}
             />
             {passwordForm.formState.errors.confirmPassword && (
-              <p className="mt-1 text-sm text-red-500">
+              <p className="text-token-xs font-token-medium text-error">
                 {passwordForm.formState.errors.confirmPassword.message}
               </p>
             )}
           </div>
-          <button type="submit" className="rounded-lg bg-primary px-4 py-2 text-primary-foreground">
+          <Button type="submit" size="sm">
             تغییر رمز
-          </button>
+          </Button>
         </form>
       </section>
-    </main>
+    </div>
   );
 }
