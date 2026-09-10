@@ -24,9 +24,16 @@ async function bootstrap() {
   // Trust the first proxy hop (nginx) so req.ip is the real client IP used by the rate limiter.
   expressInstance.set("trust proxy", 1);
 
+  const frontEndUrl = process.env.FRONT_END_URL;
+  if (!frontEndUrl) {
+    throw new Error("FRONT_END_URL environment variable is required");
+  }
+
   app.enableCors({
-    origin: process.env.FRONT_END_URL,
+    origin: frontEndUrl,
     credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   });
 
   // --- Routing ---
