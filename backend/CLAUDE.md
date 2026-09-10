@@ -218,13 +218,12 @@ Claude Code **should not** add these without explicit confirmation:
 - A per-user dedicated public page (full explanation in section 7)
 - WebSocket / polling for real-time stats
 - Refresh Token
-- Rate limiting (not yet decided)
 
 ## 11. Proposed backend folder structure
 
 > This is a sensible default based on common NestJS convention, not a locked-in decision — it can change.
 
-Actual current structure (diverged from the original proposal below — no `common/` yet, no dedicated `worker/`; the queue+worker live in `bullmq/`):
+Actual current structure (diverged from the original proposal below — no dedicated `worker/`; the queue+worker live in `bullmq/`):
 
 ```
 backend/
@@ -232,11 +231,15 @@ backend/
 │   ├── auth/
 │   ├── users/
 │   ├── links/           ← LinksController (POST /links), RedirectController (GET /:shortCode), LinksService
+│   │   └── validators/    ← IsSafeRedirectUrl (SSRF/open-redirect guard on originalUrl)
 │   ├── short-code/       ← ShortCodeService (nanoid generation)
-│   ├── redis/            ← REDIS_CLIENT provider (cache-aside)
+│   ├── redis/            ← REDIS_CLIENT provider (cache-aside) + throttler.provider.ts (rate-limit config)
 │   ├── bullmq/            ← VISIT_QUEUE (Queue) + VISIT_WORKER (Worker), both for the "visit" queue
 │   ├── visits/             ← VisitsService (UA parsing, geo-IP, SourceType, Visit creation)
 │   ├── prismaClient/        ← PrismaService
+│   ├── common/               ← cross-cutting concerns, not tied to one feature
+│   │   ├── config/              ← env.validation.ts (Joi schema, checked at boot)
+│   │   └── all-exceptions.filter.ts  ← global error handler (see section 15)
 │   └── main.ts
 ├── prisma/
 │   └── schema.prisma
@@ -285,7 +288,96 @@ Claude Code should not decide these on its own; if they come up, ask first:
 - [ ] Exact cache-invalidation procedure when a link is edited/deleted — still open; no edit/delete endpoint exists yet, so nothing calls `DEL link:{shortCode}` today.
 - [x] geo-IP service/library → **`ip-geolocation-api-sdk-typescript`** (ipgeolocation.io), via `GEOLOCATION_TOKEN`; see section 8's "Visit-queue wiring".
 - [ ] Is a Refresh Token needed, or is a simple Access Token enough?
-- [ ] Rate limiting strategy to prevent abuse of the shortening service
+- [x] Rate limiting strategy → **`@nestjs/throttler`**, storage backed by the existing Redis (`@nest-lab/throttler-storage-redis`), so limits survive restarts and are shared across processes. Full details in section 15.
+
+## 15. Security hardening (added in a dedicated hardening pass)
+
+The API used to have almost no defensive layer — the public redirect route in particular
+was reachable by anyone on the internet with no auth, no rate limit, and no input guards.
+The items below were added end to end; all are implemented, tested manually with `curl`,
+and committed.
+
+**Rate limiting** — `@nestjs/throttler`, global `APP_GUARD`, storage on the existing Redis
+(`@nest-lab/throttler-storage-redis`, `src/redis/throttler.provider.ts`) so counters survive
+restarts and are shared across processes. Default tier 60 req/60s; `@Throttle()` overrides
+per route: redirect 30/60s, `auth` controller (login+register) 5/60s, `POST /links` 20/60s.
+Requires `main.ts`'s `trust proxy` setting (below) to key on the real client IP behind nginx.
+
+**HTTP headers** — `helmet()` first in the middleware chain (HSTS, CSP, X-Content-Type-Options,
+X-Frame-Options, etc.), `x-powered-by` disabled, `trust proxy` set to `1` (single nginx hop)
+so `req.ip` and the rate limiter see the real client IP, not nginx's.
+
+**Swagger (`/docs`)** — only mounted when `NODE_ENV !== "production"`; in production the
+route doesn't exist (404). It exposes the full API surface, so it must not be public.
+
+**Input validation** —
+- Global `ValidationPipe`: `whitelist`, `forbidNonWhitelisted` (unknown body fields are a
+  400, not silently dropped), `transform`, `disableErrorMessages` in production.
+- `getLinkDto.shortCode` requires `/^[A-Za-z0-9_-]{4,20}$/` — matches exactly what
+  `ShortCodeService`/`suggestedCode` can produce, so junk is rejected before any Redis/DB
+  work on the public redirect path.
+- `CreateLinkDto.originalUrl` has a custom validator, `@IsSafeRedirectUrl()`
+  (`src/links/validators/is-safe-redirect-url.validator.ts`): http(s) only, no
+  credentials in the URL, rejects loopback/private/link-local hosts (localhost, 127.0.0.1,
+  10/8, 172.16-31/12, 192.168/16, 169.254/16 incl. cloud metadata, `*.local`), max 2048
+  chars. Best-effort, not a full SSRF guard — we never fetch `originalUrl` server-side, we
+  only 302 the visitor's browser to it, so the blast radius of a bad entry is that browser,
+  not our network.
+- Request body capped at 16kb (`express.json`/`urlencoded` limits in `main.ts`) — well
+  above the largest real payload (`POST /links` is ~2.3kb worst case), stops oversized-body
+  memory pressure before JSON parsing even starts.
+
+**CORS** — fails closed: `main.ts` throws at boot if `FRONT_END_URL` is unset (never falls
+back to reflecting the request's `Origin`), and `methods`/`allowedHeaders` are an explicit
+allowlist rather than the cors package's permissive defaults.
+
+**Env var validation at boot** — `src/common/config/env.validation.ts`, a Joi schema wired
+into `ConfigModule.forRoot({ validationSchema })`. Rejects a missing/weak `JWT_SECRET`
+(`min(32)`, and explicitly `.invalid("change-me")` so the `.env.example` placeholder can
+never reach production unnoticed) and validates the shape of every other required var. The
+app refuses to boot rather than start silently insecure.
+
+**Global exception filter** — `src/common/all-exceptions.filter.ts`, registered as
+`APP_FILTER`. `@Catch()` with no argument, so it's the last line of defense for anything
+unhandled:
+- `ThrottlerException` → Persian 429 message (checked first since it's also an
+  `HttpException`, to override its default English text).
+- Our own `HttpException`s (e.g. `ConflictException("...")`) pass through unchanged — we
+  wrote those messages ourselves, they're already safe.
+- `Prisma.PrismaClientKnownRequestError` → mapped to a safe Persian message per code
+  (`P2002` → 409, `P2025` → 404) instead of leaking Prisma's internal error text.
+- Anything else (a real bug, a raw Node/Express error) → full details go to `PinoLogger`
+  server-side only; the client always gets a generic Persian 500, never a stack trace.
+- **Known gap:** body-parser's request-too-large error is a plain `Error` with a `status`
+  field, not an `HttpException`, so it currently falls through to the generic 500 path
+  instead of `413`. The response is still safe (no leaked detail), just not the most
+  precise status code. Not fixed yet — a legitimate follow-up if a future pass touches this
+  filter.
+
+**Redirect response headers** — `Cache-Control: no-store` on `GET /:shortCode` so
+browsers/proxies never cache a redirect that cache invalidation (section 8's still-open
+`DEL link:{shortCode}` item) hasn't caught up to yet.
+`Referrer-Policy` was deliberately **not** set here after weighing it: it would strip the
+`Referer` a destination site sees, which cuts both ways — it also hides that the traffic
+came from this service, which has real marketing/analytics value the team wants to keep.
+Don't add it back without checking first.
+
+**`bcrypt` cost factor** — raised from 10 to 12 in `UsersService.createUser` (harder
+offline cracking, ~50ms slower per login/register; `bcrypt.compare` reads the cost from the
+existing hash, so old hashes at 10 still verify fine — no migration needed).
+
+**`npm audit` — reviewed, no action taken.** All current findings
+(`deepmerge-ts`/`mysql2` via the Prisma CLI's dev tooling, `fast-uri` via `@nestjs/cli`
+and webpack, `multer` via `@nestjs/platform-express`) are either build-time-only tooling
+that never runs on the deployed server, or code paths this app doesn't exercise (Prisma
+targets Postgres, not MySQL; there is no file-upload endpoint). `qs`'s vulnerable code path
+is already avoided by `urlencoded({ extended: false })` in `main.ts`. `npm audit fix --force`
+would downgrade `prisma` and `@nestjs/core` to much older majors for no real security gain
+on this app — deliberately not run. Re-check this reasoning if new findings show up, don't
+assume it's still all noise.
+
+`.dockerignore` was already correct (`.env`, `.git`, `node_modules` all excluded) —
+no change was needed there.
 
 ---
 
