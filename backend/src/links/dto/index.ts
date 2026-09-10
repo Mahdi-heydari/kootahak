@@ -9,6 +9,7 @@ import {
   MaxLength,
   MinLength,
 } from "class-validator";
+import { IsSafeRedirectUrl } from "../validators/is-safe-redirect-url.validator";
 
 export type VisitContext = {
   ip: string;
@@ -22,14 +23,18 @@ export type CachedLink = {
 };
 export class CreateLinkDto {
   @ApiProperty({
-    description: "User original URL to be shortened",
+    description:
+      "URL to shorten. Must use http:// or https://, no username/password in " +
+      "the URL, and no localhost/private/internal addresses.",
     example: "https://myShop.com/myProduct",
+    maxLength: 2048,
   })
   @IsNotEmpty({ message: "لینک ورودی الزامی است" })
   @IsUrl(
     { require_protocol: true },
     { message: "لینک باید با http:// یا https:// شروع شود" },
   )
+  @IsSafeRedirectUrl()
   originalUrl: string;
 
   @ApiPropertyOptional({
@@ -73,5 +78,6 @@ export class getLinkDto {
   })
   @IsNotEmpty({ message: "کد کوتاه الزامی است" })
   @IsString({ message: "کد کوتاه باید متن باشد" })
+  @Matches(/^[A-Za-z0-9_-]{4,20}$/, { message: "کد کوتاه نامعتبر است" })
   shortCode: string;
 }

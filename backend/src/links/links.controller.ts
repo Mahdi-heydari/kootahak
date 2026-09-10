@@ -1,5 +1,6 @@
 import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import {
+  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiConflictResponse,
   ApiCreatedResponse,
@@ -27,6 +28,11 @@ export class LinksController {
   @ApiCreatedResponse({ description: "The link was created successfully" })
   @ApiConflictResponse({
     description: "The suggested short code is already in use",
+  })
+  @ApiBadRequestResponse({
+    description:
+      "Invalid input, e.g. originalUrl is not http(s), has credentials in it, " +
+      "or points to a localhost/private/internal address",
   })
   @ApiUnauthorizedResponse({ description: "Missing or invalid authentication" })
   createLink(
