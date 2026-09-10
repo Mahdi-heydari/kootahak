@@ -3,6 +3,10 @@
 import { Filter, Plus, Search, SlidersHorizontal } from "lucide-react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useCallback } from "react";
+import Button from "../ui/Button";
+
+const inputClassName =
+  "h-12 w-full rounded-token-md border border-border bg-card px-4 text-token-sm text-foreground shadow-token-sm transition-colors duration-token-normal placeholder:text-muted-foreground focus:border-brand/30 focus:outline-none";
 
 export default function LinkToolbar() {
   const searchParams = useSearchParams();
@@ -58,40 +62,37 @@ export default function LinkToolbar() {
           placeholder="جستجوی لینک..."
           value={search}
           onChange={(e) => updateSearch(e.target.value)}
-          className="h-11 w-full rounded-xl border bg-background pe-10 pr-10 text-sm outline-none transition placeholder:text-muted-foreground focus:border-primary"
+          className={`${inputClassName} pe-10 pr-10`}
         />
       </div>
 
       <div className="flex items-center gap-2">
-        <button
+        <Button
           type="button"
+          variant={status ? "outline" : "secondary"}
+          size="sm"
           onClick={toggleStatus}
-          className={`flex h-11 items-center gap-2 rounded-xl border px-4 text-sm transition hover:bg-muted ${
-            status ? "border-primary text-primary" : ""
-          }`}
+          className="gap-2"
         >
           <Filter className="size-4" />
           <span>{statusLabel}</span>
-        </button>
+        </Button>
 
-        <button
+        <Button
           type="button"
+          variant={sort ? "outline" : "secondary"}
+          size="sm"
           onClick={cycleSort}
-          className={`flex h-11 items-center gap-2 rounded-xl border px-4 text-sm transition hover:bg-muted ${
-            sort ? "border-primary text-primary" : ""
-          }`}
+          className="gap-2"
         >
           <SlidersHorizontal className="size-4" />
           <span>{sortLabel}</span>
-        </button>
+        </Button>
 
-        <button
-          type="button"
-          className="flex h-11 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground transition hover:opacity-90"
-        >
+        <Button type="button" size="sm" className="gap-2">
           <Plus className="size-4" />
           <span>لینک جدید</span>
-        </button>
+        </Button>
       </div>
     </div>
   );

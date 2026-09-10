@@ -10,14 +10,14 @@ export default function LinkList({ links }: LinkListProps) {
     <section className="space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-semibold">لینک‌های اخیر</h2>
+          <h2 className="h3">لینک‌های اخیر</h2>
 
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="mt-1 text-token-sm text-muted-foreground">
             آخرین لینک‌هایی که ایجاد کرده‌ای
           </p>
         </div>
 
-        <span className="text-sm text-muted-foreground">
+        <span className="label">
           {links.length} لینک
         </span>
       </div>

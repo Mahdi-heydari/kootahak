@@ -1,19 +1,26 @@
-﻿import LinkList from "@/components/dashboard/LinkList";
+﻿import { Suspense } from "react";
+import LinkList from "@/components/dashboard/LinkList";
 import LinkToolbar from "@/components/dashboard/LinkToolbar";
 import { mockLinks } from "@/contents/dashboard";
+
+function ToolbarFallback() {
+  return <div className="h-12 rounded-token-md bg-muted animate-pulse" />;
+}
 
 export default function LinksPage() {
   return (
     <div className="space-y-8 p-6">
       <div>
-        <h1 className="text-2xl font-bold">لینک‌های من</h1>
+        <h1 className="h2">لینک‌های من</h1>
 
-        <p className="mt-1 text-sm text-muted-foreground">
+        <p className="mt-1 text-token-sm text-muted-foreground">
           مدیریت و مشاهده تمام لینک‌های کوتاه‌شده
         </p>
       </div>
 
-      <LinkToolbar />
+      <Suspense fallback={<ToolbarFallback />}>
+        <LinkToolbar />
+      </Suspense>
 
       <LinkList links={mockLinks} />
     </div>
