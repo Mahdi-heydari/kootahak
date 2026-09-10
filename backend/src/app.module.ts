@@ -11,10 +11,11 @@ import { ShortCodeModule } from "./short-code/short-code.module";
 import { RedisModule } from "./redis/redis.module";
 import { BullMqModule } from "./bullmq/bullMq.module";
 import { VisitsModule } from "./visits/visits.module";
-import { APP_GUARD } from "@nestjs/core";
+import { APP_FILTER, APP_GUARD } from "@nestjs/core";
 import { ThrottlerGuard } from "@nestjs/throttler";
 import { throttlerConfig } from "./redis/throttler.provider";
 import { envValidationSchema } from "./common/config/env.validation";
+import { AllExceptionsFilter } from "./common/all-exceptions.filter";
 
 @Module({
   imports: [
@@ -48,6 +49,10 @@ import { envValidationSchema } from "./common/config/env.validation";
     throttlerConfig,
   ],
   controllers: [AppController],
-  providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],
+  providers: [
+    AppService,
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
+    { provide: APP_FILTER, useClass: AllExceptionsFilter },
+  ],
 })
 export class AppModule {}
