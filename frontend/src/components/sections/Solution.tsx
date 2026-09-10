@@ -1,6 +1,7 @@
 import { Link2, ShieldCheck, BarChart3, Clock } from "lucide-react";
 import Button from "@/components/ui/Button";
 import React from "react";
+import KutahakGraph from "@/components/sections/KutahakGraph";
 
 const Solution = (): React.JSX.Element => {
   const benefits = [
@@ -23,7 +24,7 @@ const Solution = (): React.JSX.Element => {
   ];
 
   return (
-    <section className="py-20 bg-background" id="solution">
+    <section className="py-20 pb-0 bg-background" id="solution">
       <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
         {/* Left Content */}
         <div className="flex-1 text-center lg:text-right">
@@ -65,37 +66,7 @@ const Solution = (): React.JSX.Element => {
 
         {/* Right Content - SVG Animation */}
         <div className="flex-1 w-full ">
-          <div className="relative bg-card border border-border rounded-token-xl p-8 overflow-hidden">
-            {/* Background decoration */}
-            <div className="absolute inset-0 bg-brand/5" />
-
-            {/* SVG Animation */}
-            <svg
-              width="100%"
-              height="100%"
-              preserveAspectRatio="xMidYMid meet"
-              viewBox="0 0 400 300"
-              className="w-full h-full relative z-10"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <text
-                x="50%"
-                y="50%"
-                textAnchor="middle"
-                dominantBaseline="middle"
-                className="fill-primary"
-                style={{
-                  fontSize: "clamp(1.1rem, .6vw, 2rem)",
-                  textWrap: "wrap",
-                }}
-              >
-                انیمیشن نشون دادن کوتاه شدن لینک ها توسط کوتاهک
-              </text>
-            </svg>
-
-            {/* Glow effect */}
-            <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-brand/10 rounded-full blur-3xl" />
-          </div>
+          <KutahakGraph></KutahakGraph>
         </div>
       </div>
     </section>

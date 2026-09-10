@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import localFont from "next/font/local";
 
 import "./globals.css";
+import { Providers } from "@/providers/providers";
 
 const iranyekanX = localFont({
   src: "../../public/fonts/IRANYekanXVFaNumVF.DBKnep-K.woff2",

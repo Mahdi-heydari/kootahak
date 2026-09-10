@@ -1,9 +1,9 @@
-// just filling out the file to pass build err docker (it will change)
+import { RegisterForm } from "@/components/auth/RegisterForm";
 
-export default function Register() {
+export default function RegisterPage() {
   return (
-    <div>
-      <p>Register</p>
-    </div>
+    <main>
+      <RegisterForm />
+    </main>
   );
 }
