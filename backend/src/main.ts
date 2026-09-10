@@ -5,6 +5,7 @@ import { RequestMethod, ValidationPipe } from "@nestjs/common";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { Logger } from "nestjs-pino";
 import helmet from "helmet";
+import { json, urlencoded } from "express";
 import type { Express } from "express";
 
 async function bootstrap() {
@@ -18,6 +19,9 @@ async function bootstrap() {
   // --- Security middleware (must run before routing) ---
   app.use(helmet());
   app.use(cookieParser());
+  // Reject oversized request bodies before they're read into memory.
+  app.use(json({ limit: "16kb" }));
+  app.use(urlencoded({ limit: "16kb", extended: false }));
   const expressInstance = app.getHttpAdapter().getInstance() as Express;
   // Don't advertise the framework to clients.
   expressInstance.disable("x-powered-by");
