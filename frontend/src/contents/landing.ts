@@ -2,11 +2,10 @@ import { NavLink, UserInfo } from "@/types";
 
 // Header (Nav)
 export const navLinks: NavLink[] = [
-  { label: "خانه", href: "/" },
-  { label: "درباره ما", href: "#about" },
-  { label: "پرسش های پرتکرار", href: "#" },
-  { label: "خدمات", href: "#services" },
-  { label: "فوتر", href: "#footer" },
+  { label: "خانه", href: "#hero" },
+  { label: "مشکلات", href: "#problems" },
+  { label: "راهکارها", href: "#solution" },
+  { label: "پرسش‌های پرتکرار", href: "#faq" },
 ];
 
 // Profile

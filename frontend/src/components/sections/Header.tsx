@@ -8,7 +8,6 @@ import ThemeToggle from "@/components/ui/theme-toggle";
 import Button from "@/components/ui/Button";
 import { mockUser, navLinks } from "@/contents/landing";
 import Profile from "@/components/ui/Profile";
-import Hero from "./Hero";
 
 function Header(): React.JSX.Element {
   const [isLogined, setLogined] = useState<boolean>(false);
@@ -35,7 +34,7 @@ function Header(): React.JSX.Element {
         className={[
           "container px-4 mx-auto transition-all duration-token-normal ease-token-default",
           "flex justify-between items-center p-4",
-          isScrolled
+          isScrolled || isMenuOpen
             ? "bg-background-secondary/50 md:mt-4 backdrop-blur-md shadow-token-md rounded-token-sm rounded-bl-none rounded-br-none"
             : "bg-transparent",
         ].join(" ")}
@@ -51,12 +50,12 @@ function Header(): React.JSX.Element {
           <ul className="hidden md:flex items-center  text-token-sm font-token-medium text-primary/60">
             {navLinks.map((link) => (
               <li key={link.href}>
-                <Link
+                <a
                   href={link.href}
                   className="hover:text-primary hover:bg-muted p-3 rounded-token-sm transition-colors"
                 >
                   {link.label}
-                </Link>
+                </a>
               </li>
             ))}
           </ul>
@@ -89,7 +88,7 @@ function Header(): React.JSX.Element {
       </nav>
 
       {/* Mobile */}
-      <nav
+      <div
         aria-hidden={!isMenuOpen}
         className={[
           "md:hidden mt-4 z-40 container mx-auto px-4 transition-all duration-token-normal ease-token-default overflow-hidden ",
@@ -102,13 +101,13 @@ function Header(): React.JSX.Element {
           <ul className="flex flex-col gap-4 text-token-sm text-muted-foreground">
             {navLinks.map((link) => (
               <li key={link.href}>
-                <Link
+                <a
                   href={link.href}
                   onClick={handleCloseMenu}
                   className="hover:text-primary transition-colors"
                 >
                   {link.label}
-                </Link>
+                </a>
               </li>
             ))}
           </ul>
@@ -133,7 +132,7 @@ function Header(): React.JSX.Element {
             <ThemeToggle />
           </div>
         </div>
-      </nav>
+      </div>
     </header>
   );
 }

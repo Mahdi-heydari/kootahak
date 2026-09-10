@@ -14,7 +14,7 @@ const FAQ = (): React.JSX.Element => {
   };
 
   return (
-    <section className="py-20" id="faq">
+    <section className="py-20 scroll-mt-16 md:scroll-mt-24" id="faq">
       {/* Header */}
       <div className="flex items-center justify-center gap-x-3 sm:gap-x-7 mb-12">
         <div className="hidden sm:block w-full h-px bg-linear-to-r from-primary/20 to-primafrom-primary/5"></div>

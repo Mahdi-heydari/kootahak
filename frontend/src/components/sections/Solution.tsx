@@ -1,7 +1,7 @@
 import { Link2, ShieldCheck, BarChart3, Clock } from "lucide-react";
 import Button from "@/components/ui/Button";
 import React from "react";
-import KutahakGraph from "@/components/sections/KutahakGraph";
+import KutahakGraph from "@/components/KutahakGraph";
 
 const Solution = (): React.JSX.Element => {
   const benefits = [
@@ -24,7 +24,10 @@ const Solution = (): React.JSX.Element => {
   ];
 
   return (
-    <section className="py-20 pb-0 bg-background" id="solution">
+    <section
+      className="py-20 pb-0 bg-background scroll-mt-16 md:scroll-mt-24"
+      id="solution"
+    >
       <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
         {/* Left Content */}
         <div className="flex-1 text-center lg:text-right">

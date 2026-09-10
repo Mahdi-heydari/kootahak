@@ -11,15 +11,15 @@
 }
 
 .dark {
-  --hero-c1: hsl(268, 18%, 11%);
-  --hero-c2: hsl(240, 5%, 12%);
-  --hero-c3: hsl(260, 28%, 13%);
-  --hero-c4: hsl(263, 10%, 17%);
-  --hero-c5: hsl(260, 26%, 20%);
-  --hero-c6: hsl(272, 11%, 21%);
+  --hero-c1: hsl(268, 18%, 10%);
+  --hero-c2: hsl(240, 5%, 11%);
+  --hero-c3: hsl(260, 28%, 12%);
+  --hero-c4: hsl(263, 10%, 15%);
+  --hero-c5: hsl(260, 26%, 17%);
+  --hero-c6: hsl(272, 11%, 19%);
   --hero-c7: hsl(266, 18%, 23%);
   --hero-c8: hsl(267, 15%, 28%);
-  --hero-shape: hsl(0, 0%, 100%, 0.04);
+  --hero-shape: hsl(0, 0%, 100%, 0.03);
 }
 
 .hero {
@@ -73,7 +73,7 @@
   will-change: border-radius, transform;
   transform-origin: 55% 55%;
   pointer-events: none;
-  filter: blur(20px);
+  filter: blur(15px);
 }
 
 .hero::after {
@@ -87,7 +87,7 @@
     morph 10s linear infinite alternate,
     spin 26s linear infinite reverse;
   transform-origin: 20% 20%;
-  filter: blur(20px);
+  filter: blur(15px);
 }
 
 @keyframes Gradient {

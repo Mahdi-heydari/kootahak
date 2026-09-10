@@ -18,7 +18,7 @@ export default function Profile({ user }: ProfileProps) {
 
   return (
     <div className="md:absolute top-[150%] left-0 font-iranyekan text-token-sm md:group-hover:visible md:group-hover:opacity-100 md:invisible md:opacity-0 z-50 transition-all">
-      <div className="w-full md:w-64 md:bg-card md:border border-border md:rounded-xl  overflow-hidden">
+      <div className="w-full md:w-64 md:bg-card md:border border-border md:rounded-token-sm  overflow-hidden">
         {/* User Info */}
         <div className="flex items-center gap-x-3 ps-4 py-4 md:p-4 border-b border-border">
           <div className="flex flex-col cursor-default min-w-0">
@@ -39,7 +39,7 @@ export default function Profile({ user }: ProfileProps) {
               href={item.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex items-center gap-x-3 py-2.5 px-3 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200"
+              className="group flex items-center gap-x-3 py-2.5 px-3 rounded-token-sm text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all duration-200"
             >
               {item.icon}
               <span className="text-token-sm">{item.label}</span>
