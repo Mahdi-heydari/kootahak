@@ -38,7 +38,7 @@ export default function SettingsPage() {
   });
 
   return (
-    <div className="mx-auto max-w-2xl space-y-10 p-6">
+    <div className="mx-auto max-w-2xl space-y-8 p-4 sm:space-y-10 sm:p-6">
       <div>
         <h1 className="h2">تنظیمات</h1>
         <p className="mt-1 text-token-sm text-muted-foreground">

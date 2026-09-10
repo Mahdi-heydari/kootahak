@@ -1,6 +1,6 @@
 export default function AnalyticsPage() {
   return (
-    <main className="space-y-8 p-6">
+    <main className="space-y-6 p-4 sm:space-y-8 sm:p-6">
       <div>
         <h1 className="h2">آمار</h1>
 
