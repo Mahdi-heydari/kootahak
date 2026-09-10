@@ -1,8 +1,53 @@
 "use client";
 
 import { Filter, Plus, Search, SlidersHorizontal } from "lucide-react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useCallback } from "react";
 
 export default function LinkToolbar() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const search = searchParams.get("search") || "";
+  const status = searchParams.get("status") || "";
+  const sort = searchParams.get("sort") || "";
+
+  const createQuery = useCallback(
+    (updates: Record<string, string>) => {
+      const params = new URLSearchParams(searchParams.toString());
+      for (const [key, value] of Object.entries(updates)) {
+        if (value) {
+          params.set(key, value);
+        } else {
+          params.delete(key);
+        }
+      }
+      return params.toString();
+    },
+    [searchParams]
+  );
+
+  const updateSearch = (value: string) => {
+    router.push(`${pathname}?${createQuery({ search: value })}`);
+  };
+
+  const toggleStatus = () => {
+    const next = status === "active" ? "inactive" : status === "inactive" ? "" : "active";
+    router.push(`${pathname}?${createQuery({ status: next })}`);
+  };
+
+  const cycleSort = () => {
+    const next = sort === "newest" ? "oldest" : sort === "oldest" ? "popular" : "newest";
+    router.push(`${pathname}?${createQuery({ sort: next })}`);
+  };
+
+  const sortLabel =
+    sort === "oldest" ? "قدیمی‌ترین" : sort === "popular" ? "محبوب‌ترین" : "جدیدترین";
+
+  const statusLabel =
+    status === "inactive" ? "غیرفعال" : status === "active" ? "فعال" : "وضعیت";
+
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div className="relative flex-1 sm:max-w-md">
@@ -11,6 +56,8 @@ export default function LinkToolbar() {
         <input
           type="text"
           placeholder="جستجوی لینک..."
+          value={search}
+          onChange={(e) => updateSearch(e.target.value)}
           className="h-11 w-full rounded-xl border bg-background pe-10 pr-10 text-sm outline-none transition placeholder:text-muted-foreground focus:border-primary"
         />
       </div>
@@ -18,18 +65,24 @@ export default function LinkToolbar() {
       <div className="flex items-center gap-2">
         <button
           type="button"
-          className="flex h-11 items-center gap-2 rounded-xl border px-4 text-sm transition hover:bg-muted"
+          onClick={toggleStatus}
+          className={`flex h-11 items-center gap-2 rounded-xl border px-4 text-sm transition hover:bg-muted ${
+            status ? "border-primary text-primary" : ""
+          }`}
         >
           <Filter className="size-4" />
-          <span>وضعیت</span>
+          <span>{statusLabel}</span>
         </button>
 
         <button
           type="button"
-          className="flex h-11 items-center gap-2 rounded-xl border px-4 text-sm transition hover:bg-muted"
+          onClick={cycleSort}
+          className={`flex h-11 items-center gap-2 rounded-xl border px-4 text-sm transition hover:bg-muted ${
+            sort ? "border-primary text-primary" : ""
+          }`}
         >
           <SlidersHorizontal className="size-4" />
-          <span>مرتب‌سازی</span>
+          <span>{sortLabel}</span>
         </button>
 
         <button

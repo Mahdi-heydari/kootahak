@@ -1,6 +1,6 @@
 "use client";
 
-import { Bell, Search } from "lucide-react";
+import Link from "next/link";
 import ThemeToggle from "../ui/theme-toggle";
 
 export default function DashboardHeader() {
@@ -14,21 +14,12 @@ export default function DashboardHeader() {
       </div>
 
       <div className="flex items-center gap-3">
-        <button
-          type="button"
-          className="rounded-lg p-2 transition hover:bg-muted"
-          aria-label="جستجو"
+        <Link
+          href="/"
+          className="rounded-lg px-4 py-2 text-sm font-medium transition hover:bg-muted"
         >
-          <Search className="size-5" />
-        </button>
-
-        <button
-          type="button"
-          className="rounded-lg p-2 transition hover:bg-muted"
-          aria-label="اعلان‌ها"
-        >
-          <Bell className="size-5" />
-        </button>
+          خانه
+        </Link>
 
         <ThemeToggle />
       </div>

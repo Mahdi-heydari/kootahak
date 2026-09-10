@@ -20,7 +20,7 @@ export function DashboardSidebar() {
       <nav className="flex-1">
         <ul className="space-y-1">
           {sidebarItems.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = pathname.startsWith(item.href);
 
             return (
               <li key={item.href}>
@@ -44,9 +44,10 @@ export function DashboardSidebar() {
       <div className="border-t pt-4">
         <Link
           href="/settings"
-          className="block rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         >
-          <Settings />
+          <Settings className="size-5" />
+          <span>حساب کاربری</span>
         </Link>
       </div>
     </aside>

@@ -1,10 +1,10 @@
-import LinkList from "@/components/dashboard/LinkList";
+﻿import LinkList from "@/components/dashboard/LinkList";
 import LinkToolbar from "@/components/dashboard/LinkToolbar";
 import { mockLinks } from "@/contents/dashboard";
 
 export default function LinksPage() {
   return (
-    <main className="space-y-8 p-6">
+    <div className="space-y-8 p-6">
       <div>
         <h1 className="text-2xl font-bold">لینک‌های من</h1>
 
@@ -16,6 +16,6 @@ export default function LinksPage() {
       <LinkToolbar />
 
       <LinkList links={mockLinks} />
-    </main>
+    </div>
   );
 }

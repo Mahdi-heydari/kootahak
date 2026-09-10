@@ -2,8 +2,6 @@ import type { Link } from "@/types/links";
 
 export const sidebarItems = [
   { label: "داشبورد", href: "/dashboard" },
-  { label: "لینک‌های من", href: "/links" },
-  { label: "آمار", href: "/analytics" },
 ];
 
 export const mockLinks: Link[] = [
