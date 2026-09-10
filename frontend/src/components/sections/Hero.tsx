@@ -45,7 +45,7 @@ const trustItems = [
 
 const Hero = (): React.JSX.Element => {
   return (
-    <section className="min-h-screen relative isolate flex flex-col items-center justify-center gap-y-8 md:gap-y-10 lg:gap-y-12 py-16 md:py-20">
+    <section className="hero min-h-screen w-full flex flex-col items-center justify-center gap-y-8 md:gap-y-10 lg:gap-y-12 py-16 md:py-20">
       <div className="container">
         {/* محتوای اصلی (متمرکز) */}
         <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
@@ -87,12 +87,12 @@ const Hero = (): React.JSX.Element => {
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="flex items-center gap-x-3 p-3 rounded-token-sm bg-card border border-border hover:border-brand/30 hover:bg-brand/10 transition-all duration-300 cursor-default group"
+                className="flex items-center gap-x-4 p-3 rounded-token-sm bg-card border border-border hover:border-brand/30 hover:bg-brand/10 transition-all duration-300 cursor-default group"
               >
                 <div className="p-1.5 rounded-token-sm bg-brand/10 text-brand group-hover:bg-brand/20 transition-colors">
                   {feature.icon}
                 </div>
-                <div className="text-right">
+                <div className="text-right space-y-2">
                   <p className="text-token-xs font-token-medium text-foreground">
                     {feature.title}
                   </p>

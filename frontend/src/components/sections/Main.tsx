@@ -7,8 +7,8 @@ import Hero from "./Hero";
 export const Main = (): React.JSX.Element => {
   return (
     <main className="bg-background text-7xl grid place-items-center">
+      <Hero />
       <div className="container">
-        <Hero />
         <Problems></Problems>
         <Solution></Solution>
         <FAQ></FAQ>

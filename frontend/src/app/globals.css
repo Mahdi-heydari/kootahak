@@ -7,7 +7,7 @@
 @import "../styles/tokens/motion.css";
 
 @import "../styles/kutahak-graph.css";
-@import "../styles/GradientWaves.css";
+@import "../styles/hero-section.css";
 
 :root {
   --theme-change-x: 0;
