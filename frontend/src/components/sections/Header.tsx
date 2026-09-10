@@ -2,22 +2,16 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, User, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useScroll } from "@/hooks/use-scroll";
 import ThemeToggle from "@/components/ui/theme-toggle";
 import Button from "@/components/ui/Button";
-import { mockUser, navLinks } from "@/contents/landing";
-import Profile from "@/components/ui/Profile";
+import { navLinks } from "@/contents/landing";
 import Hero from "./Hero";
 
 function Header(): React.JSX.Element {
-  const [isLogined, setLogined] = useState<boolean>(false);
   const [isMenuOpen, setMenuOpen] = useState<boolean>(false);
   const isScrolled = useScroll(70);
-
-  const handleToggleLogin = (): void => {
-    setLogined((prev) => !prev);
-  };
 
   const handleToggleMenu = (): void => {
     setMenuOpen((prev) => !prev);
@@ -66,16 +60,11 @@ function Header(): React.JSX.Element {
         <div className="hidden md:flex items-center gap-3">
           <ThemeToggle />
 
-          {isLogined ? (
-            <div className="relative group">
-              <User />
-              <Profile user={mockUser} />
-            </div>
-          ) : (
-            <Button variant="outline" size="md" onClick={handleToggleLogin}>
+          <Link href="/login">
+            <Button variant="outline" size="md">
               ورود | ثبت نام
             </Button>
-          )}
+          </Link>
         </div>
 
         <button
@@ -115,21 +104,11 @@ function Header(): React.JSX.Element {
           </ul>
 
           <div className="flex flex-col items-center justify-between gap-2 w-full pt-2 border-t border-border">
-            {isLogined ? (
-              <div className="relative group w-full">
-                {/* <User /> */}
-                <Profile user={mockUser} />
-              </div>
-            ) : (
-              <Button
-                variant="outline"
-                size="md"
-                className="w-full"
-                onClick={handleToggleLogin}
-              >
+            <Link href="/login" onClick={handleCloseMenu} className="w-full">
+              <Button variant="outline" size="md" className="w-full">
                 ورود | ثبت نام
               </Button>
-            )}
+            </Link>
 
             <ThemeToggle />
           </div>
