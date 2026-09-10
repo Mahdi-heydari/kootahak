@@ -2,11 +2,11 @@
 
 import { Copy, ExternalLink, Eye, MoreHorizontal, Pin } from "lucide-react";
 
-import type { LinkData } from "@/types/links";
+import type { Link as LinkItem } from "@/types/links";
 import Link from "next/link";
 
 interface LinkCardProps {
-  link: LinkData;
+  link: LinkItem;
 }
 
 export default function LinkCard({ link }: LinkCardProps) {
