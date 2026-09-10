@@ -7,6 +7,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, UserPlus } from "lucide-react";
 
 import { AuthLayout } from "@/components/auth/AuthLayout";
+import Button from "@/components/ui/Button";
+import {
+  authErrorClassName,
+  authFooterClassName,
+  authFooterLinkClassName,
+  authInputClassName,
+} from "@/lib/auth-input";
 import { useRegister } from "@/hooks/use-auth";
 import {
   registerSchema,
@@ -53,14 +60,12 @@ export function RegisterForm() {
     >
       <div className="space-y-8">
         <div className="space-y-3">
-          <div className="flex size-12 items-center justify-center rounded-token-lg bg-muted text-foreground">
+          <div className="flex size-12 items-center justify-center rounded-token-lg bg-brand/10 text-brand">
             <UserPlus className="size-5" aria-hidden="true" />
           </div>
           <div className="space-y-2">
             <p className="label">ایجاد حساب</p>
-            <h2 className="text-3xl font-semibold leading-tight">
-              به کوتاهک خوش آمدید
-            </h2>
+            <h2 className="h2">به کوتاهک خوش آمدید</h2>
             <p className="body-muted">
               مشخصات خود را وارد کنید تا حساب شما ساخته شود و وارد داشبورد شوید.
             </p>
@@ -77,7 +82,7 @@ export function RegisterForm() {
               نام
             </label>
             <input
-              className="h-12 w-full rounded-token-md border border-border bg-card px-4 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus:border-border-hover focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+              className={authInputClassName}
               id="name"
               autoComplete="name"
               placeholder="نام شما"
@@ -86,9 +91,7 @@ export function RegisterForm() {
             />
 
             {errors.name && (
-              <p className="text-xs font-medium text-error">
-                {errors.name.message}
-              </p>
+              <p className={authErrorClassName}>{errors.name.message}</p>
             )}
           </div>
 
@@ -97,7 +100,7 @@ export function RegisterForm() {
               ایمیل
             </label>
             <input
-              className="h-12 w-full rounded-token-md border border-border bg-card px-4 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus:border-border-hover focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+              className={authInputClassName}
               id="email"
               type="email"
               autoComplete="email"
@@ -107,9 +110,7 @@ export function RegisterForm() {
             />
 
             {errors.email && (
-              <p className="text-xs font-medium text-error">
-                {errors.email.message}
-              </p>
+              <p className={authErrorClassName}>{errors.email.message}</p>
             )}
           </div>
 
@@ -119,7 +120,7 @@ export function RegisterForm() {
                 رمز عبور
               </label>
               <input
-                className="h-12 w-full rounded-token-md border border-border bg-card px-4 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus:border-border-hover focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+                className={authInputClassName}
                 id="password"
                 type="password"
                 autoComplete="new-password"
@@ -129,9 +130,7 @@ export function RegisterForm() {
               />
 
               {errors.password && (
-                <p className="text-xs font-medium text-error">
-                  {errors.password.message}
-                </p>
+                <p className={authErrorClassName}>{errors.password.message}</p>
               )}
             </div>
 
@@ -143,7 +142,7 @@ export function RegisterForm() {
                 تکرار رمز عبور
               </label>
               <input
-                className="h-12 w-full rounded-token-md border border-border bg-card px-4 text-sm text-foreground shadow-sm transition-colors placeholder:text-muted-foreground focus:border-border-hover focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+                className={authInputClassName}
                 id="confirmPassword"
                 type="password"
                 autoComplete="new-password"
@@ -153,35 +152,33 @@ export function RegisterForm() {
               />
 
               {errors.confirmPassword && (
-                <p className="text-xs font-medium text-error">
+                <p className={authErrorClassName}>
                   {errors.confirmPassword.message}
                 </p>
               )}
             </div>
           </div>
 
-          <button
-            className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-token-md bg-primary px-5 text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+          <Button
             type="submit"
+            fullWidth
             disabled={registerMutation.isPending}
+            className="gap-2"
           >
             {registerMutation.isPending ? "در حال ثبت‌نام..." : "ساخت حساب"}
             <ArrowLeft className="size-4" aria-hidden="true" />
-          </button>
+          </Button>
 
           {registerMutation.isError && (
-            <p className="rounded-token-md border border-error/20 bg-error/5 px-4 py-3 text-sm text-error">
+            <p className="rounded-token-md border border-error/20 bg-error/5 px-4 py-3 text-token-sm text-error">
               ثبت‌نام انجام نشد. اطلاعات واردشده را بررسی کنید.
             </p>
           )}
         </form>
 
-        <div className="flex items-center justify-center gap-2 rounded-token-md border border-border bg-background-secondary px-4 py-3 text-sm text-muted-foreground">
+        <div className={authFooterClassName}>
           قبلا حساب ساخته‌اید؟
-          <Link
-            className="font-medium text-foreground transition-colors hover:text-muted-foreground"
-            href="/login"
-          >
+          <Link className={authFooterLinkClassName} href="/login">
             ورود به حساب
           </Link>
         </div>
