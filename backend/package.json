@@ -39,6 +39,7 @@
     "helmet": "^8.3.0",
     "ioredis": "^6.0.0",
     "ip-geolocation-api-sdk-typescript": "^3.0.0",
+    "joi": "^18.2.8",
     "nanoid": "^5.1.16",
     "nestjs-pino": "^4.6.1",
     "passport": "^0.7.0",

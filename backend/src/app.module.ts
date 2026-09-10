@@ -14,10 +14,14 @@ import { VisitsModule } from "./visits/visits.module";
 import { APP_GUARD } from "@nestjs/core";
 import { ThrottlerGuard } from "@nestjs/throttler";
 import { throttlerConfig } from "./redis/throttler.provider";
+import { envValidationSchema } from "./common/config/env.validation";
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validationSchema: envValidationSchema,
+    }),
     LoggerModule.forRoot({
       pinoHttp: {
         level: process.env.NODE_ENV === "production" ? "info" : "debug",
