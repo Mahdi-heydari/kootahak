@@ -8,8 +8,6 @@ import {
 } from "lucide-react";
 import Button from "../ui/Button";
 import { heroContent } from "@/contents/landing";
-import GradientWaves from "./GradientWaves";
-import { useDeviceInfo, gradientWavesPresets } from "@/hooks/useDeviceInfo";
 
 const flipWordsLoop = [
   ...heroContent.titleHighlightWords,
@@ -46,30 +44,8 @@ const trustItems = [
 ];
 
 const Hero = (): React.JSX.Element => {
-  const { tier } = useDeviceInfo();
-  const perfPreset = gradientWavesPresets[tier];
-
   return (
     <section className="min-h-screen relative isolate flex flex-col items-center justify-center gap-y-8 md:gap-y-10 lg:gap-y-12 py-16 md:py-20">
-      <GradientWaves
-        horizonColor="#5227FF"
-        waveColor="#FF9FFC"
-        crestColor="#FFFFFF"
-        speed={0.4}
-        amplitude={1.7}
-        waveScale={0.6}
-        waveRatio={0.9}
-        swell={35}
-        turbulence={20}
-        tilt={1.11}
-        zoom={1.65}
-        height={5.5}
-        fogDepth={23}
-        brightness={1.25}
-        opacity={1}
-        grainIntensity={0.05}
-        {...perfPreset}
-      />
       <div className="container">
         {/* محتوای اصلی (متمرکز) */}
         <div className="flex flex-col items-center text-center max-w-4xl mx-auto">

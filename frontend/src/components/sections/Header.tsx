@@ -28,13 +28,13 @@ function Header(): React.JSX.Element {
   };
 
   return (
-    <header className="min-h-screen bg-background text-primary">
+    <header className="fixed z-50 left-0 right-0 text-primary">
       {/* Desktop */}
       <nav
         aria-hidden={isMenuOpen}
         className={[
-          "container left-0 right-0 px-4 mx-auto transition-all duration-token-normal ease-token-default",
-          "fixed flex justify-between z-50 items-center p-4",
+          "container px-4 mx-auto transition-all duration-token-normal ease-token-default",
+          "flex justify-between items-center p-4",
           isScrolled
             ? "bg-background-secondary/50 md:mt-4 backdrop-blur-md shadow-token-md rounded-token-sm rounded-bl-none rounded-br-none"
             : "bg-transparent",
@@ -89,10 +89,10 @@ function Header(): React.JSX.Element {
       </nav>
 
       {/* Mobile */}
-      <div
+      <nav
         aria-hidden={!isMenuOpen}
         className={[
-          "md:hidden fixed left-0 right-0 top-22 z-40 container mx-auto px-4 transition-all duration-token-normal ease-token-default overflow-hidden ",
+          "md:hidden mt-4 z-40 container mx-auto px-4 transition-all duration-token-normal ease-token-default overflow-hidden ",
           isMenuOpen
             ? "max-h-fit opacity-100"
             : "max-h-0 opacity-0 pointer-events-none",
@@ -133,9 +133,7 @@ function Header(): React.JSX.Element {
             <ThemeToggle />
           </div>
         </div>
-      </div>
-
-      <Hero />
+      </nav>
     </header>
   );
 }
