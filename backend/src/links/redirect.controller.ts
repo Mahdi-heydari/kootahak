@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Redirect, Req } from "@nestjs/common";
+import { Controller, Get, Header, Param, Redirect, Req } from "@nestjs/common";
 import {
   ApiExcludeController,
   ApiFoundResponse,
@@ -34,6 +34,7 @@ export class RedirectController {
   @ApiFoundResponse({ description: "Redirects (302) to the original URL" })
   @ApiNotFoundResponse({ description: "No link exists for this short code" })
   @Throttle({ default: { limit: 30, ttl: 60000 } })
+  @Header("Cache-Control", "no-store")
   async redirect(@Param() getData: getLinkDto, @Req() request: Request) {
     const visitContext: VisitContext = {
       ip: request.ip ?? "unknown",
