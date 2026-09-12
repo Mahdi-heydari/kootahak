@@ -1,6 +1,6 @@
 "use client";
 
-import { Filter, Plus, Search, SlidersHorizontal } from "lucide-react";
+import GetIcon from "@/components/ui/Icon";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import Button from "../ui/Button";
@@ -63,17 +63,31 @@ export default function LinkToolbar({ onCreateClick }: LinkToolbarProps) {
   }, [localSearch, urlSearch, pushQuery]);
 
   const toggleStatus = () => {
-    const next = status === "active" ? "inactive" : status === "inactive" ? "" : "active";
+    const next =
+      status === "active" ? "inactive" : status === "inactive" ? "" : "active";
     pushQuery({ status: next });
   };
 
   const cycleSort = () => {
-    const next = sort === "newest" ? "oldest" : sort === "oldest" ? "popular" : sort === "popular" ? "" : "newest";
+    const next =
+      sort === "newest"
+        ? "oldest"
+        : sort === "oldest"
+          ? "popular"
+          : sort === "popular"
+            ? ""
+            : "newest";
     pushQuery({ sort: next });
   };
 
   const sortLabel =
-    sort === "oldest" ? "قدیمی‌ترین" : sort === "popular" ? "محبوب‌ترین" : sort === "newest" ? "جدیدترین" : "مرتب‌سازی";
+    sort === "oldest"
+      ? "قدیمی‌ترین"
+      : sort === "popular"
+        ? "محبوب‌ترین"
+        : sort === "newest"
+          ? "جدیدترین"
+          : "مرتب‌سازی";
 
   const statusLabel =
     status === "inactive" ? "غیرفعال" : status === "active" ? "فعال" : "وضعیت";
@@ -81,7 +95,10 @@ export default function LinkToolbar({ onCreateClick }: LinkToolbarProps) {
   return (
     <div className="flex flex-col gap-3">
       <div className="relative w-full">
-        <Search className="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+        <GetIcon
+          name="Search"
+          className="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+        />
 
         <input
           type="text"
@@ -100,7 +117,7 @@ export default function LinkToolbar({ onCreateClick }: LinkToolbarProps) {
           onClick={toggleStatus}
           className="min-h-11 w-full gap-2 sm:w-auto"
         >
-          <Filter className="size-4 shrink-0" />
+          <GetIcon name="Filter" className="size-4 shrink-0" />
           <span className="truncate">{statusLabel}</span>
         </Button>
 
@@ -111,7 +128,7 @@ export default function LinkToolbar({ onCreateClick }: LinkToolbarProps) {
           onClick={cycleSort}
           className="min-h-11 w-full gap-2 sm:w-auto"
         >
-          <SlidersHorizontal className="size-4 shrink-0" />
+          <GetIcon name="SlidersHorizontal" className="size-4 shrink-0" />
           <span className="truncate">{sortLabel}</span>
         </Button>
 
@@ -121,7 +138,7 @@ export default function LinkToolbar({ onCreateClick }: LinkToolbarProps) {
           onClick={onCreateClick}
           className="col-span-2 min-h-11 w-full gap-2 sm:col-span-1 sm:ms-auto sm:w-auto"
         >
-          <Plus className="size-4 shrink-0" />
+          <GetIcon name="Plus" className="size-4 shrink-0" />
           <span>لینک جدید</span>
         </Button>
       </div>

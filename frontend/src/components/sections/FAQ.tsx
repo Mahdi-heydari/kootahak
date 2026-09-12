@@ -1,8 +1,7 @@
-// components/sections/FAQ.tsx
 "use client";
 
 import React, { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import GetIcon from "@/components/ui/Icon";
 import Button from "@/components/ui/Button";
 import { faqs } from "@/contents/landing";
 
@@ -45,7 +44,8 @@ const FAQ = (): React.JSX.Element => {
                 {faq.question}
               </span>
               <span className="shrink-0 text-muted-foreground mr-4 transition-transform duration-500 ease-in-out group-hover:text-brand">
-                <ChevronDown
+                <GetIcon
+                  name="ChevronDown"
                   size={20}
                   className={`transition-transform duration-500 ease-in-out ${
                     openIndex === index ? "rotate-180 text-brand" : ""

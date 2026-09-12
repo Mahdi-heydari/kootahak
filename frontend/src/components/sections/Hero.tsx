@@ -1,46 +1,10 @@
-import {
-  ArrowLeftFromLine,
-  Link,
-  BarChart3,
-  ShieldCheck,
-  Sparkles,
-  Clock,
-} from "lucide-react";
+import GetIcon from "@/components/ui/Icon";
 import Button from "../ui/Button";
 import { heroContent } from "@/contents/landing";
 
 const flipWordsLoop = [
   ...heroContent.titleHighlightWords,
   heroContent.titleHighlightWords[0],
-];
-
-const features = [
-  {
-    icon: <Link size={25} strokeWidth={1.5} />,
-    title: heroContent.features[0].title,
-    description: heroContent.features[0].description,
-  },
-  {
-    icon: <BarChart3 size={25} strokeWidth={1.5} />,
-    title: heroContent.features[1].title,
-    description: heroContent.features[1].description,
-  },
-  {
-    icon: <ShieldCheck size={25} strokeWidth={1.5} />,
-    title: heroContent.features[2].title,
-    description: heroContent.features[2].description,
-  },
-];
-
-const trustItems = [
-  {
-    icon: <Sparkles size={16} className="text-brand" />,
-    text: heroContent.trustItems[0],
-  },
-  {
-    icon: <Clock size={16} className="text-brand" />,
-    text: heroContent.trustItems[1],
-  },
 ];
 
 const Hero = (): React.JSX.Element => {
@@ -81,19 +45,19 @@ const Hero = (): React.JSX.Element => {
               placeholder={heroContent.placeholder}
             />
             <Button type="submit" variant="primary">
-              <ArrowLeftFromLine size={18} />
+              <GetIcon name="ArrowLeftFromLine" size={18} />
             </Button>
           </form>
 
           {/* ویژگی‌ها */}
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 w-full max-w-3xl">
-            {features.map((feature, index) => (
+            {heroContent.features.map((feature, index) => (
               <div
                 key={index}
                 className="flex items-center gap-x-4 p-3 rounded-token-sm bg-card border border-border hover:border-brand/30 hover:bg-brand/10 transition-all duration-300 cursor-default group"
               >
                 <div className="p-1.5 rounded-token-sm bg-brand/10 text-brand group-hover:bg-brand/20 transition-colors">
-                  {feature.icon}
+                  <GetIcon name={feature.icon} size={25} strokeWidth={1.5} />
                 </div>
                 <div className="text-right space-y-2">
                   <p className="text-token-xs font-token-medium text-foreground">
@@ -109,9 +73,9 @@ const Hero = (): React.JSX.Element => {
 
           {/* نشان اعتماد */}
           <div className="mt-8 flex items-center justify-center gap-x-6 text-token-xs text-primary/70">
-            {trustItems.map((item, index) => (
+            {heroContent.trustItems.map((item, index) => (
               <span key={index} className="flex items-center gap-x-1">
-                {item.icon}
+                <GetIcon name={item.icon} size={16} className="text-brand" />
                 {item.text}
               </span>
             ))}

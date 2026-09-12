@@ -1,4 +1,4 @@
-import { Globe2, Link2, UserRound } from "lucide-react";
+import GetIcon from "@/components/ui/Icon";
 
 export default function KutahakGraph(): React.JSX.Element {
   return (
@@ -11,7 +11,6 @@ export default function KutahakGraph(): React.JSX.Element {
           fill="none"
           className="pointer-events-none absolute inset-0 h-full w-full overflow-visible"
         >
-          {/* خطوط ثابت */}
           <g data-connection="branch1" data-branch="1">
             <path
               className="line"
@@ -28,7 +27,6 @@ export default function KutahakGraph(): React.JSX.Element {
             />
           </g>
 
-          {/* پالس‌ها */}
           <g data-pulse="branch1" data-branch="1">
             <path
               className="pulse-path"
@@ -48,7 +46,6 @@ export default function KutahakGraph(): React.JSX.Element {
           </g>
         </svg>
 
-        {/* کاربر */}
         <div
           data-node="user"
           className="absolute z-10 cursor-pointer"
@@ -59,11 +56,10 @@ export default function KutahakGraph(): React.JSX.Element {
           }}
         >
           <div className="node-box flex aspect-square w-full items-center justify-center text-muted-foreground rounded-token-sm border border-border bg-card transition-colors duration-300">
-            <UserRound size={30} />
+            <GetIcon name="UserRound" size={30} />
           </div>
         </div>
 
-        {/*  LINK 1  */}
         <div
           data-kutahak-node
           data-node="link1"
@@ -76,7 +72,8 @@ export default function KutahakGraph(): React.JSX.Element {
         >
           <div className="w-full">
             <div className="node-box flex aspect-square w-full items-center justify-center rounded-token-lg border border-border bg-card transition-colors duration-300">
-              <Link2
+              <GetIcon
+                name="Link2"
                 className="h-[40%] w-[40%] text-muted-foreground"
                 strokeWidth={1.6}
               />
@@ -87,7 +84,6 @@ export default function KutahakGraph(): React.JSX.Element {
           </div>
         </div>
 
-        {/*  LINK 2  */}
         <div
           data-kutahak-node
           data-node="link2"
@@ -100,7 +96,8 @@ export default function KutahakGraph(): React.JSX.Element {
         >
           <div className="w-full">
             <div className="node-box flex aspect-square w-full items-center justify-center rounded-token-lg border border-border bg-card transition-colors duration-300">
-              <Link2
+              <GetIcon
+                name="Link2"
                 className="h-[40%] w-[40%] text-muted-foreground"
                 strokeWidth={1.6}
               />
@@ -111,7 +108,6 @@ export default function KutahakGraph(): React.JSX.Element {
           </div>
         </div>
 
-        {/*  LINK 3  */}
         <div
           data-kutahak-node
           data-node="link3"
@@ -124,7 +120,8 @@ export default function KutahakGraph(): React.JSX.Element {
         >
           <div className="w-full">
             <div className="node-box flex aspect-square w-full items-center justify-center rounded-token-lg border border-border bg-card transition-colors duration-300">
-              <Link2
+              <GetIcon
+                name="Link2"
                 className="h-[40%] w-[40%] text-muted-foreground"
                 strokeWidth={1.6}
               />
@@ -135,7 +132,6 @@ export default function KutahakGraph(): React.JSX.Element {
           </div>
         </div>
 
-        {/*  CENTER  */}
         <div
           className="absolute z-10"
           style={{
@@ -154,7 +150,6 @@ export default function KutahakGraph(): React.JSX.Element {
           </div>
         </div>
 
-        {/*  DEST 1  */}
         <div
           data-kutahak-node
           data-node="dest1"
@@ -167,7 +162,8 @@ export default function KutahakGraph(): React.JSX.Element {
         >
           <div className="w-full">
             <div className="node-box flex aspect-square w-full items-center justify-center rounded-token-lg border border-border bg-card transition-colors duration-300">
-              <Globe2
+              <GetIcon
+                name="Globe2"
                 className="h-[40%] w-[40%] text-muted-foreground"
                 strokeWidth={1.6}
               />
@@ -178,7 +174,6 @@ export default function KutahakGraph(): React.JSX.Element {
           </div>
         </div>
 
-        {/*  DEST 2  */}
         <div
           data-kutahak-node
           data-node="dest2"
@@ -191,7 +186,8 @@ export default function KutahakGraph(): React.JSX.Element {
         >
           <div className="w-full">
             <div className="node-box flex aspect-square w-full items-center justify-center rounded-token-lg border border-border bg-card transition-colors duration-300">
-              <Globe2
+              <GetIcon
+                name="Globe2"
                 className="h-[40%] w-[40%] text-muted-foreground"
                 strokeWidth={1.6}
               />
@@ -202,7 +198,6 @@ export default function KutahakGraph(): React.JSX.Element {
           </div>
         </div>
 
-        {/*  DEST 3  */}
         <div
           data-kutahak-node
           data-node="dest3"
@@ -215,7 +210,8 @@ export default function KutahakGraph(): React.JSX.Element {
         >
           <div className="w-full">
             <div className="node-box flex aspect-square w-full items-center justify-center rounded-token-lg border border-border bg-card transition-colors duration-300">
-              <Globe2
+              <GetIcon
+                name="Globe2"
                 className="h-[40%] w-[40%] text-muted-foreground"
                 strokeWidth={1.6}
               />

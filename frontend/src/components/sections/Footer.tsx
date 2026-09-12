@@ -1,27 +1,12 @@
 import React from "react";
 import Link from "next/link";
-import { Link2, Globe, Clock } from "lucide-react";
 import Button from "@/components/ui/Button";
-import { usefulLinks, statistics } from "@/contents/landing";
+import { footerContent } from "@/contents/landing";
+import GetIcon from "@/components/ui/Icon";
 
 const Footer = (): React.JSX.Element => {
-  const socialLinks = [
-    {
-      href: "1",
-      icon: <Link2 size={16} />,
-      label: "سوشیال 1",
-    },
-    {
-      href: "2",
-      icon: <Link2 size={16} />,
-      label: "سوشیال 2",
-    },
-    {
-      href: "3",
-      icon: <Link2 size={16} />,
-      label: "سوشیال 3",
-    },
-  ];
+  const { about, usefulLinks, statistics, contact, socialLinks } =
+    footerContent;
 
   return (
     <footer>
@@ -33,17 +18,7 @@ const Footer = (): React.JSX.Element => {
               درباره ما
             </span>
             <p className="font-token-normal text-token-sm text-muted-foreground leading-token-relaxed">
-              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با
-              استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله
-              در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی تکنولوژی مورد
-              نیاز، و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد،
-              کتابهای زیادی در شصت و سه درصد گذشته حال و آینده، شناخت فراوان
-              جامعه و متخصصان را می طلبد، تا با نرم افزارها شناخت بیشتری را برای
-              طراحان رایانه ای علی الخصوص طراحان خلاقی، و فرهنگ پیشرو در زبان
-              فارسی ایجاد کرد، در این صورت می توان امید داشت که تمام و دشواری
-              موجود در ارائه راهکارها، و شرایط سخت تایپ به پایان رسد و زمان مورد
-              نیاز شامل حروفچینی دستاوردهای اصلی، و جوابگوی سوالات پیوسته اهل
-              دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.
+              {about.description}
             </p>
           </div>
 
@@ -111,37 +86,37 @@ const Footer = (): React.JSX.Element => {
                 <div className="flex items-center justify-between flex-wrap gap-x-3 gap-y-1.5">
                   <span className="font-token-normal">پشتیبان تلگرام</span>
                   <a
-                    href=""
+                    href={contact.telegram.href}
                     target="_blank"
                     rel="noopener noreferrer"
                     dir="ltr"
                     className="font-token-normal mr-auto hover:text-brand transition-colors"
                   >
-                    @kootahak-sup
+                    {contact.telegram.value}
                   </a>
                 </div>
                 <div className="flex items-center justify-between flex-wrap gap-x-3 gap-y-1.5">
                   <span className="font-token-normal">ایمیل</span>
                   <a
-                    href="mailto:"
+                    href={contact.email.href}
                     dir="ltr"
                     className="font-token-normal mr-auto hover:text-brand transition-colors"
                   >
-                    info@kootahak.ir
+                    {contact.email.value}
                   </a>
                 </div>
                 <div className="flex items-center justify-between flex-wrap gap-x-3 gap-y-1.5">
                   <span className="flex items-center gap-x-1.5 font-token-normal">
-                    <Clock size={14} className="text-brand" />
+                    <GetIcon name="Clock" size={14} className="text-brand" />
                     ساعات پاسخگویی
                   </span>
                   <span className="font-token-normal mr-auto hover:text-brand transition-colors">
-                    ۹ صبح الی ۶ عصر
+                    {contact.workingHours.value}
                   </span>
                 </div>
               </div>
               <Button size="md" variant="secondary">
-                Some Action
+                {contact.cta.label}
               </Button>
             </div>
           </div>
@@ -150,10 +125,9 @@ const Footer = (): React.JSX.Element => {
 
       {/* Footer Bottom */}
       <div className="w-full mx-auto mt-4 bg-card border border-border p-2 shadow-token-md">
-        {/* Footer Bottom */}
-        <div className="flex items-center justify-between gap-x-4 gap-y-3 flex-wrap p-4 text-muted-foreground text-token-sm ">
+        <div className="flex items-center justify-between gap-x-4 gap-y-3 flex-wrap p-4 text-muted-foreground text-token-sm">
           <div className="flex items-center gap-x-2">
-            <Globe size={16} />
+            <GetIcon name="Globe" size={16} />
             <p className="font-token-normal">
               تمامی حقوق مادی و معنوی این وب‌سایت متعلق به{" "}
               <span className="text-brand font-token-semibold">کوتاهک</span>{" "}
@@ -175,7 +149,7 @@ const Footer = (): React.JSX.Element => {
                   className="flex items-center justify-center size-10 bg-muted hover:bg-brand/20 transition-colors text-muted-foreground hover:text-brand rounded-token-sm"
                   aria-label={social.label}
                 >
-                  {social.icon}
+                  <GetIcon name={social.icon} size={16} />
                 </a>
               ))}
             </div>

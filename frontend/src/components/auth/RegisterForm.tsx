@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, UserPlus } from "lucide-react";
+import GetIcon from "@/components/ui/Icon";
 
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import Button from "@/components/ui/Button";
@@ -61,7 +61,7 @@ export function RegisterForm() {
       <div className="space-y-8">
         <div className="space-y-3">
           <div className="flex size-12 items-center justify-center rounded-token-lg bg-brand/10 text-brand">
-            <UserPlus className="size-5" aria-hidden="true" />
+            <GetIcon name="UserPlus" className="size-5" aria-hidden="true" />
           </div>
           <div className="space-y-2">
             <p className="label">ایجاد حساب</p>
@@ -166,7 +166,7 @@ export function RegisterForm() {
             className="gap-2"
           >
             {registerMutation.isPending ? "در حال ثبت‌نام..." : "ساخت حساب"}
-            <ArrowLeft className="size-4" aria-hidden="true" />
+            <GetIcon name="ArrowLeft" className="size-4" aria-hidden="true" />
           </Button>
 
           {registerMutation.isError && (

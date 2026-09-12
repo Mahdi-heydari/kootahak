@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import GetIcon from "@/components/ui/Icon";
 import { useScroll } from "@/hooks/use-scroll";
 import ThemeToggle from "@/components/ui/theme-toggle";
 import Button from "@/components/ui/Button";
@@ -84,12 +84,12 @@ function Header(): React.JSX.Element {
           <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
 
-          <Link href="/login">
-            <Button variant="outline" size="md">
-              ورود | ثبت نام
-            </Button>
-          </Link>
-        </div>
+            <Link href="/login">
+              <Button variant="outline" size="md">
+                ورود | ثبت نام
+              </Button>
+            </Link>
+          </div>
 
           <button
             type="button"
@@ -98,7 +98,11 @@ function Header(): React.JSX.Element {
             aria-label="Toggle menu"
             aria-expanded={isMenuOpen}
           >
-            {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            {isMenuOpen ? (
+              <GetIcon name="X" size={22} />
+            ) : (
+              <GetIcon name="Menu" size={22} />
+            )}
           </button>
         </nav>
 
@@ -127,12 +131,12 @@ function Header(): React.JSX.Element {
               ))}
             </ul>
 
-          <div className="flex flex-col items-center justify-between gap-2 w-full pt-2 border-t border-border">
-            <Link href="/login" onClick={handleCloseMenu} className="w-full">
-              <Button variant="outline" size="md" className="w-full">
-                ورود | ثبت نام
-              </Button>
-            </Link>
+            <div className="flex flex-col items-center justify-between gap-2 w-full pt-2 border-t border-border">
+              <Link href="/login" onClick={handleCloseMenu} className="w-full">
+                <Button variant="outline" size="md" className="w-full">
+                  ورود | ثبت نام
+                </Button>
+              </Link>
 
               <ThemeToggle />
             </div>

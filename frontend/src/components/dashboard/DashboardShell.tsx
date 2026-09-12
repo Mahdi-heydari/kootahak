@@ -20,7 +20,9 @@ export function DashboardShell({ children }: DashboardShellProps) {
 
       <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
         <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
-        <main className="scrollbar-thin flex-1 overflow-y-auto">{children}</main>
+        <main className="scrollbar-thin flex-1 overflow-y-auto">
+          {children}
+        </main>
       </div>
     </div>
   );

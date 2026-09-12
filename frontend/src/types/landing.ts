@@ -1,4 +1,4 @@
-import { Renderer, Program, Mesh } from "ogl";
+import type { IconName } from "@/components/ui/Icon";
 
 export type NavLink = {
   label: string;
@@ -6,6 +6,17 @@ export type NavLink = {
   external?: boolean;
 };
 
+// Profile
+export interface ProfileMenuItem {
+  href: string;
+  label: string;
+  icon: IconName;
+}
+
+export interface ProfileContent {
+  menuItems: ProfileMenuItem[];
+  logoutLabel: string;
+}
 export interface ProfileProps {
   user: {
     name: string;
@@ -19,58 +30,105 @@ export interface UserInfo {
   phone: string;
 }
 
-// GradientWaves
-export interface GradientWavesProps {
-  horizonColor?: string;
-  waveColor?: string;
-  crestColor?: string;
-  speed?: number;
-  amplitude?: number;
-  waveScale?: number;
-  waveRatio?: number;
-  swell?: number;
-  turbulence?: number;
-  tilt?: number;
-  zoom?: number;
-  height?: number;
-  fogDepth?: number;
-  detail?: "ultra-low" | "low" | "medium" | "high";
-  brightness?: number;
-  opacity?: number;
-  mouseInteraction?: boolean;
-  parallaxStrength?: number;
-  grain?: boolean;
-  grainIntensity?: number;
-  className?: string;
-}
-export interface Uniforms {
-  iTime: { value: number };
-  iResolution: { value: Float32Array };
-  uSpeed: { value: number };
-  uAmplitude: { value: number };
-  uWaveScale: { value: number };
-  uWaveRatio: { value: number };
-  uSwell: { value: number };
-  uTurbulence: { value: number };
-  uTilt: { value: number };
-  uZoom: { value: number };
-  uHeight: { value: number };
-  uFogDepth: { value: number };
-  uSteps: { value: number };
-  uBrightness: { value: number };
-  uOpacity: { value: number };
-  uGrain: { value: number };
-  uGrainIntensity: { value: number };
-  uMouse: { value: Float32Array };
-  uParallax: { value: number };
-  uEnableMouse: { value: boolean };
-  uHorizonColor: { value: Float32Array };
-  uWaveColor: { value: Float32Array };
-  uCrestColor: { value: Float32Array };
+// Hero
+export interface HeroFeature {
+  icon: IconName;
+  title: string;
+  description: string;
 }
 
-export interface Context {
-  renderer: Renderer;
-  program: Program;
-  mesh: Mesh;
+export interface HeroTrustItem {
+  icon: IconName;
+  text: string;
+}
+
+export interface HeroContent {
+  preTitle: string;
+  titleHighlightWords: string[];
+  title: string;
+  description: string;
+  placeholder: string;
+  features: HeroFeature[];
+  trustItems: HeroTrustItem[];
+}
+
+// Problems
+export interface ProblemItem {
+  icon: IconName;
+  title: string;
+  description: string;
+}
+
+export interface ProblemsContent {
+  heading: {
+    before: string;
+    highlight: string;
+    after: string;
+    description: string;
+  };
+  problems: ProblemItem[];
+}
+
+// Solutions
+export interface SolutionBenefit {
+  icon: IconName;
+  text: string;
+}
+
+export interface SolutionContent {
+  heading: {
+    line1: string;
+    line2Before: string;
+    highlight: string;
+  };
+  description: string;
+  benefits: SolutionBenefit[];
+  cta: {
+    label: string;
+    tagline: string;
+  };
+}
+
+// Footer
+interface SocialLink {
+  href: string;
+  icon: IconName;
+  label: string;
+}
+
+interface UsefulLink {
+  href: string;
+  label: string;
+  external?: boolean;
+}
+
+interface Statistic {
+  value: string;
+  label: string;
+}
+
+export interface FooterContent {
+  about: {
+    description: string;
+  };
+  usefulLinks: UsefulLink[];
+  statistics: Statistic[];
+  contact: {
+    telegram: {
+      value: string;
+      href: string;
+    };
+    email: {
+      value: string;
+      href: string;
+    };
+    workingHours: {
+      value: string;
+    };
+    cta: {
+      label: string;
+      href: string;
+    };
+  };
+  socialLinks: SocialLink[];
 }

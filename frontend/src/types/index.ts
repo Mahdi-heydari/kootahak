@@ -1,5 +1,4 @@
-export * from "./schema"
+export * from "./schema";
 export * from "./landing";
-export * from "./links"
-export * from "./auth"
-
+export * from "./links";
+export * from "./auth";
