@@ -1,47 +1,27 @@
-import { MousePointerClick, Link2, ShieldQuestion, Share2 } from "lucide-react";
 import React from "react";
-
-const problems = [
-  {
-    icon: <MousePointerClick size={20} strokeWidth={1.5} />,
-    title: "اعتماد کم، آمار صفر",
-    description:
-      "کاربر به آدرس‌های طولانی و عجیب اعتماد نمی‌کنه و کلیک نمی‌کنه. حتی وقتی کلیک کنه، تو هیچ‌وقت نمی‌فهمی از کجا اومد و کِی.",
-  },
-  {
-    icon: <Link2 size={20} strokeWidth={1.5} />,
-    title: "لینک‌های بلند و زشت",
-    description:
-      "آدرس‌های پر از پارامتر، توی پست و پیام جا نمیشن و به‌سختی توی ذهن می‌مونن.",
-  },
-  {
-    icon: <ShieldQuestion size={20} strokeWidth={1.5} />,
-    title: "مقصد نامشخص",
-    description:
-      "کاربر نمی‌دونه لینک به کجا وصله، و همین بی‌اعتمادی باعث میشه کلیک نکنه.",
-  },
-  {
-    icon: <Share2 size={20} strokeWidth={1.5} />,
-    title: "ابزارهای پراکنده",
-    description:
-      "برای هر لینک باید سراغ یه ابزار جدا بری؛ بدون مدیریت متمرکز و یکپارچه.",
-  },
-];
+import Icon from "@/components/ui/Icon";
+import { problemsContent } from "@/contents/landing";
 
 const Problems = (): React.JSX.Element => {
+  const { heading, problems } = problemsContent;
+
   return (
-    <section className="w-full pb-20 pt-25" id="problems">
+    <section
+      className="w-full py-20 scroll-mt-16 md:scroll-mt-24"
+      id="problems"
+    >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-center gap-x-3 sm:gap-x-7 mb-12">
           <div className="hidden sm:block w-full h-px bg-linear-to-r from-primary/20 to-primafrom-primary/5"></div>
           <div className="text-center sm:shrink-0">
             <h2 className="text-token-3xl sm:text-token-4xl md:text-token-5xl font-token-bold text-foreground leading-token-tight">
-              لینک خوب، فقط <span className="text-brand">کوتاه</span> نیست
+              {heading.before}{" "}
+              <span className="text-brand">{heading.highlight}</span>{" "}
+              {heading.after}
             </h2>
             <p className="text-token-base text-muted-foreground max-w-xl mx-auto mt-4 leading-token-relaxed">
-              بیشتر لینک‌هایی که هر روز ساخته میشن، چند مشکل مشترک دارن؛
-              مشکل‌هایی که روی اعتماد کاربر و نتیجه‌ی کارت تأثیر می‌ذارن.
+              {heading.description}
             </p>
           </div>
           <div className="hidden sm:block w-full h-px bg-linear-to-l from-primary/20 to-primafrom-primary/5"></div>
@@ -55,7 +35,7 @@ const Problems = (): React.JSX.Element => {
               <div className="feature-card control group bg-card hover:bg-brand/5 border border-border hover:border-brand/30 transition-all duration-token-normal rounded-token-xl w-full md:flex-1 h-100 relative grid place-items-center">
                 <div className="p-8 flex flex-col items-center justify-center gap-3 max-w-md text-center">
                   <div className="p-2.5 rounded-token-sm bg-brand/10 text-brand group-hover:bg-brand/20 transition-colors duration-token-normal">
-                    <MousePointerClick size={20} strokeWidth={1.5} />
+                    <Icon name={problems[0].icon} size={20} strokeWidth={1.5} />
                   </div>
                   <h3 className="text-token-xl font-token-semibold text-foreground">
                     {problems[0].title}
@@ -72,7 +52,7 @@ const Problems = (): React.JSX.Element => {
               <div className="feature-card group bg-card hover:bg-brand/5 border border-border hover:border-brand/30 transition-all duration-token-normal rounded-token-xl w-full md:w-100 h-100 relative grid place-items-center">
                 <div className="p-8 flex flex-col items-center justify-center gap-3 max-w-md text-center">
                   <div className="p-2.5 rounded-token-sm bg-brand/10 text-brand group-hover:bg-brand/20 transition-colors duration-token-normal">
-                    <Link2 size={20} strokeWidth={1.5} />
+                    <Icon name={problems[1].icon} size={20} strokeWidth={1.5} />
                   </div>
                   <h3 className="text-token-xl font-token-semibold text-foreground">
                     {problems[1].title}
@@ -91,7 +71,7 @@ const Problems = (): React.JSX.Element => {
               <div className="feature-card group bg-card hover:bg-brand/5 border border-border hover:border-brand/30 transition-all duration-token-normal rounded-token-xl w-full md:w-100 h-100 grid place-items-center gap-3">
                 <div className="p-8 flex flex-col items-center justify-center gap-3 max-w-md text-center">
                   <div className="p-2.5 rounded-token-sm bg-brand/10 text-brand group-hover:bg-brand/20 transition-colors duration-token-normal">
-                    <ShieldQuestion size={20} strokeWidth={1.5} />
+                    <Icon name={problems[2].icon} size={20} strokeWidth={1.5} />
                   </div>
                   <h3 className="text-token-xl font-token-semibold text-foreground text-center">
                     {problems[2].title}
@@ -108,7 +88,7 @@ const Problems = (): React.JSX.Element => {
               <div className="feature-card group bg-card hover:bg-brand/5 border border-border hover:border-brand/30 transition-all duration-token-normal rounded-token-xl w-full md:flex-1 h-100 relative grid place-items-center">
                 <div className="p-8 flex flex-col items-center justify-center gap-3 max-w-md text-center">
                   <div className="p-2.5 rounded-token-sm bg-brand/10 text-brand group-hover:bg-brand/20 transition-colors duration-token-normal">
-                    <Share2 size={20} strokeWidth={1.5} />
+                    <Icon name={problems[3].icon} size={20} strokeWidth={1.5} />
                   </div>
                   <h3 className="text-token-xl font-token-semibold text-foreground">
                     {problems[3].title}

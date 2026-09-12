@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { sidebarItems } from "@/contents/dashboard";
-import { Settings, X } from "lucide-react";
+import GetIcon from "@/components/ui/Icon";
 
 interface DashboardSidebarProps {
   mobileOpen?: boolean;
@@ -29,7 +29,9 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
           کوتاهک
           <span className="text-brand mr-2">/</span>
         </Link>
-        <p className="mt-1 text-token-sm text-muted-foreground">مدیریت لینک‌ها</p>
+        <p className="mt-1 text-token-sm text-muted-foreground">
+          مدیریت لینک‌ها
+        </p>
       </div>
 
       <nav className="flex-1">
@@ -54,7 +56,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
           onClick={onNavigate}
           className={`flex items-center gap-2 rounded-token-md px-3 py-2.5 text-token-sm transition-colors duration-token-normal ${linkClass("/settings")}`}
         >
-          <Settings className="size-5" />
+          <GetIcon name="Settings" className="size-5" />
           <span>حساب کاربری</span>
         </Link>
       </div>
@@ -62,7 +64,10 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 
-export function DashboardSidebar({ mobileOpen = false, onClose }: DashboardSidebarProps) {
+export function DashboardSidebar({
+  mobileOpen = false,
+  onClose,
+}: DashboardSidebarProps) {
   return (
     <>
       {/* Desktop */}
@@ -88,7 +93,7 @@ export function DashboardSidebar({ mobileOpen = false, onClose }: DashboardSideb
                 className="flex size-11 items-center justify-center rounded-token-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                 aria-label="بستن منو"
               >
-                <X className="size-5" />
+                <GetIcon name="X" className="size-5" />
               </button>
             </div>
 

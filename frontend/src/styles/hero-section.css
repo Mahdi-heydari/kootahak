@@ -1,0 +1,118 @@
+:root {
+  --hero-c1: hsl(270, 33%, 95%);
+  --hero-c2: hsl(270, 33%, 92%);
+  --hero-c3: hsl(270, 33%, 89%);
+  --hero-c4: hsl(270, 33%, 86%);
+  --hero-c5: hsl(270, 33%, 83%);
+  --hero-c6: hsl(270, 33%, 80%);
+  --hero-c7: hsl(270, 33%, 77%);
+  --hero-c8: hsl(270, 33%, 74%);
+  --hero-shape: hsl(0, 0%, 0%, 0.06);
+}
+
+.dark {
+  --hero-c1: hsl(268, 18%, 10%);
+  --hero-c2: hsl(240, 5%, 11%);
+  --hero-c3: hsl(260, 28%, 12%);
+  --hero-c4: hsl(263, 10%, 15%);
+  --hero-c5: hsl(260, 26%, 17%);
+  --hero-c6: hsl(272, 11%, 19%);
+  --hero-c7: hsl(266, 18%, 23%);
+  --hero-c8: hsl(267, 15%, 28%);
+  --hero-shape: hsl(0, 0%, 100%, 0.03);
+}
+
+.hero {
+  background: linear-gradient(
+    45deg,
+    var(--hero-c1) 0%,
+    var(--hero-c2) 20%,
+    var(--hero-c3) 40%,
+    var(--hero-c4) 55%,
+    var(--hero-c5) 70%,
+    var(--hero-c6) 82%,
+    var(--hero-c7) 92%,
+    var(--hero-c8) 100%
+  );
+  background-size: 400% 400%;
+  animation: Gradient 15s ease infinite;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-evenly;
+  overflow: hidden;
+  position: relative;
+  mask: linear-gradient(to bottom, black 0%, black 20%, transparent 100%);
+  -webkit-mask: linear-gradient(
+    to bottom,
+    black 0%,
+    black 70%,
+    transparent 100%
+  );
+  mask-size: 100% 100%;
+  -webkit-mask-size: 100% 100%;
+  mask-position: center;
+  -webkit-mask-position: center;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+}
+
+.hero::before,
+.hero::after {
+  content: "";
+  width: 70vmax;
+  height: 70vmax;
+  position: absolute;
+  background: var(--hero-shape);
+  left: -20vmin;
+  top: -20vmin;
+  animation:
+    morph 15s linear infinite alternate,
+    spin 20s linear infinite;
+  z-index: 1;
+  will-change: border-radius, transform;
+  transform-origin: 55% 55%;
+  pointer-events: none;
+  filter: blur(15px);
+}
+
+.hero::after {
+  width: 70vmin;
+  height: 70vmin;
+  left: auto;
+  right: -10vmin;
+  top: auto;
+  bottom: 0;
+  animation:
+    morph 10s linear infinite alternate,
+    spin 26s linear infinite reverse;
+  transform-origin: 20% 20%;
+  filter: blur(15px);
+}
+
+@keyframes Gradient {
+  0% {
+    background-position: 0 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+@keyframes morph {
+  0% {
+    border-radius: 40% 60% 60% 40% / 70% 30% 70% 30%;
+  }
+  100% {
+    border-radius: 40% 60%;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
+}

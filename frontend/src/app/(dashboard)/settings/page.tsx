@@ -107,7 +107,10 @@ export default function SettingsPage() {
           noValidate
         >
           <div className="space-y-2">
-            <label className="label block text-foreground" htmlFor="currentPassword">
+            <label
+              className="label block text-foreground"
+              htmlFor="currentPassword"
+            >
               رمز فعلی
             </label>
             <input
@@ -119,7 +122,10 @@ export default function SettingsPage() {
             />
           </div>
           <div className="space-y-2">
-            <label className="label block text-foreground" htmlFor="newPassword">
+            <label
+              className="label block text-foreground"
+              htmlFor="newPassword"
+            >
               رمز جدید
             </label>
             <input
@@ -131,7 +137,10 @@ export default function SettingsPage() {
             />
           </div>
           <div className="space-y-2">
-            <label className="label block text-foreground" htmlFor="confirmPassword">
+            <label
+              className="label block text-foreground"
+              htmlFor="confirmPassword"
+            >
               تکرار رمز جدید
             </label>
             <input
@@ -140,7 +149,9 @@ export default function SettingsPage() {
               autoComplete="new-password"
               {...passwordForm.register("confirmPassword")}
               className={inputClassName}
-              aria-invalid={Boolean(passwordForm.formState.errors.confirmPassword)}
+              aria-invalid={Boolean(
+                passwordForm.formState.errors.confirmPassword,
+              )}
             />
             {passwordForm.formState.errors.confirmPassword && (
               <p className="text-token-xs font-token-medium text-error">

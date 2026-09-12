@@ -7,7 +7,7 @@
 @import "../styles/tokens/motion.css";
 
 @import "../styles/kutahak-graph.css";
-@import "../styles/GradientWaves.css";
+@import "../styles/hero-section.css";
 
 :root {
   --theme-change-x: 0;
@@ -270,7 +270,11 @@
 
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: color-mix(in srgb, var(--muted-foreground) 35%, transparent)
+    scrollbar-color: color-mix(
+        in srgb,
+        var(--muted-foreground) 35%,
+        transparent
+      )
       transparent;
   }
 

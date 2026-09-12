@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { ArrowLeft, LockKeyhole } from "lucide-react";
+import GetIcon from "@/components/ui/Icon";
 import { useRouter } from "next/navigation";
 
 import { AuthLayout } from "@/components/auth/AuthLayout";
@@ -52,7 +52,7 @@ export function LoginForm() {
       <div className="space-y-8">
         <div className="space-y-3">
           <div className="flex size-12 items-center justify-center rounded-token-lg bg-brand/10 text-brand">
-            <LockKeyhole className="size-5" aria-hidden="true" />
+            <GetIcon name="LockKeyhole" className="size-5" aria-hidden="true" />
           </div>
           <div className="space-y-2">
             <p className="label">ورود به حساب</p>
@@ -115,7 +115,7 @@ export function LoginForm() {
             className="gap-2"
           >
             {loginMutation.isPending ? "در حال ورود..." : "ورود"}
-            <ArrowLeft className="size-4" aria-hidden="true" />
+            <GetIcon name="ArrowLeft" className="size-4" aria-hidden="true" />
           </Button>
 
           {loginMutation.isError && (

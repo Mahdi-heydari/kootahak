@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ClipboardPaste, Link2, X } from "lucide-react";
+import GetIcon from "@/components/ui/Icon";
 
 import Button from "@/components/ui/Button";
 import { readUrlFromClipboard } from "@/lib/dashboard/clipboard-url";
@@ -112,7 +112,7 @@ export default function CreateLinkModal({
         <div className="mb-6 flex items-start justify-between gap-3">
           <div className="flex items-start gap-3">
             <div className="flex size-11 shrink-0 items-center justify-center rounded-token-lg bg-brand/10 text-brand">
-              <Link2 className="size-5" />
+              <GetIcon name="Link2" className="size-5" />
             </div>
             <div>
               <h2 id="create-link-title" className="h3">
@@ -130,14 +130,21 @@ export default function CreateLinkModal({
             className="flex size-11 shrink-0 items-center justify-center rounded-token-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             aria-label="بستن"
           >
-            <X className="size-5" />
+            <GetIcon name="X" className="size-5" />
           </button>
         </div>
 
-        <form className="space-y-4" onSubmit={handleSubmit(handleFormSubmit)} noValidate>
+        <form
+          className="space-y-4"
+          onSubmit={handleSubmit(handleFormSubmit)}
+          noValidate
+        >
           <div className="space-y-2">
             <div className="flex items-center justify-between gap-2">
-              <label className="label block text-foreground" htmlFor="originalUrl">
+              <label
+                className="label block text-foreground"
+                htmlFor="originalUrl"
+              >
                 آدرس اصلی
               </label>
               <button
@@ -145,7 +152,7 @@ export default function CreateLinkModal({
                 onClick={handlePasteFromClipboard}
                 className="inline-flex items-center gap-1.5 text-token-xs font-token-medium text-brand transition-colors hover:text-brand/80"
               >
-                <ClipboardPaste className="size-3.5" />
+                <GetIcon name="ClipboardPaste" className="size-3.5" />
                 چسباندن از کلیپ‌بورد
               </button>
             </div>
@@ -192,7 +199,10 @@ export default function CreateLinkModal({
               نام کوتاه <span className="text-muted-foreground">(اختیاری)</span>
             </label>
             <div className="flex items-center gap-2">
-              <span className="shrink-0 text-token-sm text-muted-foreground" dir="ltr">
+              <span
+                className="shrink-0 text-token-sm text-muted-foreground"
+                dir="ltr"
+              >
                 kootahak.ir/
               </span>
               <input

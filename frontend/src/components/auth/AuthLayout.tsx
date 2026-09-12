@@ -1,8 +1,5 @@
-"use client";
-
 import Link from "next/link";
-import { Link2, ShieldCheck, Sparkles } from "lucide-react";
-
+import GetIcon from "@/components/ui/Icon";
 import Button from "@/components/ui/Button";
 import ThemeToggle from "@/components/ui/theme-toggle";
 
@@ -23,7 +20,10 @@ export function AuthLayout({
     <section className="min-h-dvh bg-background text-foreground">
       {/* Mobile header */}
       <header className="flex items-center justify-between border-b border-border bg-card px-4 py-3 lg:hidden">
-        <Link href="/" className="text-token-xl font-token-bold text-foreground">
+        <Link
+          href="/"
+          className="text-token-xl font-token-bold text-foreground"
+        >
           کوتاهک
           <span className="text-brand mr-2">/</span>
         </Link>
@@ -45,9 +45,12 @@ export function AuthLayout({
           <div className="absolute inset-x-10 bottom-10 top-10 rounded-token-xl border border-brand/20 bg-brand/5 shadow-token-sm backdrop-blur-sm" />
 
           <div className="relative z-10 flex h-full flex-col justify-between p-10 xl:p-14">
-            <Link href="/" className="inline-flex w-fit items-center gap-3 rounded-token-full border border-brand/20 bg-brand/10 px-4 py-2">
+            <Link
+              href="/"
+              className="inline-flex w-fit items-center gap-3 rounded-token-full border border-brand/20 bg-brand/10 px-4 py-2"
+            >
               <span className="flex size-8 items-center justify-center rounded-token-full bg-brand/15 text-brand">
-                <Link2 className="size-4" aria-hidden="true" />
+                <GetIcon name="Link2" className="size-4" aria-hidden="true" />
               </span>
               <span className="text-token-sm font-token-medium text-foreground">
                 کوتاهک
@@ -68,7 +71,9 @@ export function AuthLayout({
                   <p className="mt-2 label">دسترسی به پنل</p>
                 </div>
                 <div className="surface rounded-token-lg p-4 shadow-token-sm">
-                  <p className="text-token-2xl font-token-semibold text-foreground">امن</p>
+                  <p className="text-token-2xl font-token-semibold text-foreground">
+                    امن
+                  </p>
                   <p className="mt-2 label">ورود محافظت‌شده</p>
                 </div>
               </div>
@@ -76,10 +81,18 @@ export function AuthLayout({
 
             <div className="flex items-center justify-between gap-6 text-token-sm text-muted-foreground">
               <div className="flex items-center gap-3">
-                <ShieldCheck className="size-5 text-brand" aria-hidden="true" />
+                <GetIcon
+                  name="ShieldCheck"
+                  className="size-5 text-brand"
+                  aria-hidden="true"
+                />
                 اطلاعات حساب شما با دقت نگهداری می‌شود.
               </div>
-              <Sparkles className="size-5 text-brand/70" aria-hidden="true" />
+              <GetIcon
+                name="Sparkles"
+                className="size-5 text-brand/70"
+                aria-hidden="true"
+              />
             </div>
           </div>
         </aside>

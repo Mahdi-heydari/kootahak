@@ -1,13 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import GetIcon from "@/components/ui/Icon";
 import { useScroll } from "@/hooks/use-scroll";
 import ThemeToggle from "@/components/ui/theme-toggle";
 import Button from "@/components/ui/Button";
 import { navLinks } from "@/contents/landing";
-import Hero from "./Hero";
 
 function Header(): React.JSX.Element {
   const [isMenuOpen, setMenuOpen] = useState<boolean>(false);
@@ -21,102 +20,130 @@ function Header(): React.JSX.Element {
     setMenuOpen(false);
   };
 
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMenuOpen]);
+
   return (
-    <header className="min-h-screen bg-background text-primary">
-      {/* Desktop */}
-      <nav
-        aria-hidden={isMenuOpen}
+    <>
+      <div
+        onClick={handleCloseMenu}
+        aria-hidden="true"
         className={[
-          "container left-0 right-0 px-4 mx-auto transition-all duration-token-normal ease-token-default",
-          "fixed flex justify-between z-50 items-center p-4",
-          isScrolled
-            ? "bg-background-secondary/50 md:mt-4 backdrop-blur-md shadow-token-md rounded-token-sm rounded-bl-none rounded-br-none"
-            : "bg-transparent",
-          isMenuOpen ? "border-b-0" : "border-b",
+          "fixed inset-0 z-30 md:hidden transition-opacity duration-token-normal ease-token-default",
+          "bg-background/60 backdrop-blur-sm",
+          isMenuOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none",
         ].join(" ")}
-      >
-        <div className="flex items-center gap-15">
-          <div className="shrink-0 text-token-3xl font-extrabold">
-            <Link href="/" className="">
-              کوتاهک
-            </Link>
-            <span className="text-brand mr-2">/</span>
+      />
+
+      <header className="fixed z-50 left-0 right-0 text-primary">
+        {/* Desktop */}
+        <nav
+          aria-hidden={isMenuOpen}
+          className={[
+            "container px-4 mx-auto transition-all duration-token-normal ease-token-default",
+            "flex justify-between items-center p-4",
+            isScrolled || isMenuOpen
+              ? "bg-background-secondary/50 md:mt-4 backdrop-blur-md shadow-token-md rounded-token-sm rounded-bl-none rounded-br-none"
+              : "bg-transparent",
+          ].join(" ")}
+        >
+          <div className="flex items-center gap-15">
+            <div className="shrink-0 text-token-3xl font-extrabold">
+              <Link href="/" className="">
+                کوتاهک
+              </Link>
+              <span className="text-brand mr-2">/</span>
+            </div>
+
+            <ul className="hidden md:flex items-center  text-token-sm font-token-medium text-primary/60">
+              {navLinks.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    className="hover:text-primary hover:bg-muted p-3
+                  rounded-token-sm transition-colors"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
 
-          <ul className="hidden md:flex items-center  text-token-sm font-token-medium text-primary/60">
-            {navLinks.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="hover:text-primary hover:bg-muted p-3 rounded-token-sm transition-colors"
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+          <div className="hidden md:flex items-center gap-3">
+            <ThemeToggle />
 
-        <div className="hidden md:flex items-center gap-3">
-          <ThemeToggle />
-
-          <Link href="/login">
-            <Button variant="outline" size="md">
-              ورود | ثبت نام
-            </Button>
-          </Link>
-        </div>
-
-        <button
-          type="button"
-          onClick={handleToggleMenu}
-          className="md:hidden p-2 rounded-token-sm hover:bg-muted transition-colors"
-          aria-label="Toggle menu"
-          aria-expanded={isMenuOpen}
-        >
-          {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
-      </nav>
-
-      {/* Mobile */}
-      <div
-        aria-hidden={!isMenuOpen}
-        className={[
-          "md:hidden fixed left-0 right-0 top-22 z-40 container mx-auto px-4 transition-all duration-token-normal ease-token-default overflow-hidden ",
-          isMenuOpen
-            ? "max-h-fit opacity-100"
-            : "max-h-0 opacity-0 pointer-events-none",
-        ].join(" ")}
-      >
-        <div className="bg-card/95 backdrop-blur-md border border-border rounded-token-md shadow-token-md p-4 flex flex-col gap-4">
-          <ul className="flex flex-col gap-4 text-token-sm text-muted-foreground">
-            {navLinks.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  onClick={handleCloseMenu}
-                  className="hover:text-primary transition-colors"
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-
-          <div className="flex flex-col items-center justify-between gap-2 w-full pt-2 border-t border-border">
-            <Link href="/login" onClick={handleCloseMenu} className="w-full">
-              <Button variant="outline" size="md" className="w-full">
+            <Link href="/login">
+              <Button variant="outline" size="md">
                 ورود | ثبت نام
               </Button>
             </Link>
+          </div>
 
-            <ThemeToggle />
+          <button
+            type="button"
+            onClick={handleToggleMenu}
+            className="md:hidden p-2 rounded-token-sm hover:bg-muted transition-colors"
+            aria-label="Toggle menu"
+            aria-expanded={isMenuOpen}
+          >
+            {isMenuOpen ? (
+              <GetIcon name="X" size={22} />
+            ) : (
+              <GetIcon name="Menu" size={22} />
+            )}
+          </button>
+        </nav>
+
+        {/* Mobile */}
+        <div
+          aria-hidden={!isMenuOpen}
+          className={[
+            "md:hidden mt-4 z-40 container mx-auto px-4 transition-all duration-token-normal ease-token-default overflow-hidden ",
+            isMenuOpen
+              ? "max-h-fit opacity-100"
+              : "max-h-0 opacity-0 pointer-events-none",
+          ].join(" ")}
+        >
+          <div className="bg-card/95 backdrop-blur-md border border-border rounded-token-md shadow-token-md p-4 flex flex-col gap-4">
+            <ul className="flex flex-col gap-4 text-token-sm text-muted-foreground">
+              {navLinks.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    onClick={handleCloseMenu}
+                    className="hover:text-primary transition-colors"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+
+            <div className="flex flex-col items-center justify-between gap-2 w-full pt-2 border-t border-border">
+              <Link href="/login" onClick={handleCloseMenu} className="w-full">
+                <Button variant="outline" size="md" className="w-full">
+                  ورود | ثبت نام
+                </Button>
+              </Link>
+
+              <ThemeToggle />
+            </div>
           </div>
         </div>
-      </div>
-
-      <Hero />
-    </header>
+      </header>
+    </>
   );
 }
 

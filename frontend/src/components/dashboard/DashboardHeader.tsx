@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Menu } from "lucide-react";
+import GetIcon from "@/components/ui/Icon";
 import ThemeToggle from "../ui/theme-toggle";
 import Button from "../ui/Button";
 
@@ -19,7 +19,7 @@ export default function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
           className="flex size-11 shrink-0 items-center justify-center rounded-token-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground lg:hidden"
           aria-label="باز کردن منو"
         >
-          <Menu className="size-5" />
+          <GetIcon name="Menu" className="size-5" />
         </button>
 
         <div className="min-w-0">

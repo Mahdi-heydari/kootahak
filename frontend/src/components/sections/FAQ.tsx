@@ -1,8 +1,7 @@
-// components/sections/FAQ.tsx
 "use client";
 
 import React, { useState } from "react";
-import { ChevronDown } from "lucide-react";
+import GetIcon from "@/components/ui/Icon";
 import Button from "@/components/ui/Button";
 import { faqs } from "@/contents/landing";
 
@@ -14,7 +13,7 @@ const FAQ = (): React.JSX.Element => {
   };
 
   return (
-    <section className="py-20" id="faq">
+    <section className="py-20 scroll-mt-16 md:scroll-mt-24" id="faq">
       {/* Header */}
       <div className="flex items-center justify-center gap-x-3 sm:gap-x-7 mb-12">
         <div className="hidden sm:block w-full h-px bg-linear-to-r from-primary/20 to-primafrom-primary/5"></div>
@@ -45,7 +44,8 @@ const FAQ = (): React.JSX.Element => {
                 {faq.question}
               </span>
               <span className="shrink-0 text-muted-foreground mr-4 transition-transform duration-500 ease-in-out group-hover:text-brand">
-                <ChevronDown
+                <GetIcon
+                  name="ChevronDown"
                   size={20}
                   className={`transition-transform duration-500 ease-in-out ${
                     openIndex === index ? "rotate-180 text-brand" : ""
