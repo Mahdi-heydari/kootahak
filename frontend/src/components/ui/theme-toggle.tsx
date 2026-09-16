@@ -8,20 +8,16 @@ import { IconName } from "@/components/ui/Icon";
 export interface ThemeToggleContent {
   lightIcon: IconName;
   darkIcon: IconName;
-  lightLabel: string;
-  darkLabel: string;
 }
 export const themeToggleContent: ThemeToggleContent = {
   lightIcon: "Sun",
   darkIcon: "Moon",
-  lightLabel: "تغییر به حالت روشن",
-  darkLabel: "تغییر به حالت تاریک",
 };
 function ThemeToggle() {
   const { setTheme, resolvedTheme } = useTheme();
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const { lightIcon, darkIcon, lightLabel, darkLabel } = themeToggleContent;
+  const { lightIcon, darkIcon } = themeToggleContent;
 
   const themeChange = () => {
     const newTheme = resolvedTheme === "dark" ? "light" : "dark";
@@ -49,7 +45,7 @@ function ThemeToggle() {
     <button
       ref={buttonRef}
       onClick={themeChange}
-      aria-label={resolvedTheme === "dark" ? lightLabel : darkLabel}
+      aria-label={"تغییر سیستم روز و شب"}
       className="btn p-2 w-full flex justify-center items-center md:w-auto bg-muted md:bg-transparent md:rounded-token-md rounded-token-sm md:hover:bg-muted transition-colors"
     >
       <div className="block dark:hidden">
