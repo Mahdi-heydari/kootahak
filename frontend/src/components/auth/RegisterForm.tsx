@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
@@ -23,6 +24,9 @@ import {
 export function RegisterForm() {
   const router = useRouter();
   const registerMutation = useRegister();
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     register,
@@ -71,26 +75,31 @@ export function RegisterForm() {
       title="حساب کوتاهک خود را بسازید و لینک‌ها را حرفه‌ای‌تر مدیریت کنید"
       description="با ساخت حساب، لینک‌های کوتاه خود را در یک داشبورد منظم نگه می‌دارید و برای رشد مسیرهای مهمتان آماده می‌شوید."
     >
-      <div className="space-y-2 mb-8 text-center">
-        <div className="flex justify-center items-center gap-2">
-          <h2 className="text-2xl font-semibold leading-tight tracking-[-0.03em] md:text-3xl">
+      <div className="mb-8 space-y-2 text-center">
+        <div className="flex items-center justify-center gap-2">
+          <h2 className="text-token-2xl font-token-semibold leading-token-tight tracking-token-tight md:text-token-3xl">
             به <span className="text-brand">کوتاهک</span> خوش آمدید
           </h2>
         </div>
-        <p className="body-muted">
+        <p className="text-token-sm leading-token-relaxed text-muted-foreground">
           مشخصات خود را وارد کنید تا حساب شما ساخته شود و وارد داشبورد شوید.
         </p>
       </div>
+
       <div className="relative isolate">
-        <div className="absolute -top-4 right-1/2 left-1/2 translate-x-1/2 mx-auto bg-brand w-3/4 h-25 rounded-xl -z-10"></div>
-        <div className="space-y-8 dark:bg-background bg-primary-foreground p-7 shadow-token-md">
+        <div className="absolute -top-4 left-1/2 right-1/2 -z-10 mx-auto h-25 w-3/4 translate-x-1/2 rounded-token-xl bg-brand" />
+
+        <div className="space-y-8 bg-primary-foreground p-7 shadow-token-md dark:bg-background">
           <form
             className="space-y-5"
             onSubmit={handleSubmit(onSubmit)}
             noValidate
           >
             <div className="space-y-2">
-              <label className="label block text-foreground" htmlFor="name">
+              <label
+                className="block text-token-sm font-token-medium text-muted-foreground"
+                htmlFor="name"
+              >
                 نام
               </label>
               <input
@@ -108,7 +117,10 @@ export function RegisterForm() {
             </div>
 
             <div className="space-y-2">
-              <label className="label block text-foreground" htmlFor="email">
+              <label
+                className="block text-token-sm font-token-medium text-muted-foreground"
+                htmlFor="email"
+              >
                 ایمیل
               </label>
               <input
@@ -127,38 +139,84 @@ export function RegisterForm() {
             </div>
 
             <div className="grid gap-5 sm:grid-cols-2">
+              {/* رمز عبور */}
               <div className="space-y-2">
                 <label
-                  className="label block text-foreground"
+                  className="block text-token-sm font-token-medium text-muted-foreground"
                   htmlFor="password"
                 >
                   رمز عبور
                 </label>
-                <input
-                  className={authInputClassName}
-                  id="password"
-                  type="password"
-                  autoComplete="new-password"
-                  aria-invalid={Boolean(errors.password)}
-                  {...register("password")}
-                />
+                <div className="relative">
+                  <input
+                    className={`${authInputClassName} pl-10`}
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    autoComplete="new-password"
+                    aria-invalid={Boolean(errors.password)}
+                    {...register("password")}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    aria-label={
+                      showPassword ? "پنهان کردن رمز عبور" : "نمایش رمز عبور"
+                    }
+                    title={
+                      showPassword ? "پنهان کردن رمز عبور" : "نمایش رمز عبور"
+                    }
+                    aria-pressed={showPassword}
+                    className="absolute inset-y-0 left-3 flex items-center text-muted-foreground transition-colors hover:text-foreground"
+                    tabIndex={-1}
+                  >
+                    <GetIcon
+                      name={showPassword ? "EyeOff" : "Eye"}
+                      className="size-4"
+                    />
+                  </button>
+                </div>
               </div>
 
+              {/* تکرار رمز عبور */}
               <div className="space-y-2">
                 <label
-                  className="label block text-foreground"
+                  className="block text-token-sm font-token-medium text-muted-foreground"
                   htmlFor="confirmPassword"
                 >
                   تکرار رمز عبور
                 </label>
-                <input
-                  className={authInputClassName}
-                  id="confirmPassword"
-                  type="password"
-                  autoComplete="new-password"
-                  aria-invalid={Boolean(errors.confirmPassword)}
-                  {...register("confirmPassword")}
-                />
+                <div className="relative">
+                  <input
+                    className={`${authInputClassName} pl-10`}
+                    id="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    autoComplete="new-password"
+                    aria-invalid={Boolean(errors.confirmPassword)}
+                    {...register("confirmPassword")}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword((v) => !v)}
+                    aria-label={
+                      showConfirmPassword
+                        ? "پنهان کردن رمز عبور"
+                        : "نمایش رمز عبور"
+                    }
+                    title={
+                      showConfirmPassword
+                        ? "پنهان کردن رمز عبور"
+                        : "نمایش رمز عبور"
+                    }
+                    aria-pressed={showConfirmPassword}
+                    className="absolute inset-y-0 left-3 flex items-center text-muted-foreground transition-colors hover:text-foreground"
+                    tabIndex={-1}
+                  >
+                    <GetIcon
+                      name={showConfirmPassword ? "EyeOff" : "Eye"}
+                      className="size-4"
+                    />
+                  </button>
+                </div>
 
                 {errors.confirmPassword && (
                   <p className={authErrorClassName}>
@@ -168,18 +226,19 @@ export function RegisterForm() {
               </div>
             </div>
 
-            <div className="w-full text-foreground text-token-xs">
-              <div className="grid grid-cols-2 gap-y-3">
+            <div className="w-full text-token-xs text-foreground">
+              <div className="grid grid-cols-1 gap-y-3 sm:grid-cols-2">
                 {passwordRules.map((rule) => (
                   <div
                     key={`${rule.label}-${submitCount}`}
-                    className={`flex items-start gap-[10px] leading-[1.45] transition-colors ${
-                      rule.valid ? "text-[#16c95a]" : "text-[#777]"
+                    className={`flex items-start gap-2.5 leading-token-snug transition-colors ${
+                      rule.valid ? "text-success" : "text-muted-foreground"
                     } ${!rule.valid && errors.password ? "animate-shake" : ""}`}
                   >
                     <GetIcon
                       name={rule.valid ? "CircleCheck" : "Circle"}
                       size={18}
+                      aria-hidden="true"
                     />
                     <span>{rule.label}</span>
                   </div>
@@ -211,9 +270,10 @@ export function RegisterForm() {
             </Link>
           </div>
         </div>
+
         <div className="flex items-baseline gap-1.5">
-          <span className="block w-2 h-2 bg-brand" />
-          <p className="text-muted-foreground text-sm font-token-normal select-none mt-6">
+          <span className="block size-2 bg-brand" />
+          <p className="mt-6 select-none text-token-sm font-token-normal text-muted-foreground">
             عضویت شما در سایت به منظور پذیرفتن{" "}
             <a href="#" className="text-brand underline">
               قوانین

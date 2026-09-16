@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
@@ -20,6 +21,7 @@ import { loginSchema, type LoginFormValues } from "@/lib/validations/auth";
 export function LoginForm() {
   const router = useRouter();
   const loginMutation = useLogin();
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -47,27 +49,31 @@ export function LoginForm() {
       title="سریع وارد شوید و لینک‌های کوتاه خود را مدیریت کنید"
       description="پنل کوتاهک برای ساخت، پیگیری و مدیریت لینک‌ها طراحی شده تا مسیرهای مهم شما همیشه مرتب و قابل اندازه‌گیری بمانند."
     >
-      <div className="space-y-2 mb-8 text-center">
-        <div className="flex justify-center items-center gap-2">
-          <h2 className="text-2xl font-semibold leading-tight tracking-[-0.03em] md:text-3xl">
+      <div className="mb-8 space-y-2 text-center">
+        <div className="flex items-center justify-center gap-2">
+          <h2 className="text-token-2xl font-token-semibold leading-token-tight tracking-token-tight md:text-token-3xl">
             خوش برگشتید به <span className="text-brand">کوتاهک</span>
           </h2>
         </div>
-        <p className="body-muted">
+        <p className="text-token-sm leading-token-relaxed text-muted-foreground">
           ایمیل و رمز عبور خود را وارد کنید تا به داشبورد کوتاهک بروید.
         </p>
       </div>
 
       <div className="relative isolate">
-        <div className="absolute -top-4 right-1/2 left-1/2 translate-x-1/2 mx-auto bg-brand w-3/4 h-25 rounded-xl -z-10"></div>
-        <div className="space-y-8 dark:bg-background bg-primary-foreground p-7 shadow-token-md">
+        <div className="absolute -top-4 left-1/2 right-1/2 -z-10 mx-auto h-25 w-3/4 translate-x-1/2 rounded-token-xl bg-brand" />
+
+        <div className="space-y-8 bg-primary-foreground p-7 shadow-token-md dark:bg-background">
           <form
             className="space-y-5"
             onSubmit={handleSubmit(onSubmit)}
             noValidate
           >
             <div className="space-y-2">
-              <label className="label block text-foreground" htmlFor="email">
+              <label
+                className="block text-token-sm font-token-medium text-muted-foreground"
+                htmlFor="email"
+              >
                 ایمیل
               </label>
               <input
@@ -86,18 +92,38 @@ export function LoginForm() {
             </div>
 
             <div className="space-y-2">
-              <label className="label block text-foreground" htmlFor="password">
+              <label
+                className="block text-token-sm font-token-medium text-muted-foreground"
+                htmlFor="password"
+              >
                 رمز عبور
               </label>
-              <input
-                className={authInputClassName}
-                id="password"
-                type="password"
-                autoComplete="current-password"
-                placeholder="رمز عبور"
-                aria-invalid={Boolean(errors.password)}
-                {...register("password")}
-              />
+              <div className="relative">
+                <input
+                  className={`${authInputClassName} pl-10`}
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  // placeholder="رمز عبور"
+                  aria-invalid={Boolean(errors.password)}
+                  {...register("password")}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  aria-label={
+                    showPassword ? "پنهان کردن رمز عبور" : "نمایش رمز عبور"
+                  }
+                  aria-pressed={showPassword}
+                  className="absolute inset-y-0 left-3 flex items-center text-muted-foreground transition-colors hover:text-foreground"
+                  tabIndex={-1}
+                >
+                  <GetIcon
+                    name={showPassword ? "EyeOff" : "Eye"}
+                    className="size-4"
+                  />
+                </button>
+              </div>
 
               {errors.password && (
                 <p className={authErrorClassName}>{errors.password.message}</p>
@@ -130,8 +156,8 @@ export function LoginForm() {
         </div>
 
         <div className="flex items-baseline gap-1.5">
-          <span className="block w-2 h-2 bg-brand" />
-          <p className="text-muted-foreground text-sm font-token-normal select-none mt-6">
+          <span className="block size-2 bg-brand" />
+          <p className="mt-6 select-none text-token-sm font-token-normal text-muted-foreground">
             ورود شما به معنای پذیرش{" "}
             <a href="#" className="text-brand underline">
               قوانین

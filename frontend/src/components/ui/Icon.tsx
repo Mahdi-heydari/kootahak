@@ -21,6 +21,7 @@ import {
   Copy,
   ExternalLink,
   Eye,
+  EyeOff,
   MoreHorizontal,
   Pin,
   Pencil,
@@ -38,7 +39,7 @@ import {
   Sun,
   Moon,
   Circle,
-  CircleCheck
+  CircleCheck,
 } from "lucide-react";
 import type { LucideProps } from "lucide-react";
 
@@ -65,6 +66,7 @@ const icons = {
   Copy,
   ExternalLink,
   Eye,
+  EyeOff,
   MoreHorizontal,
   Pin,
   Pencil,

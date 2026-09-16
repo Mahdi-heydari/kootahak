@@ -39,12 +39,12 @@ export function AuthLayout({
         </div>
       </header>
 
-      <div className="grid lg:min-h-[calc(100dvh-57px)] lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:min-h-dvh">
+      <div className="grid lg:min-h-dvh lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
         {/* Desktop panel */}
         <aside className="relative isolate hidden overflow-hidden border-l border-border bg-card lg:grid">
           <DotPattern />
-          <div className="relative z-10 flex gap-25 h-full flex-col p-14 lg:pt-24">
-            <div className="flex flex-col justify-around h-full max-w-lg">
+          <div className="relative z-10 flex h-full flex-col gap-25 p-14 lg:pt-24">
+            <div className="flex h-full max-w-lg flex-col justify-around">
               <div className="space-y-4">
                 <p className="text-token-xs font-token-semibold uppercase tracking-token-wide text-brand">
                   {eyebrow}
@@ -69,13 +69,13 @@ export function AuthLayout({
                   اطلاعات حساب شما با دقت نگهداری می‌شود.
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="rounded-token-lg hover:border-brand/50 hover:text-brand transition-colors border border-border bg-card p-4 shadow-token-sm">
+                  <div className="rounded-token-lg border border-border bg-card p-4 shadow-token-sm transition-colors hover:border-brand/50 hover:text-brand">
                     <p className="text-token-2xl font-token-bold">24/7</p>
                     <p className="mt-2 text-token-xs font-token-medium uppercase tracking-token-wide">
                       دسترسی به پنل
                     </p>
                   </div>
-                  <div className="rounded-token-lg hover:border-brand/50 hover:text-brand transition-colors border border-border bg-card p-4 shadow-token-sm">
+                  <div className="rounded-token-lg border border-border bg-card p-4 shadow-token-sm transition-colors hover:border-brand/50 hover:text-brand">
                     <p className="text-token-2xl font-token-semibold">امن</p>
                     <p className="mt-2 text-token-xs font-token-medium uppercase tracking-token-wide">
                       ورود محافظت‌شده
