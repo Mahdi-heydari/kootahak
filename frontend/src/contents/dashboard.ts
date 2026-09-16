@@ -1,8 +1,6 @@
 import type { Link } from "@/types/links";
 
-export const sidebarItems = [
-  { label: "داشبورد", href: "/dashboard" },
-];
+export const sidebarItems = [{ label: "داشبورد", href: "/dashboard" }];
 
 export const mockLinks: Link[] = [
   {

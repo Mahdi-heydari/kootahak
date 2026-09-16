@@ -1,12 +1,23 @@
 "use client";
 
-import { Sun, Moon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useRef } from "react";
+import Icon from "@/components/ui/Icon";
+import { IconName } from "@/components/ui/Icon";
 
+export interface ThemeToggleContent {
+  lightIcon: IconName;
+  darkIcon: IconName;
+}
+export const themeToggleContent: ThemeToggleContent = {
+  lightIcon: "Sun",
+  darkIcon: "Moon",
+};
 function ThemeToggle() {
-  const { theme, setTheme, resolvedTheme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
   const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const { lightIcon, darkIcon } = themeToggleContent;
 
   const themeChange = () => {
     const newTheme = resolvedTheme === "dark" ? "light" : "dark";
@@ -34,13 +45,14 @@ function ThemeToggle() {
     <button
       ref={buttonRef}
       onClick={themeChange}
+      aria-label={"تغییر سیستم روز و شب"}
       className="btn p-2 w-full flex justify-center items-center md:w-auto bg-muted md:bg-transparent md:rounded-token-md rounded-token-sm md:hover:bg-muted transition-colors"
     >
       <div className="block dark:hidden">
-        <Sun size={18} />
+        <Icon name={lightIcon} size={18} />
       </div>
       <div className="hidden dark:block">
-        <Moon size={18} />
+        <Icon name={darkIcon} size={18} />
       </div>
     </button>
   );
