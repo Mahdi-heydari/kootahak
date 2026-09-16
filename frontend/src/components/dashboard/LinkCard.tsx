@@ -1,18 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import {
-  BarChart3,
-  Check,
-  Copy,
-  ExternalLink,
-  Eye,
-  MoreHorizontal,
-  Pin,
-  Pencil,
-  Trash2,
-  ToggleLeft,
-} from "lucide-react";
+import GetIcon from "@/components/ui/Icon";
 
 import type { Link as LinkItem } from "@/types/links";
 import Link from "next/link";
@@ -25,7 +14,10 @@ interface LinkCardProps {
 export default function LinkCard({ link }: LinkCardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [modal, setModal] = useState<{ type: "delete" | "toggle"; linkId: number } | null>(null);
+  const [modal, setModal] = useState<{
+    type: "delete" | "toggle";
+    linkId: number;
+  } | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -82,10 +74,12 @@ export default function LinkCard({ link }: LinkCardProps) {
           <div className="flex min-w-0 items-center gap-3">
             <div
               className={`flex size-10 shrink-0 items-center justify-center rounded-token-lg ${
-                isInactive ? "bg-muted text-muted-foreground" : "bg-brand/10 text-brand"
+                isInactive
+                  ? "bg-muted text-muted-foreground"
+                  : "bg-brand/10 text-brand"
               }`}
             >
-              <ExternalLink className="size-5" />
+              <GetIcon name="ExternalLink" className="size-5" />
             </div>
 
             <div className="min-w-0">
@@ -99,7 +93,8 @@ export default function LinkCard({ link }: LinkCardProps) {
                 </h3>
 
                 {link.isPin && (
-                  <Pin
+                  <GetIcon
+                    name="Pin"
                     className={`size-3.5 shrink-0 fill-current ${
                       isInactive ? "text-muted-foreground" : "text-brand"
                     }`}
@@ -120,7 +115,7 @@ export default function LinkCard({ link }: LinkCardProps) {
               aria-label="عملیات"
               onClick={() => setMenuOpen((prev) => !prev)}
             >
-              <MoreHorizontal className="size-5" />
+              <GetIcon name="MoreHorizontal" className="size-5" />
             </button>
 
             {menuOpen && (
@@ -130,7 +125,7 @@ export default function LinkCard({ link }: LinkCardProps) {
                   className="flex w-full items-center gap-2 rounded-token-md px-3 py-2.5 text-token-sm transition-colors duration-token-normal hover:bg-muted"
                   onClick={() => setMenuOpen(false)}
                 >
-                  <Pencil className="size-4" />
+                  <GetIcon name="Pencil" className="size-4" />
                   ویرایش
                 </button>
 
@@ -142,7 +137,7 @@ export default function LinkCard({ link }: LinkCardProps) {
                     setModal({ type: "toggle", linkId: link.id });
                   }}
                 >
-                  <ToggleLeft className="size-4" />
+                  <GetIcon name="ToggleLeft" className="size-4" />
                   {link.isActive ? "غیرفعال کردن" : "فعال کردن"}
                 </button>
 
@@ -154,7 +149,7 @@ export default function LinkCard({ link }: LinkCardProps) {
                     setModal({ type: "delete", linkId: link.id });
                   }}
                 >
-                  <Trash2 className="size-4" />
+                  <GetIcon name="Trash2" className="size-4" />
                   حذف
                 </button>
               </div>
@@ -191,7 +186,11 @@ export default function LinkCard({ link }: LinkCardProps) {
             aria-label="کپی لینک"
             onClick={handleCopy}
           >
-            {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
+            {copied ? (
+              <GetIcon name="Check" className="size-4" />
+            ) : (
+              <GetIcon name="Copy" className="size-4" />
+            )}
           </button>
         </div>
 
@@ -203,7 +202,7 @@ export default function LinkCard({ link }: LinkCardProps) {
         >
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-token-xs text-muted-foreground">
             <span className="flex items-center gap-1.5">
-              <Eye className="size-3.5" />
+              <GetIcon name="Eye" className="size-3.5" />
               {link.visits.length} بازدید
             </span>
 
@@ -218,7 +217,11 @@ export default function LinkCard({ link }: LinkCardProps) {
                 }`}
               />
 
-              <span className={link.isActive ? "text-success" : "text-muted-foreground"}>
+              <span
+                className={
+                  link.isActive ? "text-success" : "text-muted-foreground"
+                }
+              >
                 {link.isActive ? "فعال" : "غیرفعال"}
               </span>
             </div>
@@ -229,7 +232,7 @@ export default function LinkCard({ link }: LinkCardProps) {
                 size="sm"
                 className="min-h-11 gap-1.5 px-3"
               >
-                <BarChart3 className="size-4" />
+                <GetIcon name="BarChart3" className="size-4" />
                 <span>آمار</span>
               </Button>
             </Link>
@@ -256,7 +259,11 @@ export default function LinkCard({ link }: LinkCardProps) {
                 : `آیا می‌خواهید این لینک را ${link.isActive ? "غیرفعال" : "فعال"} کنید؟`}
             </p>
             <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-              <Button variant="outline" size="sm" onClick={() => setModal(null)}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setModal(null)}
+              >
                 انصراف
               </Button>
               <Button

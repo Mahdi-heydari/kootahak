@@ -27,7 +27,9 @@ export default function LinkList({
         <div className="min-w-0">
           <h2 className="h3">{title}</h2>
 
-          <p className="mt-1 text-token-sm text-muted-foreground">{description}</p>
+          <p className="mt-1 text-token-sm text-muted-foreground">
+            {description}
+          </p>
         </div>
 
         <span className="label shrink-0">{countLabel}</span>

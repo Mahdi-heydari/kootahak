@@ -1,78 +1,22 @@
-import {
-  ArrowLeftFromLine,
-  Link,
-  BarChart3,
-  ShieldCheck,
-  Sparkles,
-  Clock,
-} from "lucide-react";
+import GetIcon from "@/components/ui/Icon";
 import Button from "../ui/Button";
 import { heroContent } from "@/contents/landing";
-import GradientWaves from "./GradientWaves";
 
 const flipWordsLoop = [
   ...heroContent.titleHighlightWords,
   heroContent.titleHighlightWords[0],
 ];
 
-const features = [
-  {
-    icon: <Link size={25} strokeWidth={1.5} />,
-    title: heroContent.features[0].title,
-    description: heroContent.features[0].description,
-  },
-  {
-    icon: <BarChart3 size={25} strokeWidth={1.5} />,
-    title: heroContent.features[1].title,
-    description: heroContent.features[1].description,
-  },
-  {
-    icon: <ShieldCheck size={25} strokeWidth={1.5} />,
-    title: heroContent.features[2].title,
-    description: heroContent.features[2].description,
-  },
-];
-
-const trustItems = [
-  {
-    icon: <Sparkles size={16} className="text-brand" />,
-    text: heroContent.trustItems[0],
-  },
-  {
-    icon: <Clock size={16} className="text-brand" />,
-    text: heroContent.trustItems[1],
-  },
-];
-
 const Hero = (): React.JSX.Element => {
   return (
-    <section className="min-h-screen relative isolate flex flex-col items-center justify-center gap-y-8 md:gap-y-10 lg:gap-y-12 py-16 md:py-20">
-      <GradientWaves
-        horizonColor="#5227FF"
-        waveColor="#FF9FFC"
-        crestColor="#FFFFFF"
-        speed={0.4}
-        amplitude={1.7}
-        waveScale={0.6}
-        waveRatio={0.9}
-        swell={35}
-        turbulence={20}
-        tilt={1.11}
-        zoom={1.65}
-        height={5.5}
-        fogDepth={23}
-        detail="low"
-        brightness={1.25}
-        opacity={0.68}
-        mouseInteraction={true}
-        parallaxStrength={0.5}
-        grain
-        grainIntensity={0.05}
-      />
+    <section
+      id="hero"
+      className="hero min-h-screen w-full flex flex-col items-center justify-center gap-y-8 md:gap-y-10 lg:gap-y-12 py-16 md:py-20"
+    >
       <div className="container">
         {/* محتوای اصلی (متمرکز) */}
         <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
-          {/* عنوان اصلی - حالا با کلمه‌ی متحرک flip-words */}
+          {/* flip-words */}
           <h1 className="text-token-4xl sm:text-token-5xl md:text-token-6xl lg:text-token-7xl font-token-bold text-foreground leading-token-tight">
             {heroContent.preTitle}{" "}
             <span className="flip-words-wrapper">
@@ -101,21 +45,21 @@ const Hero = (): React.JSX.Element => {
               placeholder={heroContent.placeholder}
             />
             <Button type="submit" variant="primary">
-              <ArrowLeftFromLine size={18} />
+              <GetIcon name="ArrowLeftFromLine" size={18} />
             </Button>
           </form>
 
           {/* ویژگی‌ها */}
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 w-full max-w-3xl">
-            {features.map((feature, index) => (
+            {heroContent.features.map((feature, index) => (
               <div
                 key={index}
-                className="flex items-center gap-x-3 p-3 rounded-token-sm bg-card border border-border hover:border-brand/30 hover:bg-brand/10 transition-all duration-300 cursor-default group"
+                className="flex items-center gap-x-4 p-3 rounded-token-sm bg-card border border-border hover:border-brand/30 hover:bg-brand/10 transition-all duration-300 cursor-default group"
               >
                 <div className="p-1.5 rounded-token-sm bg-brand/10 text-brand group-hover:bg-brand/20 transition-colors">
-                  {feature.icon}
+                  <GetIcon name={feature.icon} size={25} strokeWidth={1.5} />
                 </div>
-                <div className="text-right">
+                <div className="text-right space-y-2">
                   <p className="text-token-xs font-token-medium text-foreground">
                     {feature.title}
                   </p>
@@ -129,9 +73,9 @@ const Hero = (): React.JSX.Element => {
 
           {/* نشان اعتماد */}
           <div className="mt-8 flex items-center justify-center gap-x-6 text-token-xs text-primary/70">
-            {trustItems.map((item, index) => (
+            {heroContent.trustItems.map((item, index) => (
               <span key={index} className="flex items-center gap-x-1">
-                {item.icon}
+                <GetIcon name={item.icon} size={16} className="text-brand" />
                 {item.text}
               </span>
             ))}

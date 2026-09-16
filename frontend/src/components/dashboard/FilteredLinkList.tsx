@@ -22,8 +22,10 @@ export default function FilteredLinkList({
   const searchParams = useSearchParams();
 
   const search = searchParams.get("search") ?? "";
-  const status = (searchParams.get("status") ?? "") as "" | "active" | "inactive";
-  const sort = (searchParams.get("sort") ?? "") as "" | "newest" | "oldest" | "popular";
+  const status = (searchParams.get("status") ?? "") as
+    "" | "active" | "inactive";
+  const sort = (searchParams.get("sort") ?? "") as
+    "" | "newest" | "oldest" | "popular";
 
   const filteredLinks = filterAndSortLinks(links, { search, status, sort });
 

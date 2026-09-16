@@ -49,10 +49,14 @@ export function filterAndSortLinks(
   const search = params.search ?? "";
   const status = params.status ?? "";
   const sort: LinkSortOption =
-    params.sort === "oldest" || params.sort === "popular" ? params.sort : "newest";
+    params.sort === "oldest" || params.sort === "popular"
+      ? params.sort
+      : "newest";
 
   return links
-    .filter((link) => matchesSearch(link, search) && matchesStatus(link, status))
+    .filter(
+      (link) => matchesSearch(link, search) && matchesStatus(link, status),
+    )
     .sort((a, b) => {
       if (a.isPin !== b.isPin) {
         return a.isPin ? -1 : 1;

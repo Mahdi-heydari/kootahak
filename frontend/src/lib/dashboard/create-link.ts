@@ -10,7 +10,10 @@ function slugFromUrl(url: string): string {
       return segment.toLowerCase();
     }
 
-    return hostname.replace(/^www\./, "").split(".")[0].slice(0, 20);
+    return hostname
+      .replace(/^www\./, "")
+      .split(".")[0]
+      .slice(0, 20);
   } catch {
     return "link";
   }
@@ -61,7 +64,8 @@ export function buildNewLink(
   }
 
   const now = new Date().toISOString();
-  const nextId = existingLinks.reduce((max, link) => Math.max(max, link.id), 0) + 1;
+  const nextId =
+    existingLinks.reduce((max, link) => Math.max(max, link.id), 0) + 1;
 
   return {
     id: nextId,
