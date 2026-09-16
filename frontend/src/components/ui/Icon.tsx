@@ -37,6 +37,8 @@ import {
   MessageCircleMore,
   Sun,
   Moon,
+  Circle,
+  CircleCheck
 } from "lucide-react";
 import type { LucideProps } from "lucide-react";
 
@@ -79,6 +81,8 @@ const icons = {
   MessageCircleMore,
   Sun,
   Moon,
+  Circle,
+  CircleCheck
 };
 
 export type IconName = keyof typeof icons;
