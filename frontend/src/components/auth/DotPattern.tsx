@@ -20,7 +20,7 @@ export function DotPattern({
   return (
     <svg
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0 h-full w-full fill-slate-400/70 dark:fill-slate-500/50 md:fill-slate-400/90 md:dark:fill-slate-500/70"
+      className="pointer-events-none absolute -z-30 inset-0 h-full w-full fill-slate-400/70 dark:fill-slate-500/50 md:fill-slate-400/90 md:dark:fill-slate-500/70"
     >
       <defs>
         <pattern

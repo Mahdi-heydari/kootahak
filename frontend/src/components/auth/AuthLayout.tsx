@@ -43,8 +43,8 @@ export function AuthLayout({
         {/* Desktop panel */}
         <aside className="relative isolate hidden overflow-hidden border-l border-border bg-card lg:grid">
           <DotPattern />
-          <div className="relative z-10 flex h-full flex-col gap-25 p-14 lg:pt-24">
-            <div className="flex h-full max-w-lg flex-col justify-around">
+          <div className="grid place-items-center h-full p-14 lg:pt-24">
+            <div className="flex h-full max-w-lg flex-col justify-center gap-28">
               <div className="space-y-4">
                 <p className="text-token-xs font-token-semibold uppercase tracking-token-wide text-brand">
                   {eyebrow}
