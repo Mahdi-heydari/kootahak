@@ -215,4 +215,27 @@ export class LinksService {
 
     return updatedLink;
   }
+
+  async deleteLink(linkId: number, user: AuthorInfo) {
+    const linkData = await this.prisma.link.findUnique({
+      where: { id: linkId },
+    });
+
+    if (!linkData) {
+      throw new NotFoundException("لینک شما نامعتبر است.");
+    }
+
+    if (linkData.authorId !== user.id) {
+      throw new ForbiddenException("شما دسترسی به این لینک ندارید.");
+    }
+
+    const deletedLink = await this.prisma.link.update({
+      where: { id: linkId },
+      data: { deletedAt: new Date() },
+    });
+
+    await this.redis.del(`link:${linkData.shortCode}`);
+
+    return deletedLink;
+  }
 }

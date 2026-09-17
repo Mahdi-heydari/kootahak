@@ -1,4 +1,13 @@
-import { Body, Controller, Patch, Post, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  UseGuards,
+} from "@nestjs/common";
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -75,5 +84,20 @@ export class LinksController {
     @CurrentUser() user: Pick<User, "id" | "name" | "email">,
   ) {
     return await this.linksService.setActiveLink(updateData, user);
+  }
+
+  @Delete(":linkId")
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  @ApiOperation({ summary: "Soft-delete a link owned by the current user" })
+  @ApiOkResponse({ description: "The link was deleted" })
+  @ApiBadRequestResponse({ description: "Invalid linkId" })
+  @ApiUnauthorizedResponse({ description: "Missing or invalid authentication" })
+  @ApiForbiddenResponse({ description: "The link belongs to another user" })
+  @ApiNotFoundResponse({ description: "No link exists with the given linkId" })
+  async deleteLink(
+    @Param("linkId", ParseIntPipe) linkId: number,
+    @CurrentUser() user: Pick<User, "id" | "name" | "email">,
+  ) {
+    return await this.linksService.deleteLink(linkId, user);
   }
 }
