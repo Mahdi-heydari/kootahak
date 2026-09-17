@@ -18,6 +18,7 @@ import {
   CachedLink,
   CreateLinkDto,
   getLinkDto,
+  SetActiveLinkDto,
   SetPinLinkDto,
   VisitContext,
 } from "./dto";
@@ -190,5 +191,28 @@ export class LinksService {
       where: { id: updateData.linkId },
       data: { isPin: updateData.isPin },
     });
+  }
+
+  async setActiveLink(updateData: SetActiveLinkDto, user: AuthorInfo) {
+    const linkData = await this.prisma.link.findUnique({
+      where: { id: updateData.linkId },
+    });
+
+    if (!linkData) {
+      throw new NotFoundException("لینک شما نامعتبر است.");
+    }
+
+    if (linkData.authorId !== user.id) {
+      throw new ForbiddenException("شما دسترسی به این لینک ندارید.");
+    }
+
+    const updatedLink = await this.prisma.link.update({
+      where: { id: updateData.linkId },
+      data: { isActive: updateData.isActive },
+    });
+
+    await this.redis.del(`link:${linkData.shortCode}`);
+
+    return updatedLink;
   }
 }

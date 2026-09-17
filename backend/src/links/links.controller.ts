@@ -12,7 +12,7 @@ import {
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
 import { LinksService } from "./links.service";
-import { CreateLinkDto, SetPinLinkDto } from "./dto";
+import { CreateLinkDto, SetActiveLinkDto, SetPinLinkDto } from "./dto";
 import { Throttle } from "@nestjs/throttler";
 import { JwtAuthGuard } from "../auth/jwt/jwt-auth.guard";
 import { CurrentUser } from "../auth/jwt/current-user.decorator";
@@ -58,5 +58,22 @@ export class LinksController {
     @CurrentUser() user: Pick<User, "id" | "name" | "email">,
   ) {
     return await this.linksService.setPinLink(updateData, user);
+  }
+
+  @Patch("active")
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  @ApiOperation({
+    summary: "Activate or deactivate a link owned by the current user",
+  })
+  @ApiOkResponse({ description: "The link's active state was updated" })
+  @ApiBadRequestResponse({ description: "Invalid linkId or isActive value" })
+  @ApiUnauthorizedResponse({ description: "Missing or invalid authentication" })
+  @ApiForbiddenResponse({ description: "The link belongs to another user" })
+  @ApiNotFoundResponse({ description: "No link exists with the given linkId" })
+  async setActiveLink(
+    @Body() updateData: SetActiveLinkDto,
+    @CurrentUser() user: Pick<User, "id" | "name" | "email">,
+  ) {
+    return await this.linksService.setActiveLink(updateData, user);
   }
 }

@@ -93,6 +93,25 @@ export class SetPinLinkDto {
   isPin: boolean;
 }
 
+export class SetActiveLinkDto {
+  @ApiProperty({
+    description: "Id of the link to activate/deactivate",
+    example: 1,
+  })
+  @IsNotEmpty({ message: "شناسه لینک الزامی است" })
+  @IsInt({ message: "شناسه لینک باید عدد صحیح باشد" })
+  @IsPositive({ message: "شناسه لینک نامعتبر است" })
+  linkId: number;
+
+  @ApiProperty({
+    description: "Whether the link should be active",
+    example: true,
+  })
+  @IsNotEmpty({ message: "وضعیت فعال بودن الزامی است" })
+  @IsBoolean({ message: "وضعیت فعال بودن باید مقدار درست یا نادرست باشد" })
+  isActive: boolean;
+}
+
 export class getLinkDto {
   @ApiProperty({
     description: "short code",
