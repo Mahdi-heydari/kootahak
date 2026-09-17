@@ -54,7 +54,7 @@ export class LinksController {
     return this.linksService.createUserLink(createLinkDto, user);
   }
 
-  @Patch()
+  @Patch("pin")
   @Throttle({ default: { limit: 20, ttl: 60000 } })
   @ApiOperation({ summary: "Pin or unpin a link owned by the current user" })
   @ApiOkResponse({ description: "The link's pin state was updated" })
