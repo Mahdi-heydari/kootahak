@@ -1,5 +1,6 @@
 import {
   ConflictException,
+  ForbiddenException,
   Inject,
   Injectable,
   InternalServerErrorException,
@@ -13,12 +14,18 @@ import { Link, Prisma, User } from "../generated/prisma/client";
 import { PrismaService } from "../prismaClient/prisma.service";
 import { LINK_CACHE_TTL_SECONDS, REDIS_CLIENT } from "../redis/redis.constants";
 import { ShortCodeService } from "../short-code/short-code.service";
-import { CachedLink, CreateLinkDto, getLinkDto, VisitContext } from "./dto";
+import {
+  CachedLink,
+  CreateLinkDto,
+  getLinkDto,
+  SetPinLinkDto,
+  VisitContext,
+} from "./dto";
 
 const MAX_GENERATION_ATTEMPTS = 5;
 const UNIQUE_CONSTRAINT_ERROR_CODE = "P2002";
 
-type AuthorInfo = Pick<User, "id">;
+type AuthorInfo = Pick<User, "id" | "name" | "email">;
 type LinkDataWithoutCode = Omit<Prisma.LinkCreateInput, "shortCode">;
 
 @Injectable()
@@ -164,5 +171,24 @@ export class LinksService {
       });
 
     return userData.originalUrl;
+  }
+
+  async setPinLink(updateData: SetPinLinkDto, user: AuthorInfo) {
+    const linkData = await this.prisma.link.findUnique({
+      where: { id: updateData.linkId },
+    });
+
+    if (!linkData) {
+      throw new NotFoundException("لینک شما نامعتبر است.");
+    }
+
+    if (linkData.authorId !== user.id) {
+      throw new ForbiddenException("شما دسترسی به این لینک ندارید.");
+    }
+
+    return this.prisma.link.update({
+      where: { id: updateData.linkId },
+      data: { isPin: updateData.isPin },
+    });
   }
 }

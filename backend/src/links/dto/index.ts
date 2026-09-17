@@ -1,8 +1,11 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import {
+  IsBoolean,
   IsDateString,
+  IsInt,
   IsNotEmpty,
   IsOptional,
+  IsPositive,
   IsString,
   IsUrl,
   Matches,
@@ -69,6 +72,25 @@ export class CreateLinkDto {
   @IsOptional()
   @IsDateString({}, { message: "تاریخ انقضا باید در قالب معتبر تاریخ باشد" })
   expiresAt?: string;
+}
+
+export class SetPinLinkDto {
+  @ApiProperty({
+    description: "Id of the link to pin/unpin",
+    example: 1,
+  })
+  @IsNotEmpty({ message: "شناسه لینک الزامی است" })
+  @IsInt({ message: "شناسه لینک باید عدد صحیح باشد" })
+  @IsPositive({ message: "شناسه لینک نامعتبر است" })
+  linkId: number;
+
+  @ApiProperty({
+    description: "Whether the link should be pinned",
+    example: true,
+  })
+  @IsNotEmpty({ message: "وضعیت پین الزامی است" })
+  @IsBoolean({ message: "وضعیت پین باید مقدار درست یا نادرست باشد" })
+  isPin: boolean;
 }
 
 export class getLinkDto {
