@@ -20,6 +20,7 @@ import {
   getLinkDto,
   SetActiveLinkDto,
   SetPinLinkDto,
+  UpdateLinkDto,
   VisitContext,
 } from "./dto";
 
@@ -237,5 +238,38 @@ export class LinksService {
     await this.redis.del(`link:${linkData.shortCode}`);
 
     return deletedLink;
+  }
+
+  async updateLink(updateData: UpdateLinkDto, user: AuthorInfo) {
+    const linkData = await this.prisma.link.findUnique({
+      where: { id: updateData.linkId },
+    });
+
+    if (!linkData) {
+      throw new NotFoundException("لینک شما نامعتبر است.");
+    }
+
+    if (linkData.authorId !== user.id) {
+      throw new ForbiddenException("شما دسترسی به این لینک ندارید.");
+    }
+
+    let newShortCode: string | undefined;
+    if (updateData.shortCode && updateData.shortCode !== linkData.shortCode) {
+      newShortCode = await this.reserveSuggestedCode(updateData.shortCode);
+    }
+
+    if (updateData.originalUrl !== undefined || newShortCode !== undefined) {
+      await this.redis.del(`link:${linkData?.shortCode}`);
+    }
+
+    return await this.prisma.link.update({
+      where: { id: updateData.linkId },
+      data: {
+        title: updateData.title,
+        originalUrl: updateData.originalUrl,
+        expiresAt: updateData.expiresAt,
+        shortCode: newShortCode,
+      },
+    });
   }
 }
