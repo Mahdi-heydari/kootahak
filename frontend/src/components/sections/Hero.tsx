@@ -38,6 +38,7 @@ const Hero = (): React.JSX.Element => {
 
           {/* فرم ترغیب کننده کاربر */}
           <form className="mt-8 flex items-center justify-between gap-x-4 w-full max-w-lg bg-card border border-border py-2.5 pr-5 pl-2.5 rounded-token-md shadow-token-sm transition-all duration-300 focus-within:border-brand/50 focus-within:shadow-token-md">
+          {/* TODO-1 */}
             <input
               type="text"
               dir="ltr"
@@ -50,6 +51,7 @@ const Hero = (): React.JSX.Element => {
           </form>
 
           {/* ویژگی‌ها */}
+          {/* TODO-2 */}
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 w-full max-w-3xl">
             {heroContent.features.map((feature, index) => (
               <div

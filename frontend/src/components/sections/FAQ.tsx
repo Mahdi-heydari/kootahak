@@ -76,6 +76,7 @@ const FAQ = (): React.JSX.Element => {
         <p className="text-token-sm text-muted-foreground mb-4">
           سوال دیگه‌ای داری؟
         </p>
+        {/* TODO-3 */}
         <Button size="lg" variant="primary">
           تماس با پشتیبانی
         </Button>
