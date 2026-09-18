@@ -18,8 +18,11 @@ import {
   CachedLink,
   CreateLinkDto,
   getLinkDto,
+  GetLinksQueryDto,
+  LinkSortBy,
   SetActiveLinkDto,
   SetPinLinkDto,
+  SortOrder,
   UpdateLinkDto,
   VisitContext,
 } from "./dto";
@@ -40,6 +43,83 @@ export class LinksService {
     private readonly logger: PinoLogger,
   ) {
     this.logger.setContext(LinksService.name);
+  }
+
+  async getUserAllLinks(user: AuthorInfo, query: GetLinksQueryDto = {}) {
+    const { limit = 10, offset = 0 } = query;
+    const sortBy = query.sortBy ?? LinkSortBy.CREATED_AT;
+    const sortOrder = query.sortOrder ?? SortOrder.DESC;
+    let expiredCondition = {};
+    let searchCondition = {};
+    let orderByCondition = {};
+
+    if (query.expired === true) {
+      expiredCondition = { expiresAt: { lte: new Date() } };
+    } else if (query.expired === false) {
+      expiredCondition = {
+        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+      };
+    }
+
+    if (query.search) {
+      searchCondition = {
+        OR: [
+          { title: { contains: query.search, mode: "insensitive" } },
+          { originalUrl: { contains: query.search, mode: "insensitive" } },
+        ],
+      };
+    }
+
+    const noFilterOrSortRequested =
+      query.sortBy === undefined &&
+      query.isActive === undefined &&
+      query.isPin === undefined &&
+      query.expired === undefined;
+
+    if (noFilterOrSortRequested) {
+      orderByCondition = [
+        { isPin: SortOrder.DESC },
+        { isActive: SortOrder.DESC },
+        { createdAt: SortOrder.DESC },
+        { id: SortOrder.DESC },
+      ];
+    } else {
+      orderByCondition =
+        sortBy === LinkSortBy.CREATED_AT
+          ? [{ createdAt: sortOrder }, { id: sortOrder }]
+          : [
+              { expiresAt: { sort: sortOrder, nulls: "last" } },
+              { id: sortOrder },
+            ];
+    }
+
+    const whereCondition = {
+      isActive: query.isActive,
+      isPin: query.isPin,
+      authorId: user.id,
+      AND: [searchCondition, expiredCondition],
+      deletedAt: null,
+    };
+
+    const [links, totalCount] = await Promise.all([
+      this.prisma.link.findMany({
+        skip: offset,
+        take: limit,
+        where: whereCondition,
+        orderBy: orderByCondition,
+      }),
+      this.prisma.link.count({
+        where: whereCondition,
+      }),
+    ]);
+
+    return {
+      links,
+      totalCount,
+      limit,
+      offset,
+      totalPages: Math.ceil(totalCount / limit),
+    };
   }
 
   async createUserLink(

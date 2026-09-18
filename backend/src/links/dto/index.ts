@@ -1,7 +1,13 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import {
+  ApiProperty,
+  ApiPropertyOptional,
+  IntersectionType,
+} from "@nestjs/swagger";
+import { Transform, Type } from "class-transformer";
 import {
   IsBoolean,
   IsDateString,
+  IsEnum,
   IsInt,
   IsNotEmpty,
   IsOptional,
@@ -9,7 +15,9 @@ import {
   IsString,
   IsUrl,
   Matches,
+  Max,
   MaxLength,
+  Min,
   MinLength,
 } from "class-validator";
 import { IsSafeRedirectUrl } from "../validators/is-safe-redirect-url.validator";
@@ -73,6 +81,120 @@ export class CreateLinkDto {
   @IsDateString({}, { message: "تاریخ انقضا باید در قالب معتبر تاریخ باشد" })
   expiresAt?: string;
 }
+
+export enum LinkSortBy {
+  CREATED_AT = "createdAt",
+  EXPIRES_AT = "expiresAt",
+}
+
+export enum SortOrder {
+  ASC = "asc",
+  DESC = "desc",
+}
+
+export class PaginationDto {
+  @ApiPropertyOptional({
+    description: "Number of items per page",
+    example: 10,
+    default: 10,
+    minimum: 1,
+    maximum: 50,
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt({ message: "limit باید عدد صحیح باشد" })
+  @Min(1, { message: "limit باید حداقل 1 باشد" })
+  @Max(50, { message: "limit باید حداکثر 50 باشد" })
+  limit?: number = 10;
+
+  @ApiPropertyOptional({
+    description: "Number of items to skip from the start of the list",
+    example: 0,
+    default: 0,
+    minimum: 0,
+  })
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt({ message: "offset باید عدد صحیح باشد" })
+  @Min(0, { message: "offset نمی‌تواند منفی باشد" })
+  offset?: number = 0;
+}
+
+const toBoolean = ({ value }: { value: unknown }): unknown => {
+  if (value === "true") return true;
+  if (value === "false") return false;
+  return value;
+};
+
+export class FilterDto {
+  @ApiPropertyOptional({
+    description: "Filter by whether the link is active",
+    example: true,
+  })
+  @IsOptional()
+  @Transform(toBoolean)
+  @IsBoolean({ message: "isActive باید مقدار درست یا نادرست باشد" })
+  isActive?: boolean;
+
+  @ApiPropertyOptional({
+    description: "Filter by whether the link is pinned",
+    example: true,
+  })
+  @IsOptional()
+  @Transform(toBoolean)
+  @IsBoolean({ message: "isPin باید مقدار درست یا نادرست باشد" })
+  isPin?: boolean;
+
+  @ApiPropertyOptional({
+    description:
+      "Filter by whether the link has expired (true: expired, " +
+      "false: valid or unlimited)",
+    example: false,
+  })
+  @IsOptional()
+  @Transform(toBoolean)
+  @IsBoolean({ message: "expired باید مقدار درست یا نادرست باشد" })
+  expired?: boolean;
+}
+
+export class SearchDto {
+  @ApiPropertyOptional({
+    description: "Search in title and original URL",
+    example: "myShop",
+    maxLength: 255,
+  })
+  @IsOptional()
+  @IsString({ message: "search باید متن باشد" })
+  @MaxLength(255, { message: "search باید حداکثر 255 کاراکتر باشد" })
+  search?: string;
+}
+
+export class SortDto {
+  @ApiPropertyOptional({
+    description: "Field to sort by",
+    enum: LinkSortBy,
+    default: LinkSortBy.CREATED_AT,
+  })
+  @IsOptional()
+  @IsEnum(LinkSortBy, { message: "sortBy نامعتبر است" })
+  sortBy?: LinkSortBy = LinkSortBy.CREATED_AT;
+
+  @ApiPropertyOptional({
+    description: "Sort direction",
+    enum: SortOrder,
+    default: SortOrder.DESC,
+  })
+  @IsOptional()
+  @IsEnum(SortOrder, { message: "sortOrder نامعتبر است" })
+  sortOrder?: SortOrder = SortOrder.DESC;
+}
+
+export class GetLinksQueryDto extends IntersectionType(
+  PaginationDto,
+  FilterDto,
+  SortDto,
+  SearchDto,
+) {}
 
 export class SetPinLinkDto {
   @ApiProperty({

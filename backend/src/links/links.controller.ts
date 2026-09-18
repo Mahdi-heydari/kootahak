@@ -2,11 +2,13 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   ParseIntPipe,
   Patch,
   Post,
   Put,
+  Query,
   UseGuards,
 } from "@nestjs/common";
 import {
@@ -24,6 +26,7 @@ import {
 import { LinksService } from "./links.service";
 import {
   CreateLinkDto,
+  GetLinksQueryDto,
   SetActiveLinkDto,
   SetPinLinkDto,
   UpdateLinkDto,
@@ -39,6 +42,20 @@ import type { User } from "../generated/prisma/client";
 @Controller("links")
 export class LinksController {
   constructor(private readonly linksService: LinksService) {}
+
+  @Get()
+  @ApiOperation({ summary: "List links owned by the current user" })
+  @ApiOkResponse({ description: "A paginated list of the user's links" })
+  @ApiBadRequestResponse({
+    description: "Invalid pagination, filter, sort, or search query params",
+  })
+  @ApiUnauthorizedResponse({ description: "Missing or invalid authentication" })
+  async getUserLinks(
+    @CurrentUser() user: Pick<User, "id" | "name" | "email">,
+    @Query() query: GetLinksQueryDto,
+  ) {
+    return await this.linksService.getUserAllLinks(user, query);
+  }
 
   @Post()
   @Throttle({ default: { limit: 20, ttl: 60000 } })
