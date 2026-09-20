@@ -17,12 +17,14 @@ const Footer = (): React.JSX.Element => {
             <span className="font-token-semibold text-token-base text-foreground">
               درباره ما
             </span>
+            {/* TODO-4 */}
             <p className="font-token-normal text-token-sm text-muted-foreground leading-token-relaxed">
               {about.description}
             </p>
           </div>
 
           {/* Useful Links */}
+          {/* TODO-5 */}
           <div className="flex flex-col gap-y-3 sm:gap-y-6">
             <p className="font-token-semibold text-token-base text-foreground">
               لینک های مفید
@@ -55,6 +57,7 @@ const Footer = (): React.JSX.Element => {
           </div>
 
           {/* Statistics */}
+          {/* TODO-6 */}
           <div className="flex flex-col gap-y-3 sm:gap-y-6">
             <p className="font-token-semibold text-token-base text-foreground">
               آمار و ارقام
@@ -77,6 +80,7 @@ const Footer = (): React.JSX.Element => {
           </div>
 
           {/* Contact Section */}
+          {/* TODO-7 */}
           <div className="flex flex-col gap-y-3 sm:gap-y-6 w-full sm:w-70 xl:w-80">
             <p className="font-token-semibold text-token-base text-foreground">
               ارتباط با ما
@@ -107,7 +111,6 @@ const Footer = (): React.JSX.Element => {
                 </div>
                 <div className="flex items-center justify-between flex-wrap gap-x-3 gap-y-1.5">
                   <span className="flex items-center gap-x-1.5 font-token-normal">
-                    <GetIcon name="Clock" size={14} className="text-brand" />
                     ساعات پاسخگویی
                   </span>
                   <span className="font-token-normal mr-auto hover:text-brand transition-colors">
@@ -115,6 +118,7 @@ const Footer = (): React.JSX.Element => {
                   </span>
                 </div>
               </div>
+              {/* TODO-8 */}
               <Button size="md" variant="secondary">
                 {contact.cta.label}
               </Button>
@@ -136,6 +140,7 @@ const Footer = (): React.JSX.Element => {
           </div>
           {/* Social Links */}
           <div className="flex items-center justify-between flex-wrap gap-x-3 gap-y-1.5">
+            {/* TODO-9 */}
             <span className="font-token-normal text-token-sm text-muted-foreground">
               شبکه های اجتماعی
             </span>

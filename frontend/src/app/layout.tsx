@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import localFont from "next/font/local";
 
@@ -33,7 +33,7 @@ export default function RootLayout({
       className={`${iranyekanX.variable}`}
       suppressHydrationWarning
     >
-      <body>
+      <body className="scrollbar-thin scrollbar-thin::-webkit-scrollbar scrollbar-thin::-webkit-scrollbar-track scrollbar-thin::-webkit-scrollbar-thumb scrollbar-thin::-webkit-scrollbar-thumb:hover">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Providers>{children}</Providers>
         </ThemeProvider>
