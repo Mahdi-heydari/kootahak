@@ -21,6 +21,7 @@ import {
   Copy,
   ExternalLink,
   Eye,
+  EyeOff,
   MoreHorizontal,
   Pin,
   Pencil,
@@ -37,6 +38,8 @@ import {
   MessageCircleMore,
   Sun,
   Moon,
+  Circle,
+  CircleCheck,
 } from "lucide-react";
 import type { LucideProps } from "lucide-react";
 
@@ -63,6 +66,7 @@ const icons = {
   Copy,
   ExternalLink,
   Eye,
+  EyeOff,
   MoreHorizontal,
   Pin,
   Pencil,
@@ -79,6 +83,8 @@ const icons = {
   MessageCircleMore,
   Sun,
   Moon,
+  Circle,
+  CircleCheck
 };
 
 export type IconName = keyof typeof icons;
