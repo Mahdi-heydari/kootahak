@@ -26,6 +26,8 @@ export function LoginForm() {
   const {
     register,
     handleSubmit,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -36,9 +38,50 @@ export function LoginForm() {
   });
 
   const onSubmit = (data: LoginFormValues) => {
+    clearErrors();
+
     loginMutation.mutate(data, {
       onSuccess: () => {
         router.push("/dashboard");
+      },
+      onError: (error) => {
+        const status = error?.response?.status;
+        const serverMessage = error?.response?.data?.message;
+        const message = Array.isArray(serverMessage)
+          ? serverMessage.join("، ")
+          : serverMessage;
+
+        if (!error?.response) {
+          setError("root.serverError", {
+            type: "server",
+            message: "ارتباط با سرور برقرار نشد",
+          });
+          return;
+        }
+
+        switch (status) {
+          case 401:
+            setError("root.serverError", {
+              type: "server",
+              message: message ?? "ایمیل یا رمز عبور اشتباه است",
+            });
+            break;
+
+          case 500:
+          case 502:
+          case 503:
+            setError("root.serverError", {
+              type: "server",
+              message: "خطای سرور، لطفاً بعداً تلاش کنید",
+            });
+            break;
+
+          default:
+            setError("root.serverError", {
+              type: "server",
+              message: message ?? "ورود ناموفق بود، دوباره تلاش کنید",
+            });
+        }
       },
     });
   };
@@ -83,7 +126,13 @@ export function LoginForm() {
                 autoComplete="email"
                 placeholder="you@example.com"
                 aria-invalid={Boolean(errors.email)}
-                {...register("email")}
+                {...register("email", {
+                  onChange: () => {
+                    if (errors.email?.type === "server") {
+                      clearErrors("email");
+                    }
+                  },
+                })}
               />
 
               {errors.email && (
@@ -104,9 +153,14 @@ export function LoginForm() {
                   id="password"
                   type={showPassword ? "text" : "password"}
                   autoComplete="current-password"
-                  // placeholder="رمز عبور"
                   aria-invalid={Boolean(errors.password)}
-                  {...register("password")}
+                  {...register("password", {
+                    onChange: () => {
+                      if (errors.email?.type === "server") {
+                        clearErrors("email");
+                      }
+                    },
+                  })}
                 />
                 <button
                   type="button"
@@ -140,9 +194,9 @@ export function LoginForm() {
               <GetIcon name="ArrowLeft" className="size-4" aria-hidden="true" />
             </Button>
 
-            {loginMutation.isError && (
+            {errors.root?.serverError && (
               <p className="rounded-token-md border border-error/20 bg-error/5 px-4 py-3 text-token-sm text-error">
-                ورود ناموفق بود. اطلاعات خود را بررسی کنید.
+                {errors.root.serverError.message}
               </p>
             )}
           </form>
