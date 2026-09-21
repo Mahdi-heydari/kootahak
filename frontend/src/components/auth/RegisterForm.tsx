@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import GetIcon from "@/components/ui/Icon";
-
+import { passwordSchema, PASSWORD_MESSAGES } from "@/lib/validations/auth";
+import z from "zod";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import Button from "@/components/ui/Button";
 import {
@@ -32,6 +33,8 @@ export function RegisterForm() {
     register,
     handleSubmit,
     control,
+    setError,
+    clearErrors,
     formState: { errors, submitCount },
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -45,17 +48,22 @@ export function RegisterForm() {
 
   const password = useWatch({ control, name: "password" }) ?? "";
 
-  const passwordRules = [
-    { label: "حداقل ۸ کاراکتر", valid: password.length >= 8 },
-    { label: "حداقل یک حرف بزرگ انگلیسی", valid: /[A-Z]/.test(password) },
-    { label: "حداقل یک کاراکتر خاص", valid: /[^A-Za-z0-9]/.test(password) },
-    {
-      label: "حداقل دو عدد",
-      valid: (password.match(/\d/g) ?? []).length >= 2,
-    },
-  ];
+  const passwordCheck = passwordSchema.safeParse(password);
+  const failedMessages = passwordCheck.success
+    ? []
+    : z.flattenError(passwordCheck.error).formErrors;
+
+  const passwordRulesState = Object.entries(PASSWORD_MESSAGES)
+    .filter(([key]) => key !== "englishOnly")
+    .map(([key, label]) => ({
+      key,
+      label,
+      valid: !failedMessages.includes(label),
+    }));
 
   const onSubmit = (data: RegisterFormValues) => {
+    clearErrors();
+
     const payload = {
       name: data.name,
       email: data.email,
@@ -65,6 +73,14 @@ export function RegisterForm() {
     registerMutation.mutate(payload, {
       onSuccess: () => {
         router.push("/dashboard");
+      },
+      onError: (error) => {
+        if (error?.response?.status === 409) {
+          setError("email", {
+            type: "server",
+            message: "این ایمیل قبلاً ثبت شده است",
+          });
+        }
       },
     });
   };
@@ -130,7 +146,13 @@ export function RegisterForm() {
                 autoComplete="email"
                 placeholder="you@example.com"
                 aria-invalid={Boolean(errors.email)}
-                {...register("email")}
+                {...register("email", {
+                  onChange: () => {
+                    if (errors.email?.type === "server") {
+                      clearErrors("email");
+                    }
+                  },
+                })}
               />
 
               {errors.email && (
@@ -228,7 +250,7 @@ export function RegisterForm() {
 
             <div className="w-full text-token-xs text-foreground">
               <div className="grid grid-cols-1 gap-y-3 sm:grid-cols-2">
-                {passwordRules.map((rule) => (
+                {passwordRulesState.map((rule) => (
                   <div
                     key={`${rule.label}-${submitCount}`}
                     className={`flex items-start gap-2.5 leading-token-snug transition-colors ${
@@ -237,6 +259,7 @@ export function RegisterForm() {
                   >
                     <GetIcon
                       name={rule.valid ? "CircleCheck" : "Circle"}
+                      className="shrink-0"
                       size={18}
                       aria-hidden="true"
                     />
