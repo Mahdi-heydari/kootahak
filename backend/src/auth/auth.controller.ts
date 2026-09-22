@@ -5,7 +5,7 @@ import { LoginDto, RegisterDto } from "./dto";
 import type { Response } from "express";
 
 @Throttle({ default: { limit: 5, ttl: 60000 } })
-@Controller("auth")
+@Controller("api/auth")
 export class AuthController {
   constructor(private authService: AuthService) {}
 

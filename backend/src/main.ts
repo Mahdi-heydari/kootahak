@@ -1,7 +1,7 @@
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import cookieParser from "cookie-parser";
-import { RequestMethod, ValidationPipe } from "@nestjs/common";
+import { ValidationPipe } from "@nestjs/common";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { Logger } from "nestjs-pino";
 import helmet from "helmet";
@@ -40,13 +40,6 @@ async function bootstrap() {
     allowedHeaders: ["Content-Type", "Authorization"],
   });
 
-  // --- Routing ---
-  // The redirect entrypoint (`GET /:shortCode`, RedirectController) must live at
-  // the root so short links stay short — keep it out of the global `api` prefix.
-  app.setGlobalPrefix("api", {
-    exclude: [{ path: ":shortCode", method: RequestMethod.GET }],
-  });
-
   // --- Validation ---
   app.useGlobalPipes(
     new ValidationPipe({
@@ -68,7 +61,7 @@ async function bootstrap() {
       .build();
 
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup("docs", app, document);
+    SwaggerModule.setup("api/docs", app, document);
   }
 
   await app.listen(process.env.PORT ?? 3000, "0.0.0.0");

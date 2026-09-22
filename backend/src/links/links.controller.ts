@@ -39,7 +39,7 @@ import type { User } from "../generated/prisma/client";
 @ApiTags("links")
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
-@Controller("links")
+@Controller("api/links")
 export class LinksController {
   constructor(private readonly linksService: LinksService) {}
 

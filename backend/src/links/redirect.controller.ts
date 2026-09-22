@@ -14,8 +14,11 @@ import { Throttle } from "@nestjs/throttler";
 /**
  * Public redirect entrypoint for short links.
  *
- * Mounted at the application root (`GET /:shortCode`), outside the global `api`
- * prefix (see `main.ts`), so a short link is genuinely short: `domain.com/abc123`.
+ * Mounted at the application root (`GET /:shortCode`). Every other controller in
+ * this app declares its own `"api/..."` prefix explicitly on `@Controller()`
+ * (see main.ts -- there is no global prefix anymore); this controller simply has
+ * no prefix, so it stays at the root and a short link is genuinely short:
+ * `domain.com/abc123`.
  * A visitor here is anonymous — this controller must never sit behind the JWT
  * guard.
  */
