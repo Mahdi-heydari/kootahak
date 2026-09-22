@@ -1,7 +1,6 @@
 import { createParamDecorator, ExecutionContext } from "@nestjs/common";
-import { User } from "../../generated/prisma/client";
+import type { CurrentUserShape } from "./jwt.strategy";
 
-type CurrentUserShape = Pick<User, "id" | "name" | "email">;
 type RequestWithUser = Request & { user: CurrentUserShape };
 
 export const CurrentUser = createParamDecorator(
