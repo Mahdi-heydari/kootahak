@@ -12,6 +12,8 @@ export const envValidationSchema = Joi.object({
 
   FRONT_END_URL: Joi.string().uri().required(),
 
+  REDIRECT_HOST: Joi.string().hostname().required(),
+
   REDIS_HOST: Joi.string().required(),
   REDIS_PORT: Joi.number().port().required(),
 

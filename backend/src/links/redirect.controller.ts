@@ -12,18 +12,12 @@ import type { Request } from "express";
 import { Throttle } from "@nestjs/throttler";
 
 /**
- * Public redirect entrypoint for short links.
- *
- * Mounted at the application root (`GET /:shortCode`). Every other controller in
- * this app declares its own `"api/..."` prefix explicitly on `@Controller()`
- * (see main.ts -- there is no global prefix anymore); this controller simply has
- * no prefix, so it stays at the root and a short link is genuinely short:
- * `domain.com/abc123`.
- * A visitor here is anonymous — this controller must never sit behind the JWT
- * guard.
+ * Public redirect entrypoint for short links, restricted to REDIRECT_HOST
+ * (e.g. `c7j.ir`) -- relies on `import "dotenv/config"` at the top of main.ts
+ * to populate process.env before this decorator runs. Never put behind the JWT guard.
  */
 @ApiExcludeController()
-@Controller()
+@Controller({ host: process.env.REDIRECT_HOST })
 export class RedirectController {
   constructor(private readonly linksService: LinksService) {}
 
