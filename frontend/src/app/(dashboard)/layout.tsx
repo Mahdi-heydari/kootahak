@@ -1,9 +1,10 @@
-// just filling out the file to pass build err docker (it will change)
+﻿import { ReactNode } from "react";
+import { DashboardShell } from "@/components/dashboard/DashboardShell";
 
-export default function Dashboard() {
-  return (
-    <div>
-      <p>dashboard</p>
-    </div>
-  );
+interface DashboardLayoutProps {
+  children: ReactNode;
+}
+
+export default function DashboardLayout({ children }: DashboardLayoutProps) {
+  return <DashboardShell>{children}</DashboardShell>;
 }
