@@ -46,7 +46,7 @@ This project is a **URL shortener with a special focus on visit analytics** (sim
 3. The link record is saved to Postgres.
 
 ### Redirect flow (performance-sensitive part)
-0. **Entrypoint:** `GET /:shortCode`, served by `RedirectController`, mounted at the application **root** — outside the global `api` prefix (`main.ts` uses `setGlobalPrefix('api', { exclude: [{ path: ':shortCode', method: GET }] })`) so short links stay genuinely short (`domain.com/abc123`). This route is **public/anonymous** — it must never sit behind the JWT guard. It responds with an HTTP **302** redirect to `originalUrl`. This is a stable public API contract the frontend depends on (per section 2).
+0. **Entrypoint:** `GET /:shortCode`, served by `RedirectController`, mounted at the application **root**. There is no global prefix on the app — each other controller declares its own `"api/..."` prefix explicitly on `@Controller()` (see `main.ts`); `RedirectController`'s `@Controller()` simply has no prefix, so it stays at the root and short links stay genuinely short (`domain.com/abc123`). (A previous approach used `setGlobalPrefix('api', { exclude: [...] })`, but NestJS matches `exclude` patterns against each controller's own route path at bootstrap, not the incoming request URL — a single-segment `exclude` pattern like `:shortCode` silently exempted *any* other single-segment GET route, such as `GET /api/links`, from the prefix too. Explicit per-controller prefixes avoid this footgun entirely.) This route is **public/anonymous** — it must never sit behind the JWT guard. It responds with an HTTP **302** redirect to `originalUrl`. This is a stable public API contract the frontend depends on (per section 2).
 1. A visitor clicks the short link.
 2. Backend first checks Redis (**cache-aside pattern**): if the `shortCode` is cached, redirect immediately.
 3. If not cached, read from Postgres, cache it in Redis, then redirect.
@@ -175,7 +175,7 @@ The main dashboard page (after login) has two parts:
 - The list-links endpoint (`GET /api/links`) must support query params for search, filter, pagination, and sort.
 - The link-details endpoint (`GET /api/links/:id`) must return both the link's own info and its related stats/visits.
 
-> Note on prefixes: all dashboard/CRUD endpoints live under the `api` prefix (`/api/links`, ...). The **only** exception is the public redirect route `GET /:shortCode` (section 4), which is deliberately mounted at the root.
+> Note on prefixes: all dashboard/CRUD endpoints live under the `api` prefix (`/api/links`, ...), declared explicitly as `"api/..."` on each controller's `@Controller()` decorator (not via `setGlobalPrefix`). The **only** exception is the public redirect route `GET /:shortCode` (section 4), which is deliberately mounted at the root.
 
 ### About the "public page" (an important contradiction with the original idea)
 The project's original idea was for every user to have a public page showing their links. **This was ultimately dropped.** Per the final decision:
@@ -233,7 +233,7 @@ backend/
 ├── src/
 │   ├── auth/
 │   ├── users/
-│   ├── links/           ← LinksController (POST /links), RedirectController (GET /:shortCode), LinksService
+│   ├── links/           ← LinksController (POST /api/links), RedirectController (GET /:shortCode), LinksService
 │   │   └── validators/    ← IsSafeRedirectUrl (SSRF/open-redirect guard on originalUrl)
 │   ├── short-code/       ← ShortCodeService (nanoid generation)
 │   ├── redis/            ← REDIS_CLIENT provider (cache-aside) + throttler.provider.ts (rate-limit config)
