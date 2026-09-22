@@ -1,0 +1,14 @@
+# root env (docker-compose secrets)
+.env
+.env.*.local
+
+# OS
+.DS_Store
+
+# editors
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
