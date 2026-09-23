@@ -1,4 +1,5 @@
 import type { Link } from "@/types/links";
+import type { UpdateLinkFormValues } from "@/lib/validations/link";
 import LinkCard from "./LinkCard";
 
 interface LinkListProps {
@@ -7,6 +8,10 @@ interface LinkListProps {
   description?: string;
   totalCount?: number;
   isFiltered?: boolean;
+  /** تابعی که از والد می‌آید و وقتی کاربر ویرایش را ذخیره کرد صدا زده می‌شود */
+  onUpdateLink?: (id: number, data: UpdateLinkFormValues) => void;
+  /** لیست همه‌ی کدهای کوتاه برای بررسی یکتا بودن در مودال ویرایش */
+  existingShortCodes?: string[];
 }
 
 export default function LinkList({
@@ -15,6 +20,8 @@ export default function LinkList({
   description = "آخرین لینک‌هایی که ایجاد کرده‌ای",
   totalCount,
   isFiltered = false,
+  onUpdateLink,
+  existingShortCodes = [],
 }: LinkListProps) {
   const countLabel =
     isFiltered && totalCount !== undefined
@@ -26,9 +33,9 @@ export default function LinkList({
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-          <span className="block bg-brand w-4 h-1"></span>
+            <span className="block bg-brand w-4 h-1"></span>
 
-          <h2 className="h3">{title}</h2>
+            <h2 className="h3">{title}</h2>
           </div>
 
           <p className="mt-1 text-token-sm text-muted-foreground">
@@ -51,7 +58,12 @@ export default function LinkList({
       ) : (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           {links.map((link) => (
-            <LinkCard key={link.id} link={link} />
+            <LinkCard
+              key={link.id}
+              link={link}
+              onUpdate={onUpdateLink}
+              existingShortCodes={existingShortCodes}
+            />
           ))}
         </div>
       )}

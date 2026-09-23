@@ -2,14 +2,7 @@
 
 import { useState } from "react";
 import Sidebar from "@/components/dashboard/Sidebar";
-import DashboardHeader from "@/components/dashboard/DashboardHeader2";
-
-const user = {
-  name: "زانیار رحمانی",
-  phone: "09100005547",
-  avatar: "",
-};
-
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
 export default function DashboardLayout({
   children,
 }: {
@@ -29,11 +22,7 @@ export default function DashboardLayout({
         }`}
       />
 
-      <Sidebar
-        user={user}
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-      />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <section className="flex flex-col lg:gap-y-8 w-full overflow-hidden">
         <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />

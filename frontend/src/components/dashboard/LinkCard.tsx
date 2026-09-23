@@ -4,16 +4,27 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import GetIcon from "@/components/ui/Icon";
 
 import type { Link as LinkItem } from "@/types/links";
+import type { UpdateLinkFormValues } from "@/lib/validations/link";
 import Link from "next/link";
 import Button from "../ui/Button";
+import EditLinkModal from "./EditLinkModal";
 
 interface LinkCardProps {
   link: LinkItem;
+  /** وقتی کاربر ویرایش را ذخیره کرد صدا زده می‌شود */
+  onUpdate?: (id: number, data: UpdateLinkFormValues) => void;
+  /** کدهای کوتاه همه‌ی لینک‌ها (شامل خود این لینک) برای بررسی یکتا بودن */
+  existingShortCodes?: string[];
 }
 
-export default function LinkCard({ link }: LinkCardProps) {
+export default function LinkCard({
+  link,
+  onUpdate,
+  existingShortCodes = [],
+}: LinkCardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
   const [modal, setModal] = useState<{
     type: "delete" | "toggle";
     linkId: number;
@@ -123,7 +134,10 @@ export default function LinkCard({ link }: LinkCardProps) {
                 <button
                   type="button"
                   className="flex w-full items-center gap-2 rounded-token-md px-3 py-2.5 text-token-sm transition-colors duration-token-normal hover:bg-muted"
-                  onClick={() => setMenuOpen(false)}
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setEditOpen(true);
+                  }}
                 >
                   <GetIcon name="Pencil" className="size-4" />
                   ویرایش
@@ -239,6 +253,17 @@ export default function LinkCard({ link }: LinkCardProps) {
           </div>
         </div>
       </article>
+
+      {/* Edit Modal */}
+      <EditLinkModal
+        open={editOpen}
+        link={link}
+        onClose={() => setEditOpen(false)}
+        onSubmit={(data) => onUpdate?.(link.id, data)}
+        existingShortCodes={existingShortCodes.filter(
+          (code) => code !== link.shortCode,
+        )}
+      />
 
       {/* Confirmation Modal */}
       {modal && (

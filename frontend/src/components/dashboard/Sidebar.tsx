@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import GetIcon from "@/components/ui/Icon";
 import {
+  Rocket,
   Ad,
   MessagesSquare,
   Link2,
@@ -26,11 +27,6 @@ type SidebarSection = {
 };
 
 type SidebarProps = {
-  user: {
-    name: string;
-    phone: string;
-    avatar: string;
-  };
   isOpen?: boolean;
   onClose?: () => void;
 };
@@ -53,19 +49,27 @@ const sections: SidebarSection[] = [
   },
 ];
 
-export default function Sidebar({ user, isOpen, onClose }: SidebarProps) {
+const user = {
+  name: "زانیار رحمانی",
+  phone: "09100005547",
+  avatar: "",
+};
+
+export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
 
   return (
     <aside
       className={`
-        fixed top-0 bottom-0 z-50
-        md:static lg:sticky lg:top-5 lg:h-max
-        overflow-y-auto w-65 sm:w-70 md:w-66 lg:w-70 shrink-0
+        fixed top-0 bottom-0 right-0 z-50
+        w-65 sm:w-70 md:w-66 lg:w-70 shrink-0
+        overflow-y-auto
         bg-card md:border-l md:border-border
         px-7 pb-5 lg:rounded-token-sm
-        transition-all duration-300
-        ${isOpen ? "right-0" : "-right-65 sm:-right-70"}
+        transition-transform duration-300
+        md:static md:translate-x-0
+        lg:sticky lg:top-5 lg:h-max
+        ${isOpen ? "translate-x-0" : "translate-x-full"}
       `}
     >
       {/* User header */}
@@ -83,7 +87,8 @@ export default function Sidebar({ user, isOpen, onClose }: SidebarProps) {
 
         <div className="flex items-center gap-x-3">
           <Link
-            href="dashboard/settings"
+            href="/dashboard/settings"
+            onClick={onClose}
             className="flex items-center justify-center cursor-pointer"
           >
             <GetIcon
@@ -153,6 +158,23 @@ export default function Sidebar({ user, isOpen, onClose }: SidebarProps) {
             </div>
           </div>
         ))}
+      </div>
+
+      <div className="border-t border-border pt-5 mt-25">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="flex size-8 shrink-0 items-center justify-center rounded-token-md bg-brand/10 text-brand">
+            <Rocket size={16} />
+          </div>
+          <span className="text-token-sm font-token-semibold text-foreground">
+            در حال توسعه
+          </span>
+        </div>
+
+        <p className="text-token-xs leading-relaxed text-muted-foreground">
+          تیم توسعه دهنده کوتاهک مداوم در تلاش برای ارتقای بخش‌ها و ارائه‌ی
+          قابلیت‌های جدید است. بابت تکمیل‌نشدن بعضی بخش‌ها پوزش می‌طلبیم —
+          به‌زودی ساخته می‌شوند.
+        </p>
       </div>
     </aside>
   );

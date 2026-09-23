@@ -6,34 +6,39 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import GetIcon from "@/components/ui/Icon";
 
 import Button from "@/components/ui/Button";
-import { readUrlFromClipboard } from "@/lib/dashboard/clipboard-url";
 import {
-  createLinkSchema,
-  type CreateLinkFormValues,
+  updateLinkSchema,
+  type UpdateLinkFormValues,
 } from "@/lib/validations/link";
+import type { Link } from "@/types/links";
 
-interface CreateLinkModalProps {
+const inputClassName =
+  "h-12 w-full rounded-token-md border border-border bg-card px-4 text-token-sm text-foreground shadow-token-sm transition-colors duration-token-normal placeholder:text-muted-foreground focus:border-brand/30 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60";
+
+interface EditLinkModalProps {
   open: boolean;
+  link: Link | null;
   onClose: () => void;
-  onSubmit: (data: CreateLinkFormValues) => void;
+  onSubmit: (data: UpdateLinkFormValues) => void;
+  /** کدهای کوتاه سایر لینک‌ها (بدون خود این لینک) برای بررسی تکراری نبودن */
   existingShortCodes: string[];
 }
 
-export default function CreateLinkModal({
+export default function EditLinkModal({
   open,
+  link,
   onClose,
   onSubmit,
   existingShortCodes,
-}: CreateLinkModalProps) {
+}: EditLinkModalProps) {
   const {
     register,
     handleSubmit,
     reset,
-    setValue,
     setError,
     formState: { errors, isSubmitting },
-  } = useForm<CreateLinkFormValues>({
-    resolver: zodResolver(createLinkSchema),
+  } = useForm<UpdateLinkFormValues>({
+    resolver: zodResolver(updateLinkSchema),
     defaultValues: {
       originalUrl: "",
       title: "",
@@ -41,22 +46,18 @@ export default function CreateLinkModal({
     },
   });
 
+  // هر وقت مودال باز شد یا لینک عوض شد، فرم را با مقادیر لینک پر کن
   useEffect(() => {
-    if (!open) return;
+    if (!open || !link) return;
 
     reset({
-      originalUrl: "",
-      title: "",
-      shortCode: "",
+      originalUrl: link.originalUrl,
+      title: link.title,
+      shortCode: link.shortCode,
     });
+  }, [open, link, reset]);
 
-    readUrlFromClipboard().then((url) => {
-      if (url) {
-        setValue("originalUrl", url, { shouldValidate: true });
-      }
-    });
-  }, [open, reset, setValue]);
-
+  // بستن با Escape
   useEffect(() => {
     if (!open) return;
 
@@ -70,14 +71,7 @@ export default function CreateLinkModal({
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [open, onClose]);
 
-  const handlePasteFromClipboard = async () => {
-    const url = await readUrlFromClipboard();
-    if (url) {
-      setValue("originalUrl", url, { shouldValidate: true, shouldDirty: true });
-    }
-  };
-
-  const handleFormSubmit = (data: CreateLinkFormValues) => {
+  const handleFormSubmit = (data: UpdateLinkFormValues) => {
     const shortCode = data.shortCode?.trim().toLowerCase();
 
     if (shortCode && existingShortCodes.includes(shortCode)) {
@@ -92,7 +86,7 @@ export default function CreateLinkModal({
     onClose();
   };
 
-  if (!open) return null;
+  if (!open || !link) return null;
 
   return (
     <div
@@ -104,19 +98,19 @@ export default function CreateLinkModal({
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
-        aria-labelledby="create-link-title"
+        aria-labelledby="edit-link-title"
       >
         <div className="mb-6 flex items-start justify-between gap-3">
           <div className="flex items-start gap-3">
             <div className="flex size-11 shrink-0 items-center justify-center rounded-token-lg bg-brand/10 text-brand">
-              <GetIcon name="Link2" className="size-5" />
+              <GetIcon name="Pencil" className="size-5" />
             </div>
             <div>
-              <h2 id="create-link-title" className="h3">
-                لینک جدید
+              <h2 id="edit-link-title" className="h3">
+                ویرایش لینک
               </h2>
               <p className="mt-1 text-token-sm text-muted-foreground">
-                لینک بلند را وارد کنید تا کوتاه شود
+                اطلاعات لینک را ویرایش کنید
               </p>
             </div>
           </div>
@@ -137,34 +131,22 @@ export default function CreateLinkModal({
           noValidate
         >
           <div className="space-y-2">
-            <div className="flex items-center justify-between gap-2">
-              <label
-                className="label block text-foreground"
-                htmlFor="originalUrl"
-              >
-                آدرس اصلی
-              </label>
-              <button
-                type="button"
-                onClick={handlePasteFromClipboard}
-                className="inline-flex items-center gap-1.5 text-token-xs font-token-medium text-brand transition-colors hover:text-brand/80"
-              >
-                <GetIcon name="ClipboardPaste" className="size-3.5" />
-                چسباندن از کلیپ‌بورد
-              </button>
-            </div>
-
+            <label
+              className="label block text-foreground"
+              htmlFor="edit-originalUrl"
+            >
+              آدرس اصلی
+            </label>
             <input
-              id="originalUrl"
+              id="edit-originalUrl"
               type="url"
               dir="ltr"
               placeholder="https://example.com/page"
               autoComplete="url"
-              className="h-12 w-full rounded-token-md border border-border bg-card px-4 text-token-sm text-foreground shadow-token-sm transition-colors duration-token-normal placeholder:text-muted-foreground focus:border-brand/30 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+              className={inputClassName}
               aria-invalid={Boolean(errors.originalUrl)}
               {...register("originalUrl")}
             />
-
             {errors.originalUrl && (
               <p className="text-token-xs font-token-medium text-error">
                 {errors.originalUrl.message}
@@ -173,14 +155,14 @@ export default function CreateLinkModal({
           </div>
 
           <div className="space-y-2">
-            <label className="label block text-foreground" htmlFor="title">
+            <label className="label block text-foreground" htmlFor="edit-title">
               عنوان <span className="text-muted-foreground">(اختیاری)</span>
             </label>
             <input
-              id="title"
+              id="edit-title"
               type="text"
               placeholder="مثلاً لندینگ محصول"
-              className="h-12 w-full rounded-token-md border border-border bg-card px-4 text-token-sm text-foreground shadow-token-sm transition-colors duration-token-normal placeholder:text-muted-foreground focus:border-brand/30 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+              className={inputClassName}
               aria-invalid={Boolean(errors.title)}
               {...register("title")}
             />
@@ -192,25 +174,28 @@ export default function CreateLinkModal({
           </div>
 
           <div className="space-y-2">
-            <label className="label block text-foreground" htmlFor="shortCode">
-              نام کوتاه <span className="text-muted-foreground">(اختیاری)</span>
+            <label
+              className="label block text-foreground"
+              htmlFor="edit-shortCode"
+            >
+              نام کوتاه
             </label>
-            <div className="flex items-center">
+            <div className="flex items-center gap-2">
+              <span
+                className="shrink-0 text-token-sm text-muted-foreground"
+                dir="ltr"
+              >
+                kootahak.ir/
+              </span>
               <input
-                id="shortCode"
+                id="edit-shortCode"
                 type="text"
                 dir="ltr"
                 placeholder="my-link"
-                className="h-12 w-full rounded-token-md rounded-l-none border border-border bg-card px-4 text-token-sm text-foreground shadow-token-sm transition-colors duration-token-normal placeholder:text-muted-foreground focus:border-brand/30 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+                className={inputClassName}
                 aria-invalid={Boolean(errors.shortCode)}
                 {...register("shortCode")}
               />
-              <span
-                className="grid place-items-center px-4 rounded-token-md rounded-r-none h-12 shrink-0 text-token-sm text-muted-foreground bg-background"
-                dir="ltr"
-              >
-                https://kootahak.ir/
-              </span>
             </div>
             {errors.shortCode && (
               <p className="text-token-xs font-token-medium text-error">
@@ -224,7 +209,7 @@ export default function CreateLinkModal({
               انصراف
             </Button>
             <Button type="submit" size="sm" isLoading={isSubmitting}>
-              ساخت لینک
+              ذخیره تغییرات
             </Button>
           </div>
         </form>

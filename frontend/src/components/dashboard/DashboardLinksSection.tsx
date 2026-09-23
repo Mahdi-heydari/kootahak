@@ -4,7 +4,10 @@ import { useState } from "react";
 
 import { mockLinks } from "@/contents/dashboard";
 import { buildNewLink } from "@/lib/dashboard/create-link";
-import type { CreateLinkFormValues } from "@/lib/validations/link";
+import type {
+  CreateLinkFormValues,
+  UpdateLinkFormValues,
+} from "@/lib/validations/link";
 import type { Link } from "@/types/links";
 
 import CreateLinkModal from "./CreateLinkModal";
@@ -32,6 +35,22 @@ export default function DashboardLinksSection({
     }
   };
 
+  const handleUpdateLink = (id: number, data: UpdateLinkFormValues) => {
+    setLinks((current) =>
+      current.map((link) =>
+        link.id === id
+          ? {
+              ...link,
+              originalUrl: data.originalUrl,
+              title: data.title?.trim() || link.title,
+              shortCode: data.shortCode?.trim().toLowerCase() || link.shortCode,
+              updatedAt: new Date().toISOString(),
+            }
+          : link,
+      ),
+    );
+  };
+
   return (
     <>
       <LinkToolbar onCreateClick={() => setCreateModalOpen(true)} />
@@ -39,6 +58,7 @@ export default function DashboardLinksSection({
         links={links}
         title={listTitle}
         description={listDescription}
+        onUpdateLink={handleUpdateLink}
       />
       <CreateLinkModal
         open={createModalOpen}
