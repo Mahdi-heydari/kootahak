@@ -40,10 +40,14 @@ import {
   Moon,
   Circle,
   CircleCheck,
+  LayoutGrid,
+  LogOut,
 } from "lucide-react";
 import type { LucideProps } from "lucide-react";
 
 const icons = {
+  LogOut,
+  LayoutGrid,
   User,
   Link2,
   Globe,

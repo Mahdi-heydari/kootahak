@@ -12,9 +12,9 @@ function DashboardLinksFallback() {
 
 export default function DashboardPage() {
   return (
-    <div className="space-y-6 p-4 sm:space-y-8 sm:p-6">
+    <div className="space-y-6 sm:space-y-8">
       <Suspense fallback={<DashboardLinksFallback />}>
-        <div className="space-y-6 sm:space-y-8">
+        <div className="space-y-14 sm:space-y-10">
           <DashboardLinksSection />
         </div>
       </Suspense>

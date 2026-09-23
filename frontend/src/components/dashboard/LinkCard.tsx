@@ -63,10 +63,10 @@ export default function LinkCard({ link }: LinkCardProps) {
   return (
     <>
       <article
-        className={`rounded-token-xl p-4 transition-all duration-token-normal sm:p-5 ${
+        className={`rounded-token-lg p-4 transition-all duration-token-normal sm:p-5 ${
           isInactive
-            ? "border border-border/30 bg-muted/70 opacity-50 grayscale shadow-none"
-            : "surface shadow-token-sm hover:border-brand/30 hover:shadow-token-md"
+            ? "border border-border/40 bg-muted/30 opacity-60 grayscale shadow-none"
+            : "border border-border bg-background shadow-token-sm hover:border-brand/40 hover:shadow-token-md"
         }`}
       >
         {/* Header */}
@@ -111,7 +111,7 @@ export default function LinkCard({ link }: LinkCardProps) {
           <div className="relative shrink-0" ref={menuRef}>
             <button
               type="button"
-              className="flex size-11 items-center justify-center rounded-token-md text-muted-foreground transition-colors duration-token-normal hover:bg-muted/80 hover:text-muted-foreground"
+              className="flex size-11 items-center justify-center rounded-token-md text-muted-foreground transition-colors duration-token-normal hover:bg-muted hover:text-foreground"
               aria-label="عملیات"
               onClick={() => setMenuOpen((prev) => !prev)}
             >
@@ -119,7 +119,7 @@ export default function LinkCard({ link }: LinkCardProps) {
             </button>
 
             {menuOpen && (
-              <div className="absolute left-0 top-full z-50 mt-1 w-44 rounded-token-lg border border-border bg-card p-1 shadow-token-md">
+              <div className="absolute left-0 top-full z-50 mt-1 w-44 rounded-token-lg border border-border bg-background p-1 shadow-token-md">
                 <button
                   type="button"
                   className="flex w-full items-center gap-2 rounded-token-md px-3 py-2.5 text-token-sm transition-colors duration-token-normal hover:bg-muted"
@@ -167,7 +167,7 @@ export default function LinkCard({ link }: LinkCardProps) {
               copied
                 ? "bg-success/10 text-success"
                 : isInactive
-                  ? "bg-muted/80 text-muted-foreground"
+                  ? "bg-muted/60 text-muted-foreground"
                   : "bg-muted hover:bg-brand/5 hover:text-brand"
             }`}
           >
@@ -180,8 +180,8 @@ export default function LinkCard({ link }: LinkCardProps) {
               copied
                 ? "border-success/30 bg-success/10 text-success"
                 : isInactive
-                  ? "border-border/40 bg-muted/80 text-muted-foreground"
-                  : "border-border hover:border-brand/30 hover:bg-brand/5"
+                  ? "border-border/40 bg-muted/60 text-muted-foreground"
+                  : "border-border bg-background hover:border-brand/40 hover:bg-brand/5 hover:text-brand"
             }`}
             aria-label="کپی لینک"
             onClick={handleCopy}
@@ -212,7 +212,7 @@ export default function LinkCard({ link }: LinkCardProps) {
           <div className="flex items-center justify-between gap-3 sm:justify-end">
             <div className="flex items-center gap-1.5 text-token-xs">
               <span
-                className={`size-2 rounded-token-full ${
+                className={`size-2 rounded-token-full animate-pulse ${
                   link.isActive ? "bg-success" : "bg-muted-foreground"
                 }`}
               />

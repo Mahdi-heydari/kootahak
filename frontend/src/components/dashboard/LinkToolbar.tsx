@@ -3,12 +3,9 @@
 import GetIcon from "@/components/ui/Icon";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import Button from "../ui/Button";
+import Button from "@/components/ui/Button";
 
 const SEARCH_DEBOUNCE_MS = 350;
-
-const inputClassName =
-  "h-11 w-full rounded-token-md border border-border bg-card px-4 text-token-sm text-foreground shadow-token-sm transition-colors duration-token-normal placeholder:text-muted-foreground focus:border-brand/30 focus:outline-none sm:h-12";
 
 interface LinkToolbarProps {
   onCreateClick?: () => void;
@@ -33,11 +30,8 @@ export default function LinkToolbar({ onCreateClick }: LinkToolbarProps) {
     (updates: Record<string, string>) => {
       const params = new URLSearchParams(searchParams.toString());
       for (const [key, value] of Object.entries(updates)) {
-        if (value) {
-          params.set(key, value);
-        } else {
-          params.delete(key);
-        }
+        if (value) params.set(key, value);
+        else params.delete(key);
       }
       const query = params.toString();
       return query ? `?${query}` : "";
@@ -54,11 +48,9 @@ export default function LinkToolbar({ onCreateClick }: LinkToolbarProps) {
 
   useEffect(() => {
     if (localSearch === urlSearch) return;
-
     const timer = setTimeout(() => {
       pushQuery({ search: localSearch });
     }, SEARCH_DEBOUNCE_MS);
-
     return () => clearTimeout(timer);
   }, [localSearch, urlSearch, pushQuery]);
 
@@ -93,29 +85,15 @@ export default function LinkToolbar({ onCreateClick }: LinkToolbarProps) {
     status === "inactive" ? "غیرفعال" : status === "active" ? "فعال" : "وضعیت";
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="relative w-full">
-        <GetIcon
-          name="Search"
-          className="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-        />
-
-        <input
-          type="text"
-          placeholder="جستجوی لینک..."
-          value={localSearch}
-          onChange={(e) => setLocalSearch(e.target.value)}
-          className={`${inputClassName} pe-10 pr-10`}
-        />
-      </div>
-
-      <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
+    <div className="flex flex-col gap-3 border-b border-border pb-10 lg:flex-row lg:items-center lg:gap-3">
+      {/* Filters group */}
+      <div className="grid grid-cols-2 gap-3 md:flex md:items-center">
         <Button
           type="button"
           variant={status ? "outline" : "secondary"}
           size="sm"
           onClick={toggleStatus}
-          className="min-h-11 w-full gap-2 sm:w-auto"
+          className="min-h-11 gap-2"
         >
           <GetIcon name="Filter" className="size-4 shrink-0" />
           <span className="truncate">{statusLabel}</span>
@@ -126,22 +104,39 @@ export default function LinkToolbar({ onCreateClick }: LinkToolbarProps) {
           variant={sort ? "outline" : "secondary"}
           size="sm"
           onClick={cycleSort}
-          className="min-h-11 w-full gap-2 sm:w-auto"
+          className="min-h-11 gap-2"
         >
           <GetIcon name="SlidersHorizontal" className="size-4 shrink-0" />
           <span className="truncate">{sortLabel}</span>
         </Button>
-
-        <Button
-          type="button"
-          size="sm"
-          onClick={onCreateClick}
-          className="col-span-2 min-h-11 w-full gap-2 sm:col-span-1 sm:ms-auto sm:w-auto"
-        >
-          <GetIcon name="Plus" className="size-4 shrink-0" />
-          <span>لینک جدید</span>
-        </Button>
       </div>
+
+      {/* Search */}
+      <div className="flex h-11 items-center justify-between gap-x-4 rounded-token-md bg-background-secondary px-4 sm:h-12 lg:grow">
+        <input
+          type="text"
+          placeholder="یافتن لینک مورد نظر ..."
+          value={localSearch}
+          onChange={(e) => setLocalSearch(e.target.value)}
+          className="size-full bg-transparent text-token-sm text-foreground outline-none placeholder:text-muted-foreground"
+        />
+        <GetIcon
+          name="Search"
+          size={18}
+          className="shrink-0 text-muted-foreground"
+        />
+      </div>
+
+      {/* Create button */}
+      <Button
+        type="button"
+        size="sm"
+        onClick={onCreateClick}
+        className="min-h-11 w-full gap-2 sm:w-auto"
+      >
+        <GetIcon name="Plus" className="size-4 shrink-0" />
+        <span>لینک جدید</span>
+      </Button>
     </div>
   );
 }

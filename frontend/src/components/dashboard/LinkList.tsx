@@ -25,7 +25,11 @@ export default function LinkList({
     <section className="space-y-5">
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
+          <div className="flex items-center gap-2">
+          <span className="block bg-brand w-4 h-1"></span>
+
           <h2 className="h3">{title}</h2>
+          </div>
 
           <p className="mt-1 text-token-sm text-muted-foreground">
             {description}
