@@ -16,22 +16,22 @@ interface CreateLinkModalProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (data: CreateLinkFormValues) => void;
-  existingShortCodes: string[];
+  /** والد می‌فرسته — تا وقتی mutation در جریانه، فرم قفل بمونه */
+  isSubmitting?: boolean;
 }
 
 export default function CreateLinkModal({
   open,
   onClose,
   onSubmit,
-  existingShortCodes,
+  isSubmitting = false,
 }: CreateLinkModalProps) {
   const {
     register,
     handleSubmit,
     reset,
     setValue,
-    setError,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<CreateLinkFormValues>({
     resolver: zodResolver(createLinkSchema),
     defaultValues: {
@@ -41,14 +41,11 @@ export default function CreateLinkModal({
     },
   });
 
+  // reset + auto-paste وقتی باز شد
   useEffect(() => {
     if (!open) return;
 
-    reset({
-      originalUrl: "",
-      title: "",
-      shortCode: "",
-    });
+    reset({ originalUrl: "", title: "", shortCode: "" });
 
     readUrlFromClipboard().then((url) => {
       if (url) {
@@ -57,18 +54,15 @@ export default function CreateLinkModal({
     });
   }, [open, reset, setValue]);
 
+  // Escape
   useEffect(() => {
     if (!open) return;
-
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        onClose();
-      }
+      if (event.key === "Escape" && !isSubmitting) onClose();
     }
-
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [open, onClose]);
+  }, [open, onClose, isSubmitting]);
 
   const handlePasteFromClipboard = async () => {
     const url = await readUrlFromClipboard();
@@ -78,18 +72,12 @@ export default function CreateLinkModal({
   };
 
   const handleFormSubmit = (data: CreateLinkFormValues) => {
-    const shortCode = data.shortCode?.trim().toLowerCase();
-
-    if (shortCode && existingShortCodes.includes(shortCode)) {
-      setError("shortCode", { message: "این نام کوتاه قبلاً استفاده شده" });
-      return;
-    }
-
+    // onClose() رو صدا نمی‌زنیم — والد بعد از موفقیت mutation می‌بنده
+    // اگه سرور 409 بده، مودال باز می‌مونه و کاربر می‌تونه اصلاح کنه
     onSubmit({
       ...data,
-      shortCode,
+      shortCode: data.shortCode?.trim().toLowerCase(),
     });
-    onClose();
   };
 
   if (!open) return null;
@@ -97,7 +85,7 @@ export default function CreateLinkModal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-0 sm:items-center sm:p-4"
-      onClick={onClose}
+      onClick={() => !isSubmitting && onClose()}
     >
       <div
         className="surface max-h-[92dvh] w-full overflow-y-auto rounded-t-token-xl p-5 shadow-token-md scrollbar-thin sm:max-w-lg sm:rounded-token-xl sm:p-6"
@@ -124,7 +112,8 @@ export default function CreateLinkModal({
           <button
             type="button"
             onClick={onClose}
-            className="flex size-11 shrink-0 items-center justify-center rounded-token-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            disabled={isSubmitting}
+            className="flex size-11 shrink-0 items-center justify-center rounded-token-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-50"
             aria-label="بستن"
           >
             <GetIcon name="X" className="size-5" />
@@ -136,6 +125,7 @@ export default function CreateLinkModal({
           onSubmit={handleSubmit(handleFormSubmit)}
           noValidate
         >
+          {/* originalUrl */}
           <div className="space-y-2">
             <div className="flex items-center justify-between gap-2">
               <label
@@ -147,24 +137,24 @@ export default function CreateLinkModal({
               <button
                 type="button"
                 onClick={handlePasteFromClipboard}
-                className="inline-flex items-center gap-1.5 text-token-xs font-token-medium text-brand transition-colors hover:text-brand/80"
+                disabled={isSubmitting}
+                className="inline-flex items-center gap-1.5 text-token-xs font-token-medium text-brand transition-colors hover:text-brand/80 disabled:opacity-50"
               >
                 <GetIcon name="ClipboardPaste" className="size-3.5" />
                 چسباندن از کلیپ‌بورد
               </button>
             </div>
-
             <input
               id="originalUrl"
               type="url"
               dir="ltr"
               placeholder="https://example.com/page"
               autoComplete="url"
+              disabled={isSubmitting}
               className="h-12 w-full rounded-token-md border border-border bg-card px-4 text-token-sm text-foreground shadow-token-sm transition-colors duration-token-normal placeholder:text-muted-foreground focus:border-brand/30 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
               aria-invalid={Boolean(errors.originalUrl)}
               {...register("originalUrl")}
             />
-
             {errors.originalUrl && (
               <p className="text-token-xs font-token-medium text-error">
                 {errors.originalUrl.message}
@@ -172,6 +162,7 @@ export default function CreateLinkModal({
             )}
           </div>
 
+          {/* title */}
           <div className="space-y-2">
             <label className="label block text-foreground" htmlFor="title">
               عنوان <span className="text-muted-foreground">(اختیاری)</span>
@@ -180,6 +171,7 @@ export default function CreateLinkModal({
               id="title"
               type="text"
               placeholder="مثلاً لندینگ محصول"
+              disabled={isSubmitting}
               className="h-12 w-full rounded-token-md border border-border bg-card px-4 text-token-sm text-foreground shadow-token-sm transition-colors duration-token-normal placeholder:text-muted-foreground focus:border-brand/30 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
               aria-invalid={Boolean(errors.title)}
               {...register("title")}
@@ -191,6 +183,7 @@ export default function CreateLinkModal({
             )}
           </div>
 
+          {/* shortCode */}
           <div className="space-y-2">
             <label className="label block text-foreground" htmlFor="shortCode">
               نام کوتاه <span className="text-muted-foreground">(اختیاری)</span>
@@ -220,7 +213,13 @@ export default function CreateLinkModal({
           </div>
 
           <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
-            <Button type="button" variant="outline" size="sm" onClick={onClose}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={isSubmitting}
+              onClick={onClose}
+            >
               انصراف
             </Button>
             <Button type="submit" size="sm" isLoading={isSubmitting}>

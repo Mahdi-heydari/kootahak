@@ -1,21 +1,11 @@
 import { Suspense } from "react";
-import DashboardLinksSection from "@/components/dashboard/DashboardLinksSection";
+import LinksPage from "@/components/dashboard/links/LinksPage";
+import LinksSkeleton from "@/components/dashboard/links/LinksSkeleton";
 
-function LinksFallback() {
+export default function Page() {
   return (
-    <div className="space-y-6">
-      <div className="h-24 rounded-token-md bg-muted animate-pulse" />
-      <div className="h-48 rounded-token-md bg-muted animate-pulse" />
-    </div>
-  );
-}
-
-export default function LinkPage() {
-  return (
-    <div className="space-y-6 sm:space-y-8">
-      <Suspense fallback={<LinksFallback />}>
-          <DashboardLinksSection />
-      </Suspense>
-    </div>
+    <Suspense fallback={<LinksSkeleton />}>
+      <LinksPage />
+    </Suspense>
   );
 }

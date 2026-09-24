@@ -15,13 +15,19 @@ import type { Link } from "@/types/links";
 const inputClassName =
   "h-12 w-full rounded-token-md border border-border bg-card px-4 text-token-sm text-foreground shadow-token-sm transition-colors duration-token-normal placeholder:text-muted-foreground focus:border-brand/30 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60";
 
+export interface EditLinkSubmitPayload {
+  title?: string;
+  shortCode?: string;
+  originalUrl?: string;
+}
+
 interface EditLinkModalProps {
   open: boolean;
   link: Link | null;
   onClose: () => void;
-  onSubmit: (data: UpdateLinkFormValues) => void;
-  /** کدهای کوتاه سایر لینک‌ها (بدون خود این لینک) برای بررسی تکراری نبودن */
-  existingShortCodes: string[];
+  onSubmit: (data: EditLinkSubmitPayload) => void;
+  /** از والد میاد — تا وقتی mutation در جریانه، دکمه‌ها disabled بمونن */
+  isSubmitting?: boolean;
 }
 
 export default function EditLinkModal({
@@ -29,14 +35,13 @@ export default function EditLinkModal({
   link,
   onClose,
   onSubmit,
-  existingShortCodes,
+  isSubmitting = false,
 }: EditLinkModalProps) {
   const {
     register,
     handleSubmit,
     reset,
-    setError,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<UpdateLinkFormValues>({
     resolver: zodResolver(updateLinkSchema),
     defaultValues: {
@@ -46,7 +51,7 @@ export default function EditLinkModal({
     },
   });
 
-  // هر وقت مودال باز شد یا لینک عوض شد، فرم را با مقادیر لینک پر کن
+  // هر وقت مودال باز شد یا لینک عوض شد، فرم رو با مقادیر لینک پر کن
   useEffect(() => {
     if (!open || !link) return;
 
@@ -62,28 +67,24 @@ export default function EditLinkModal({
     if (!open) return;
 
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
+      if (event.key === "Escape" && !isSubmitting) {
         onClose();
       }
     }
 
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [open, onClose]);
+  }, [open, onClose, isSubmitting]);
 
   const handleFormSubmit = (data: UpdateLinkFormValues) => {
-    const shortCode = data.shortCode?.trim().toLowerCase();
-
-    if (shortCode && existingShortCodes.includes(shortCode)) {
-      setError("shortCode", { message: "این نام کوتاه قبلاً استفاده شده" });
-      return;
-    }
-
+    // توجه: اینجا onClose() صدا زده نمی‌شه.
+    // والد (LinkCard) بعد از موفقیت mutation، setEditOpen(false) رو اجرا می‌کنه.
+    // اگه بکند 409 برگردونه، مودال باز می‌مونه تا کاربر بتونه اصلاح کنه.
     onSubmit({
-      ...data,
-      shortCode,
+      title: data.title,
+      shortCode: data.shortCode?.trim().toLowerCase(),
+      originalUrl: data.originalUrl,
     });
-    onClose();
   };
 
   if (!open || !link) return null;
@@ -91,7 +92,7 @@ export default function EditLinkModal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-0 sm:items-center sm:p-4"
-      onClick={onClose}
+      onClick={() => !isSubmitting && onClose()}
     >
       <div
         className="surface max-h-[92dvh] w-full overflow-y-auto rounded-t-token-xl p-5 shadow-token-md scrollbar-thin sm:max-w-lg sm:rounded-token-xl sm:p-6"
@@ -118,7 +119,8 @@ export default function EditLinkModal({
           <button
             type="button"
             onClick={onClose}
-            className="flex size-11 shrink-0 items-center justify-center rounded-token-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            disabled={isSubmitting}
+            className="flex size-11 shrink-0 items-center justify-center rounded-token-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:opacity-50"
             aria-label="بستن"
           >
             <GetIcon name="X" className="size-5" />
@@ -143,6 +145,7 @@ export default function EditLinkModal({
               dir="ltr"
               placeholder="https://example.com/page"
               autoComplete="url"
+              disabled={isSubmitting}
               className={inputClassName}
               aria-invalid={Boolean(errors.originalUrl)}
               {...register("originalUrl")}
@@ -162,6 +165,7 @@ export default function EditLinkModal({
               id="edit-title"
               type="text"
               placeholder="مثلاً لندینگ محصول"
+              disabled={isSubmitting}
               className={inputClassName}
               aria-invalid={Boolean(errors.title)}
               {...register("title")}
@@ -180,22 +184,22 @@ export default function EditLinkModal({
             >
               نام کوتاه
             </label>
-            <div className="flex items-center gap-2">
-              <span
-                className="shrink-0 text-token-sm text-muted-foreground"
-                dir="ltr"
-              >
-                kootahak.ir/
-              </span>
+            <div className="flex items-center">
               <input
-                id="edit-shortCode"
+                id="shortCode"
                 type="text"
                 dir="ltr"
                 placeholder="my-link"
-                className={inputClassName}
+                className="h-12 w-full rounded-token-md rounded-l-none border border-border bg-card px-4 text-token-sm text-foreground shadow-token-sm transition-colors duration-token-normal placeholder:text-muted-foreground focus:border-brand/30 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
                 aria-invalid={Boolean(errors.shortCode)}
                 {...register("shortCode")}
               />
+              <span
+                className="grid place-items-center px-4 rounded-token-md rounded-r-none h-12 shrink-0 text-token-sm text-muted-foreground bg-background"
+                dir="ltr"
+              >
+                https://kootahak.ir/
+              </span>
             </div>
             {errors.shortCode && (
               <p className="text-token-xs font-token-medium text-error">
@@ -205,7 +209,13 @@ export default function EditLinkModal({
           </div>
 
           <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
-            <Button type="button" variant="outline" size="sm" onClick={onClose}>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={isSubmitting}
+              onClick={onClose}
+            >
               انصراف
             </Button>
             <Button type="submit" size="sm" isLoading={isSubmitting}>

@@ -1,5 +1,8 @@
 import {
   User,
+  Loader,
+  ChevronRight,
+  ChevronLeft,
   Link2,
   Globe,
   Clock,
@@ -46,6 +49,9 @@ import {
 import type { LucideProps } from "lucide-react";
 
 const icons = {
+    ChevronRight,
+  ChevronLeft,
+  Loader ,
   LogOut,
   LayoutGrid,
   User,
@@ -88,7 +94,7 @@ const icons = {
   Sun,
   Moon,
   Circle,
-  CircleCheck
+  CircleCheck,
 };
 
 export type IconName = keyof typeof icons;

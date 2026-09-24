@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
+import AppToaster from "@/components/ui/AppToaster";
 import localFont from "next/font/local";
-
 import "./globals.css";
 import { Providers } from "@/providers/providers";
 
@@ -14,18 +14,13 @@ const iranyekanX = localFont({
 });
 
 export const metadata: Metadata = {
-  title: {
-    default: "کوتاهک",
-    template: "%s | کوتاهک",
-  },
+  title: { default: "کوتاهک", template: "%s | کوتاهک" },
   description: "سرویس کوتاه‌کننده لینک کوتاهک",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
       lang="fa"
@@ -33,9 +28,10 @@ export default function RootLayout({
       className={`${iranyekanX.variable}`}
       suppressHydrationWarning
     >
-      <body className="scrollbar-thin scrollbar-thin::-webkit-scrollbar scrollbar-thin::-webkit-scrollbar-track scrollbar-thin::-webkit-scrollbar-thumb scrollbar-thin::-webkit-scrollbar-thumb:hover">
+      <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Providers>{children}</Providers>
+          <AppToaster />
         </ThemeProvider>
       </body>
     </html>
