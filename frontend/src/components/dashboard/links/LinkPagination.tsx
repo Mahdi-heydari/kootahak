@@ -61,13 +61,14 @@ export default function LinkPagination({
             type="button"
             onClick={() => goTo(p)}
             aria-current={p === page ? "page" : undefined}
+            dir="ltr"
             className={`min-w-11 h-11 rounded-token-md text-token-sm font-token-medium transition-colors ${
               p === page
                 ? "bg-primary text-primary-foreground"
                 : "bg-muted text-foreground hover:bg-border-hover"
             }`}
           >
-            {p === page ? `${p}/${totalPages}` : p}
+            {p}
           </button>
         ),
       )}

@@ -35,7 +35,7 @@ const sections: SidebarSection[] = [
   {
     title: "دسترسی سریع",
     items: [
-      { label: "لینک ها", href: "/dashboard", icon: Link2 },
+      { label: "لینک ها", href: "/dashboard/links", icon: Link2 },
       { label: "ثبت تبلیغات", href: "/dashboard/advertise", icon: Ad },
       {
         label: "ارتباط با پشتیبانی",
@@ -43,8 +43,8 @@ const sections: SidebarSection[] = [
         icon: MessagesSquare,
       },
       { label: "نقدینگی درآمد", href: "/dashboard/income", icon: HandCoins },
-      { label: "دعوت دوستان", href: "", icon: Bell },
-      { label: "اعلان ها", href: "", icon: Gift },
+      { label: "دعوت دوستان", href: "", icon: Gift },
+      { label: "اعلان ها", href: "", icon: Bell },
     ],
   },
 ];

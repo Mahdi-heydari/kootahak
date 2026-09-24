@@ -1,29 +1,38 @@
 "use client";
 
-import { ReactNode, useState } from "react";
-import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
+import { useState, type ReactNode } from "react";
+import Sidebar from "@/components/dashboard/Sidebar";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 
 interface DashboardShellProps {
   children: ReactNode;
 }
 
-export function DashboardShell({ children }: DashboardShellProps) {
+export default function DashboardShell({ children }: DashboardShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-dvh overflow-hidden bg-background">
-      <DashboardSidebar
-        mobileOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
+    <section className="relative h-dvh lg:h-auto flex lg:items-start lg:gap-x-8 lg:p-9 max-w-360 mx-auto">
+      {/* Mobile overlay */}
+      <div
+        onClick={() => setSidebarOpen(false)}
+        className={`fixed inset-0 bg-black/20 md:hidden z-40 transition-all duration-300 ${
+          sidebarOpen
+            ? "visible opacity-100"
+            : "invisible opacity-0 pointer-events-none"
+        }`}
+        aria-hidden="true"
       />
 
-      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      <section className="flex flex-col lg:gap-y-8 w-full overflow-hidden">
         <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
-        <main className="scrollbar-thin flex-1 overflow-y-auto">
+
+        <section className="bg-card p-5 sm:p-7 lg:rounded-token-sm h-full overflow-auto">
           {children}
-        </main>
-      </div>
-    </div>
+        </section>
+      </section>
+    </section>
   );
 }

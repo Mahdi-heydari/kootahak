@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import GetIcon from "@/components/ui/Icon";
 import Button from "@/components/ui/Button";
@@ -10,6 +8,14 @@ type DashboardHeaderProps = {
 };
 
 export default function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
+  const formatter = new Intl.DateTimeFormat("fa-IR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    timeZone: "Asia/Tehran",
+  });
+  const today = formatter.format(new Date());
+
   return (
     <header
       className="
@@ -48,8 +54,13 @@ export default function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
 
         <div className="max-lg:hidden w-px h-6 bg-border" />
 
-        <time className="max-lg:hidden text-token-sm text-muted-foreground select-none">
-          سه‌شنبه ۳۱ شهریور
+        <time
+          suppressHydrationWarning
+          className="max-lg:hidden text-token-sm text-muted-foreground select-none"
+        >
+          {today ?? (
+            <div className="w-21.5 h-5.25 bg-muted animate-pulse rounded-[4px]"></div>
+          )}
         </time>
       </div>
     </header>
