@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import GetIcon from "@/components/ui/Icon";
+import UserIdentity from "@/components/user/UserIdentity";
+import { useLogout } from "@/hooks/auth/use-logout";
 import {
   Rocket,
   Ad,
@@ -43,20 +45,21 @@ const sections: SidebarSection[] = [
         icon: MessagesSquare,
       },
       { label: "نقدینگی درآمد", href: "/dashboard/income", icon: HandCoins },
-      { label: "دعوت دوستان", href: "", icon: Gift },
-      { label: "اعلان ها", href: "", icon: Bell },
+      { label: "دعوت دوستان", href: "", icon: Bell, disabled: true },
+      { label: "اعلان ها", href: "", icon: Gift, disabled: true },
     ],
   },
 ];
 
-const user = {
-  name: "زانیار رحمانی",
-  phone: "09100005547",
-  avatar: "",
-};
+function isLinkActive(pathname: string, href: string): boolean {
+  if (!href) return false;
+  if (pathname === href) return true;
+  return pathname.startsWith(href + "/");
+}
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
+  const logout = useLogout();
 
   return (
     <aside
@@ -74,22 +77,14 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     >
       {/* User header */}
       <div className="flex items-center justify-between h-22 mb-5 border-b border-border">
-        <div className="flex items-center gap-x-2">
-          <div className="flex flex-col text-token-sm">
-            <span className="font-token-semibold max-w-28 truncate select-none">
-              {user.name}
-            </span>
-            <span className="font-token-normal text-muted-foreground">
-              {user.phone}
-            </span>
-          </div>
-        </div>
+        <UserIdentity />
 
         <div className="flex items-center gap-x-3">
           <Link
             href="/dashboard/settings"
             onClick={onClose}
             className="flex items-center justify-center cursor-pointer"
+            aria-label="تنظیمات"
           >
             <GetIcon
               name="Settings"
@@ -97,40 +92,58 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               className="text-muted-foreground hover:text-primary transition-colors"
             />
           </Link>
+
           <button
             type="button"
-            className="flex items-center justify-center cursor-pointer rotate-180"
+            onClick={() => logout.mutate()}
+            disabled={logout.isPending}
+            aria-label="خروج از حساب"
+            title="خروج از حساب"
+            className="flex items-center justify-center cursor-pointer rotate-180 disabled:opacity-50"
           >
             <GetIcon
               name="LogOut"
               size={18}
-              className="text-muted-foreground hover:text-error transition-colors"
+              className={`text-muted-foreground transition-colors hover:text-error ${
+                logout.isPending ? "animate-pulse" : ""
+              }`}
             />
           </button>
         </div>
       </div>
 
       {/* Sections */}
-      <div className="flex flex-col gap-y-5">
+      <nav className="flex flex-col gap-y-5">
         {sections.map((section) => (
           <div key={section.title} className="flex flex-col gap-y-2.5">
             <div className="flex flex-col gap-y-2">
               {section.items.map((item) => {
                 const Icon = item.icon;
-                const isActive = pathname === item.href && !item.disabled;
+                const isActive =
+                  !item.disabled && isLinkActive(pathname, item.href);
 
                 const inner = (
                   <>
                     <span
-                      className={`block w-0.5 h-5 ml-1 rounded-full ${
-                        isActive ? "bg-brand" : ""
+                      className={`block w-0.5 h-5 ml-1 rounded-full transition-colors ${
+                        isActive ? "bg-brand" : "bg-transparent"
                       }`}
                     />
                     <Icon
                       size={20}
-                      className="text-muted-foreground group-hover:text-brand transition-colors"
+                      className={`transition-colors ${
+                        isActive
+                          ? "text-brand"
+                          : "text-muted-foreground group-hover:text-brand"
+                      }`}
                     />
-                    <span className="text-primary group-hover:text-brand text-token-xs transition-colors">
+                    <span
+                      className={`text-token-xs transition-colors ${
+                        isActive
+                          ? "text-brand font-token-semibold"
+                          : "text-primary group-hover:text-brand"
+                      }`}
+                    >
                       {item.label}
                     </span>
                   </>
@@ -140,7 +153,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                   <button
                     key={item.label}
                     type="button"
-                    className="flex items-center gap-x-2.5 py-1.5 group text-right opacity-60 cursor-default"
+                    disabled
+                    className="flex items-center gap-x-2.5 py-1.5 group text-right opacity-60 cursor-not-allowed"
                   >
                     {inner}
                   </button>
@@ -149,6 +163,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                     key={item.label}
                     href={item.href}
                     onClick={onClose}
+                    aria-current={isActive ? "page" : undefined}
                     className="flex items-center gap-x-2.5 py-1.5 group text-right"
                   >
                     {inner}
@@ -158,8 +173,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             </div>
           </div>
         ))}
-      </div>
+      </nav>
 
+      {/* Dev notice */}
       <div className="border-t border-border pt-5 mt-25">
         <div className="flex items-center gap-2 mb-2">
           <div className="flex size-8 shrink-0 items-center justify-center rounded-token-md bg-brand/10 text-brand">

@@ -17,18 +17,6 @@ export interface ProfileContent {
   menuItems: ProfileMenuItem[];
   logoutLabel: string;
 }
-export interface ProfileProps {
-  user: {
-    name: string;
-    phone: string;
-    avatar?: string;
-  };
-}
-
-export interface UserInfo {
-  name: string;
-  phone: string;
-}
 
 // Hero
 export interface HeroFeature {
