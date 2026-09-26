@@ -15,7 +15,7 @@ import {
   authFooterLinkClassName,
   authInputClassName,
 } from "@/lib/auth-input";
-import { useLogin } from "@/hooks/use-auth";
+import { useLogin } from "@/hooks/auth/use-auth";
 import { loginSchema, type LoginFormValues } from "@/lib/validations/auth";
 
 export function LoginForm() {

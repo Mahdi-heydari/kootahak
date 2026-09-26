@@ -1,45 +1,67 @@
-"use client";
-
 import Link from "next/link";
 import GetIcon from "@/components/ui/Icon";
-import ThemeToggle from "../ui/theme-toggle";
-import Button from "../ui/Button";
+import Button from "@/components/ui/Button";
+import ThemeToggle from "@/components/ui/theme-toggle";
 
-interface DashboardHeaderProps {
+type DashboardHeaderProps = {
   onMenuClick?: () => void;
-}
+};
 
 export default function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
+  const formatter = new Intl.DateTimeFormat("fa-IR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    timeZone: "Asia/Tehran",
+  });
+  const today = formatter.format(new Date());
+
   return (
-    <header className="flex h-16 shrink-0 items-center justify-between gap-3 border-b border-border bg-card px-4 md:h-20 md:px-6">
-      <div className="flex min-w-0 items-center gap-3">
-        <button
-          type="button"
-          onClick={onMenuClick}
-          className="flex size-11 shrink-0 items-center justify-center rounded-token-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground lg:hidden"
-          aria-label="باز کردن منو"
-        >
-          <GetIcon name="Menu" className="size-5" />
-        </button>
+    <header
+      className="
+        flex items-center justify-between shrink-0 w-full h-22
+        px-5 sm:px-7 bg-card
+        max-lg:border-b max-lg:border-border
+        lg:rounded-token-sm
+      "
+    >
+      {/* Mobile menu button */}
+      <button
+        type="button"
+        onClick={onMenuClick}
+        className="md:hidden"
+        aria-label="باز کردن منو"
+      >
+        <GetIcon size={24} name="LayoutGrid" className="text-primary" />
+      </button>
 
-        <div className="min-w-0">
-          <h1 className="truncate text-token-lg font-token-semibold md:text-token-xl">
-            داشبورد
-          </h1>
-          <p className="hidden truncate text-token-sm text-muted-foreground sm:block">
-            مدیریت لینک‌های کوتاه شما
-          </p>
+      <Link href="/" className="text-token-3xl font-token-bold text-foreground">
+        کوتاهک
+        <span className="text-brand mr-2">/</span>
+      </Link>
+
+      {/* Actions */}
+      <div className="flex items-center gap-x-5">
+        <div className="flex shrink-0 items-center gap-2 md:gap-3">
+          <Link href="/">
+            <Button variant="ghost" size="sm">
+              خانه
+            </Button>
+          </Link>
+
+          <ThemeToggle />
         </div>
-      </div>
 
-      <div className="flex shrink-0 items-center gap-2 md:gap-3">
-        <Link href="/">
-          <Button variant="ghost" size="sm">
-            خانه
-          </Button>
-        </Link>
+        <div className="max-lg:hidden w-px h-6 bg-border" />
 
-        <ThemeToggle />
+        <time
+          suppressHydrationWarning
+          className="max-lg:hidden text-token-sm text-muted-foreground select-none"
+        >
+          {today ?? (
+            <div className="w-21.5 h-5.25 bg-muted animate-pulse rounded-[4px]"></div>
+          )}
+        </time>
       </div>
     </header>
   );
