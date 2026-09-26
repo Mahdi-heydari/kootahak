@@ -16,7 +16,7 @@ import {
   authFooterLinkClassName,
   authInputClassName,
 } from "@/lib/auth-input";
-import { useRegister } from "@/hooks/use-auth";
+import { useRegister } from "@/hooks/auth/use-auth";
 import {
   registerSchema,
   type RegisterFormValues,

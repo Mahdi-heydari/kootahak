@@ -1,6 +1,5 @@
 import {
   NavLink,
-  UserInfo,
   FooterContent,
   HeroContent,
   ProblemsContent,
@@ -17,10 +16,7 @@ export const navLinks: NavLink[] = [
 ];
 
 // Profile
-export const mockUser: UserInfo = {
-  name: "زانیار رحمانی",
-  phone: "09145562747",
-};
+
 export const profileContent: ProfileContent = {
   menuItems: [
     { href: "/dash", label: "داشبورد", icon: "Settings" },
