@@ -16,11 +16,14 @@ export const navLinks: NavLink[] = [
 ];
 
 // Profile
-
 export const profileContent: ProfileContent = {
   menuItems: [
-    { href: "/dash", label: "داشبورد", icon: "Settings" },
-    { href: "/supp", label: "پشتیبانی", icon: "MessageCircleMore" },
+    { href: "/dashboard", label: "داشبورد", icon: "LayoutGrid" },
+    {
+      href: "/dashboard/support",
+      label: "پشتیبانی",
+      icon: "MessageCircleMore",
+    },
   ],
   logoutLabel: "خروج از حساب کاربری",
 };

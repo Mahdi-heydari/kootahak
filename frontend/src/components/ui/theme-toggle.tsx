@@ -49,10 +49,10 @@ function ThemeToggle() {
       className="btn p-2 w-full flex justify-center items-center md:w-auto bg-muted md:bg-transparent md:rounded-token-md rounded-token-sm md:hover:bg-muted transition-colors"
     >
       <div className="block dark:hidden">
-        <Icon name={lightIcon} size={18} />
+        <Icon name={lightIcon} size={20} />
       </div>
       <div className="hidden dark:block">
-        <Icon name={darkIcon} size={18} />
+        <Icon name={darkIcon} size={20} />
       </div>
     </button>
   );

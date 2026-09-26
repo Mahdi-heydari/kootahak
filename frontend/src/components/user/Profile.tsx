@@ -14,10 +14,10 @@ export default function Profile() {
   const { menuItems, logoutLabel } = profileContent;
 
   return (
-    <div className="md:absolute left-0 top-[150%] z-50 font-iranyekan text-token-sm transition-all md:invisible md:opacity-0 md:group-hover:visible md:group-hover:opacity-100">
-      <div className="w-full overflow-hidden border-border md:w-64 md:rounded-token-sm md:border md:bg-card">
+    <div className="absolute left-0 top-[calc(100%+8px)] z-50 w-64 font-iranyekan text-token-sm transition-all duration-200 md:invisible md:opacity-0 md:group-hover:visible md:group-hover:opacity-100">
+      <div className="w-full overflow-hidden rounded-token-sm border border-border bg-card shadow-token-md">
         {/* User header */}
-        <div className="flex items-center gap-x-3 border-b border-border ps-4 py-4 md:p-4">
+        <div className="flex items-center gap-x-3 border-b border-border p-4">
           {isLoading ? (
             <UserIdentitySkeleton />
           ) : isError || !user ? (
@@ -47,7 +47,6 @@ export default function Profile() {
             <Link
               key={item.href}
               href={item.href}
-              rel="noopener noreferrer"
               className="group flex items-center gap-x-3 rounded-token-sm px-3 py-2.5 text-muted-foreground transition-all duration-200 hover:bg-muted/50 hover:text-foreground"
             >
               <GetIcon name={item.icon} size={18} />
