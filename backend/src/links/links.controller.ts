@@ -38,12 +38,22 @@ import type { User } from "../generated/prisma/client";
 
 @ApiTags("links")
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
 @Controller("api/links")
 export class LinksController {
   constructor(private readonly linksService: LinksService) {}
 
+  @Get("statistics")
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
+  @ApiOperation({ summary: "Get public platform-wide usage statistics" })
+  @ApiOkResponse({
+    description: "Aggregate counts of active links, visits, and active users",
+  })
+  async getStatistics() {
+    return await this.linksService.getStatistics();
+  }
+
   @Get()
+  @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: "List links owned by the current user" })
   @ApiOkResponse({ description: "A paginated list of the user's links" })
   @ApiBadRequestResponse({
@@ -58,6 +68,7 @@ export class LinksController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @Throttle({ default: { limit: 20, ttl: 60000 } })
   @ApiOperation({ summary: "Create a new shortened link for the current user" })
   @ApiCreatedResponse({ description: "The link was created successfully" })
@@ -78,6 +89,7 @@ export class LinksController {
   }
 
   @Patch("pin")
+  @UseGuards(JwtAuthGuard)
   @Throttle({ default: { limit: 20, ttl: 60000 } })
   @ApiOperation({ summary: "Pin or unpin a link owned by the current user" })
   @ApiOkResponse({ description: "The link's pin state was updated" })
@@ -93,6 +105,7 @@ export class LinksController {
   }
 
   @Patch("active")
+  @UseGuards(JwtAuthGuard)
   @Throttle({ default: { limit: 20, ttl: 60000 } })
   @ApiOperation({
     summary: "Activate or deactivate a link owned by the current user",
@@ -110,6 +123,7 @@ export class LinksController {
   }
 
   @Put()
+  @UseGuards(JwtAuthGuard)
   @Throttle({ default: { limit: 20, ttl: 60000 } })
   @ApiOperation({ summary: "Update a link owned by the current user" })
   @ApiOkResponse({ description: "The link was updated" })
@@ -132,6 +146,7 @@ export class LinksController {
   }
 
   @Delete(":linkId")
+  @UseGuards(JwtAuthGuard)
   @Throttle({ default: { limit: 20, ttl: 60000 } })
   @ApiOperation({ summary: "Soft-delete a link owned by the current user" })
   @ApiOkResponse({ description: "The link was deleted" })
