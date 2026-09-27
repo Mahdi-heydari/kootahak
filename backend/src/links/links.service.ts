@@ -122,6 +122,22 @@ export class LinksService {
     };
   }
 
+  async getStatistics() {
+    const totalActiveLinks = await this.prisma.link.count({
+      where: { isActive: true, deletedAt: null },
+    });
+
+    const totalVisits = await this.prisma.visit.count();
+
+    const totalActiveUsers = await this.prisma.user.count();
+
+    return {
+      totalActiveLinks,
+      totalVisits,
+      totalActiveUsers,
+    };
+  }
+
   async createUserLink(
     createData: CreateLinkDto,
     author: AuthorInfo,

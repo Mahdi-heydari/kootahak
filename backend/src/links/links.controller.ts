@@ -42,6 +42,16 @@ import type { User } from "../generated/prisma/client";
 export class LinksController {
   constructor(private readonly linksService: LinksService) {}
 
+  @Get("statistics")
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
+  @ApiOperation({ summary: "Get public platform-wide usage statistics" })
+  @ApiOkResponse({
+    description: "Aggregate counts of active links, visits, and active users",
+  })
+  async getStatistics() {
+    return await this.linksService.getStatistics();
+  }
+
   @Get()
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: "List links owned by the current user" })
