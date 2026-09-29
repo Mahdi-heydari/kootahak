@@ -2,6 +2,8 @@ import React from "react";
 import Link from "next/link";
 import Button from "@/components/ui/Button";
 import { footerContent } from "@/contents/landing";
+import { developersContent } from "@/contents/developers";
+import DeveloperPeek from "@/components/developers/DeveloperPeek";
 import GetIcon from "@/components/ui/Icon";
 
 const Footer = (): React.JSX.Element => {
@@ -138,6 +140,18 @@ const Footer = (): React.JSX.Element => {
               میباشد.
             </p>
           </div>
+
+          <div className="flex items-center gap-x-3">
+            <span className="font-token-normal text-token-sm text-muted-foreground">
+              توسعه‌دهندگان
+            </span>
+            <div className="flex items-center gap-x-2">
+              {developersContent.developers.map((developer) => (
+                <DeveloperPeek key={developer.id} developer={developer} />
+              ))}
+            </div>
+          </div>
+
           {/* Social Links */}
           <div className="flex items-center justify-between flex-wrap gap-x-3 gap-y-1.5">
             {/* TODO-9 */}
