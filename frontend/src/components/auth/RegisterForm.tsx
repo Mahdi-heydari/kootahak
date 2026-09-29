@@ -21,6 +21,7 @@ import {
   registerSchema,
   type RegisterFormValues,
 } from "@/lib/validations/auth";
+import { storeUser } from "@/lib/auth-storage";
 
 export function RegisterForm() {
   const router = useRouter();
@@ -71,7 +72,8 @@ export function RegisterForm() {
     };
 
     registerMutation.mutate(payload, {
-      onSuccess: () => {
+      onSuccess: (response) => {
+        storeUser(response.data);
         router.push("/dashboard");
       },
       onError: (error) => {

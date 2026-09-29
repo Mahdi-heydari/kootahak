@@ -7,10 +7,26 @@ import { useScroll } from "@/hooks/use-scroll";
 import ThemeToggle from "@/components/ui/theme-toggle";
 import Button from "@/components/ui/Button";
 import { navLinks } from "@/contents/landing";
+import { getStoredUser } from "@/lib/auth-storage";
+import type { AuthUser } from "@/types/auth";
 
 function Header(): React.JSX.Element {
   const [isMenuOpen, setMenuOpen] = useState<boolean>(false);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const isScrolled = useScroll(70);
+
+  useEffect(() => {
+    const syncUser = () => setUser(getStoredUser());
+
+    syncUser();
+    window.addEventListener("storage", syncUser);
+    window.addEventListener("kootahak-auth-changed", syncUser);
+
+    return () => {
+      window.removeEventListener("storage", syncUser);
+      window.removeEventListener("kootahak-auth-changed", syncUser);
+    };
+  }, []);
 
   const handleToggleMenu = (): void => {
     setMenuOpen((prev) => !prev);
@@ -84,11 +100,23 @@ function Header(): React.JSX.Element {
           <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
 
-            <Link href="/register">
-              <Button variant="outline" size="md">
-                ورود | ثبت نام
-              </Button>
-            </Link>
+            {user ? (
+              <Link href="/dashboard">
+                <Button
+                  variant="outline"
+                  size="md"
+                  className="max-w-48 truncate"
+                >
+                  {user.name}
+                </Button>
+              </Link>
+            ) : (
+              <Link href="/register">
+                <Button variant="outline" size="md">
+                  ورود | ثبت نام
+                </Button>
+              </Link>
+            )}
           </div>
 
           <button
@@ -132,9 +160,13 @@ function Header(): React.JSX.Element {
             </ul>
 
             <div className="flex flex-col items-center justify-between gap-2 w-full pt-2 border-t border-border">
-              <Link href="/login" onClick={handleCloseMenu} className="w-full">
+              <Link
+                href={user ? "/dashboard" : "/login"}
+                onClick={handleCloseMenu}
+                className="w-full"
+              >
                 <Button variant="outline" size="md" className="w-full">
-                  ورود | ثبت نام
+                  {user ? user.name : "ورود | ثبت نام"}
                 </Button>
               </Link>
 

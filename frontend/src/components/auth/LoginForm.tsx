@@ -17,6 +17,7 @@ import {
 } from "@/lib/auth-input";
 import { useLogin } from "@/hooks/use-auth";
 import { loginSchema, type LoginFormValues } from "@/lib/validations/auth";
+import { storeUser } from "@/lib/auth-storage";
 
 export function LoginForm() {
   const router = useRouter();
@@ -41,7 +42,8 @@ export function LoginForm() {
     clearErrors();
 
     loginMutation.mutate(data, {
-      onSuccess: () => {
+      onSuccess: (response) => {
+        storeUser(response.data);
         router.push("/dashboard");
       },
       onError: (error) => {
