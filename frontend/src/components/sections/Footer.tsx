@@ -1,12 +1,10 @@
 import React from "react";
 import Link from "next/link";
-import Button from "@/components/ui/Button";
 import { footerContent } from "@/contents/landing";
 import GetIcon from "@/components/ui/Icon";
 
 const Footer = (): React.JSX.Element => {
-  const { about, usefulLinks, statistics, contact, socialLinks } =
-    footerContent;
+  const { about, statistics, contact, socialLinks } = footerContent;
 
   return (
     <footer>
@@ -20,38 +18,6 @@ const Footer = (): React.JSX.Element => {
             <p className="font-token-normal text-token-sm text-muted-foreground leading-token-relaxed">
               {about.description}
             </p>
-          </div>
-
-          {/* Useful Links */}
-          <div className="flex flex-col gap-y-3 sm:gap-y-6">
-            <p className="font-token-semibold text-token-base text-foreground">
-              لینک های مفید
-            </p>
-            <ul className="flex flex-col gap-y-2.5">
-              {usefulLinks.map((link) => (
-                <li key={link.href}>
-                  {link.external ? (
-                    <a
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-x-1.5 font-token-normal text-token-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      <span className="block w-1.5 h-0.5 bg-brand rounded-full" />
-                      {link.label}
-                    </a>
-                  ) : (
-                    <Link
-                      href={link.href}
-                      className="inline-flex items-center gap-x-1.5 font-token-normal text-token-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      <span className="block w-1.5 h-0.5 bg-brand rounded-full" />
-                      {link.label}
-                    </Link>
-                  )}
-                </li>
-              ))}
-            </ul>
           </div>
 
           {/* Statistics */}
@@ -81,44 +47,12 @@ const Footer = (): React.JSX.Element => {
             <p className="font-token-semibold text-token-base text-foreground">
               ارتباط با ما
             </p>
-            <div className="flex flex-col justify-between h-full gap-y-8">
-              <div className="flex flex-col gap-y-3 text-token-sm text-muted-foreground">
-                <div className="flex items-center justify-between flex-wrap gap-x-3 gap-y-1.5">
-                  <span className="font-token-normal">پشتیبان تلگرام</span>
-                  <a
-                    href={contact.telegram.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    dir="ltr"
-                    className="font-token-normal mr-auto hover:text-brand transition-colors"
-                  >
-                    {contact.telegram.value}
-                  </a>
-                </div>
-                <div className="flex items-center justify-between flex-wrap gap-x-3 gap-y-1.5">
-                  <span className="font-token-normal">ایمیل</span>
-                  <a
-                    href={contact.email.href}
-                    dir="ltr"
-                    className="font-token-normal mr-auto hover:text-brand transition-colors"
-                  >
-                    {contact.email.value}
-                  </a>
-                </div>
-                <div className="flex items-center justify-between flex-wrap gap-x-3 gap-y-1.5">
-                  <span className="flex items-center gap-x-1.5 font-token-normal">
-                    <GetIcon name="Clock" size={14} className="text-brand" />
-                    ساعات پاسخگویی
-                  </span>
-                  <span className="font-token-normal mr-auto hover:text-brand transition-colors">
-                    {contact.workingHours.value}
-                  </span>
-                </div>
-              </div>
-              <Button size="md" variant="secondary">
-                {contact.cta.label}
-              </Button>
-            </div>
+            <Link
+              href={contact.developers.href}
+              className="inline-flex w-fit font-token-normal text-token-sm text-muted-foreground hover:text-brand transition-colors"
+            >
+              {contact.developers.label}
+            </Link>
           </div>
         </div>
       </div>

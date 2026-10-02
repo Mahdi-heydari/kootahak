@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import GetIcon from "@/components/ui/Icon";
 import Button from "@/components/ui/Button";
 import { faqs } from "@/contents/landing";
@@ -76,9 +77,11 @@ const FAQ = (): React.JSX.Element => {
         <p className="text-token-sm text-muted-foreground mb-4">
           سوال دیگه‌ای داری؟
         </p>
-        <Button size="lg" variant="primary">
-          تماس با پشتیبانی
-        </Button>
+        <Link href="/developers">
+          <Button size="lg" variant="primary">
+            تماس با پشتیبانی
+          </Button>
+        </Link>
       </div>
     </section>
   );
