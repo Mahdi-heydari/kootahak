@@ -11,7 +11,7 @@ const Hero = (): React.JSX.Element => {
   return (
     <section
       id="hero"
-      className="hero min-h-screen w-full flex flex-col items-center justify-center gap-y-8 md:gap-y-10 lg:gap-y-12 py-16 md:py-20"
+      className="hero min-h-screen w-full flex flex-col items-center justify-center gap-y-8 md:gap-y-10 lg:gap-y-12 py-16 md:py-20 scroll-mt-16 md:scroll-mt-24"
     >
       <div className="container">
         {/* محتوای اصلی (متمرکز) */}
@@ -40,6 +40,7 @@ const Hero = (): React.JSX.Element => {
           <form className="mt-8 flex items-center justify-between gap-x-4 w-full max-w-lg bg-card border border-border py-2.5 pr-5 pl-2.5 rounded-token-md shadow-token-sm transition-all duration-300 focus-within:border-brand/50 focus-within:shadow-token-md">
           {/* TODO-1 */}
             <input
+              id="hero-url-input"
               type="text"
               dir="ltr"
               className="w-full placeholder:text-end text-token-sm sm:text-token-base placeholder:font-token-normal placeholder:text-muted-foreground bg-transparent outline-none text-foreground"
