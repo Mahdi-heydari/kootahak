@@ -84,12 +84,6 @@ interface SocialLink {
   label: string;
 }
 
-interface UsefulLink {
-  href: string;
-  label: string;
-  external?: boolean;
-}
-
 interface Statistic {
   value: string;
   label: string;
@@ -99,21 +93,9 @@ export interface FooterContent {
   about: {
     description: string;
   };
-  usefulLinks: UsefulLink[];
   statistics: Statistic[];
   contact: {
-    telegram: {
-      value: string;
-      href: string;
-    };
-    email: {
-      value: string;
-      href: string;
-    };
-    workingHours: {
-      value: string;
-    };
-    cta: {
+    developers: {
       label: string;
       href: string;
     };

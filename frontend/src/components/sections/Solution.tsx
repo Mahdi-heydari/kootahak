@@ -1,8 +1,20 @@
+"use client";
+
 import React from "react";
 import Button from "@/components/ui/Button";
 import Icon from "@/components/ui/Icon";
 import KutahakGraph from "@/components/KutahakGraph";
 import { solutionContent } from "@/contents/landing";
+
+const focusHeroInput = (): void => {
+  const input = document.getElementById("hero-url-input");
+  if (!(input instanceof HTMLInputElement)) return;
+
+  input.scrollIntoView({ behavior: "smooth", block: "center" });
+  window.setTimeout(() => {
+    input.focus({ preventScroll: true });
+  }, 450);
+};
 
 const Solution = (): React.JSX.Element => {
   const { heading, description, benefits, cta } = solutionContent;
@@ -44,7 +56,7 @@ const Solution = (): React.JSX.Element => {
 
           {/* CTA */}
           <div className="mt-8 flex items-center justify-center lg:justify-start gap-x-4">
-            <Button size="md" variant="primary">
+            <Button size="md" variant="primary" onClick={focusHeroInput}>
               {cta.label}
             </Button>
             <span className="text-token-sm text-muted-foreground">
