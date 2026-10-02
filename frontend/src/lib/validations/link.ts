@@ -16,3 +16,6 @@ export const createLinkSchema = z.object({
 });
 
 export type CreateLinkFormValues = z.infer<typeof createLinkSchema>;
+
+export const updateLinkSchema = createLinkSchema;
+export type UpdateLinkFormValues = CreateLinkFormValues;

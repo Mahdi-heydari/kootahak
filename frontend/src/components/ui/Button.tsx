@@ -57,7 +57,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         } ${className}`}
         {...props}
       >
-        {isLoading ? "Loading..." : children}
+        {isLoading ? "صبر کنید ..." : children}
       </button>
     );
   },

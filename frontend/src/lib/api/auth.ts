@@ -1,6 +1,11 @@
 import { apiClient } from "./client";
 
-import type { AuthResponse, LoginPayload, RegisterPayload } from "@/types";
+import type {
+  AuthResponse,
+  LoginPayload,
+  RegisterPayload,
+  AuthUser,
+} from "@/types";
 
 export const register = async (
   payload: RegisterPayload,
@@ -19,5 +24,10 @@ export const login = async (payload: LoginPayload): Promise<AuthResponse> => {
     payload,
   );
 
+  return data;
+};
+
+export const getInitialData = async (): Promise<AuthResponse> => {
+  const { data } = await apiClient.get<AuthResponse>("/api/auth/initialData");
   return data;
 };

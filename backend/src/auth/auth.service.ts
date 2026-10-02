@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { LoginDto, RegisterDto } from "./dto";
 import { UsersService } from "../users/users.service";
+import type { CurrentUserShape } from "./jwt/jwt.strategy";
 
 @Injectable()
 export class AuthService {
@@ -25,5 +26,9 @@ export class AuthService {
     const user = await this.usersService.validateUser(data);
     const token = await this.signToken({ id: user.id, email: user.email });
     return { token, data: { id: user.id, email: user.email, name: user.name } };
+  }
+
+  initialData(user: CurrentUserShape) {
+    return user;
   }
 }

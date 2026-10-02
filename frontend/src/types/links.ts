@@ -1,4 +1,6 @@
-import { Visit } from "./schema";
+export type LinkSortBy = "createdAt" | "expiresAt";
+export type SortOrder = "asc" | "desc";
+
 
 export interface Link {
   id: number;
@@ -12,5 +14,24 @@ export interface Link {
   isPin: boolean;
   deletedAt: string | null;
   authorId: number;
-  visits: Visit[];
+  _count?: { visits: number };
+}
+
+export interface LinksListResponse {
+  links: Link[];
+  totalCount: number;
+  limit: number;
+  offset: number;
+  totalPages: number;
+}
+
+export interface LinksListParams {
+  limit?: number;
+  offset?: number;
+  isActive?: boolean;
+  isPin?: boolean;
+  expired?: boolean;
+  sortBy?: LinkSortBy;
+  sortOrder?: SortOrder;
+  search?: string;
 }

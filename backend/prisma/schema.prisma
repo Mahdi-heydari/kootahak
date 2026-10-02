@@ -34,7 +34,7 @@ model Link {
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
   isActive    Boolean   @default(true) @map("is_active")
-  title       String?   @db.VarChar(255)
+  title       String    @db.VarChar(255)
   shortCode   String    @unique @map("short_code") @db.VarChar(20)
   originalUrl String    @map("original_url") @db.Text
   expiresAt   DateTime? @map("expires_at") @db.Timestamptz(6)

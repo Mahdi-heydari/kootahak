@@ -84,7 +84,7 @@ function Header(): React.JSX.Element {
           <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
 
-            <Link href="/login">
+            <Link href="/register">
               <Button variant="outline" size="md">
                 ورود | ثبت نام
               </Button>

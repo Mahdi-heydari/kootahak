@@ -17,18 +17,6 @@ export interface ProfileContent {
   menuItems: ProfileMenuItem[];
   logoutLabel: string;
 }
-export interface ProfileProps {
-  user: {
-    name: string;
-    phone: string;
-    avatar?: string;
-  };
-}
-
-export interface UserInfo {
-  name: string;
-  phone: string;
-}
 
 // Hero
 export interface HeroFeature {
@@ -113,4 +101,30 @@ export interface FooterContent {
     };
   };
   socialLinks: SocialLink[];
+}
+
+export interface DeveloperSocial {
+  label: string;
+  value: string;
+  href: string;
+  icon: IconName;
+  external?: boolean;
+}
+
+export interface Developer {
+  id: string;
+  name: string;
+  role: string;
+  avatar: string;
+  socials: DeveloperSocial[];
+}
+
+export interface DevelopersContent {
+  heading: {
+    before: string;
+    highlight: string;
+    after: string;
+    description: string;
+  };
+  developers: Developer[];
 }

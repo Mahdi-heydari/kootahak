@@ -9,6 +9,8 @@ type JwtPayload = {
   email: string;
 };
 
+export type CurrentUserShape = { id: number; name: string; email: string };
+
 interface RequestWithCookie extends Request {
   cookies: {
     token?: string;
@@ -28,7 +30,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: JwtPayload) {
+  async validate(payload: JwtPayload): Promise<CurrentUserShape | null> {
     const user = await this.prisma.user.findUnique({
       where: { id: payload.sub },
       select: {

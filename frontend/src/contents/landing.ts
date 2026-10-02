@@ -1,6 +1,5 @@
 import {
   NavLink,
-  UserInfo,
   FooterContent,
   HeroContent,
   ProblemsContent,
@@ -10,17 +9,15 @@ import {
 
 // Header (Nav)
 export const navLinks: NavLink[] = [
-  { label: "خانه", href: "#hero" },
-  { label: "مشکلات", href: "#problems" },
-  { label: "راهکارها", href: "#solution" },
-  { label: "پرسش‌های پرتکرار", href: "#faq" },
+  { label: "خانه", href: "/#hero" },
+  { label: "مشکلات", href: "/#problems" },
+  { label: "راهکارها", href: "/#solution" },
+  { label: "پرسش‌های پرتکرار", href: "/#faq" },
+  { label: "توسعه‌دهندگان", href: "/developers" },
 ];
 
 // Profile
-export const mockUser: UserInfo = {
-  name: "زانیار رحمانی",
-  phone: "09145562747",
-};
+
 export const profileContent: ProfileContent = {
   menuItems: [
     { href: "/dash", label: "داشبورد", icon: "Settings" },
