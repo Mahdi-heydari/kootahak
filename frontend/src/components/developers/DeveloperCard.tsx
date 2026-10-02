@@ -7,49 +7,52 @@ const DeveloperCard = ({
   developer: Developer;
 }): React.JSX.Element => {
   return (
-    <article className="flex flex-col bg-card border border-border rounded-token-xl shadow-token-sm overflow-hidden hover:border-brand/30 transition-colors duration-token-normal">
-      <div className="flex flex-col items-center text-center px-6 pt-8 pb-6">
+    <article className="flex flex-col overflow-hidden rounded-token-xl border border-border bg-card shadow-token-sm transition-colors duration-token-normal hover:border-brand/30">
+      <div className="flex items-center gap-4 px-5 py-5 sm:px-6 sm:py-6">
         <img
           src={developer.avatar}
           alt=""
-          width={80}
-          height={80}
-          className="size-20 rounded-full border border-border object-cover bg-muted"
+          width={72}
+          height={72}
+          className="size-16 shrink-0 rounded-token-full border border-border bg-muted object-cover sm:size-18"
         />
-        <h2 className="mt-4 text-token-xl font-token-bold text-foreground leading-token-tight">
-          {developer.name}
-        </h2>
-        <p className="mt-1 text-token-sm text-muted-foreground">
-          {developer.role}
-        </p>
+        <div className="min-w-0 text-right">
+          <h2 className="text-token-lg font-token-bold leading-token-tight text-foreground sm:text-token-xl">
+            {developer.name}
+          </h2>
+          <p className="mt-1 text-token-sm leading-token-normal text-muted-foreground">
+            {developer.role}
+          </p>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 p-4 border-t border-border bg-background">
+      <ul className="border-t border-border bg-background">
         {developer.socials.map((social) => (
-          <a
-            key={social.label}
-            href={social.href}
-            target={social.external ? "_blank" : undefined}
-            rel={social.external ? "noopener noreferrer" : undefined}
-            className="flex items-center gap-x-3 min-w-0 rounded-token-md border border-border bg-card px-3 py-2.5 hover:border-brand/30 hover:bg-brand/5 transition-colors duration-token-normal"
-          >
-            <span className="grid size-8 shrink-0 place-items-center rounded-token-sm bg-brand/10 text-brand">
-              <GetIcon name={social.icon} size={15} />
-            </span>
-            <span className="min-w-0">
-              <span className="block text-token-xs text-muted-foreground">
-                {social.label}
+          <li key={social.label} className="border-b border-border last:border-b-0">
+            <a
+              href={social.href}
+              target={social.external ? "_blank" : undefined}
+              rel={social.external ? "noopener noreferrer" : undefined}
+              className="flex items-center gap-3 px-5 py-3.5 transition-colors duration-token-normal hover:bg-brand/5 sm:px-6"
+            >
+              <span className="grid size-9 shrink-0 place-items-center rounded-token-md bg-brand/10 text-brand">
+                <GetIcon name={social.icon} size={16} />
               </span>
-              <span
-                dir="ltr"
-                className="block truncate text-left text-token-sm font-token-medium text-foreground"
-              >
-                {social.value}
+              <span className="flex min-w-0 flex-1 flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                <span className="shrink-0 text-token-xs font-token-medium text-muted-foreground">
+                  {social.label}
+                </span>
+                <span
+                  dir="ltr"
+                  className="break-all text-left text-token-sm font-token-medium leading-token-normal text-foreground sm:text-token-base"
+                >
+                  {social.value}
+                </span>
               </span>
-            </span>
-          </a>
+            </a>
+          </li>
         ))}
-      </div>
+      </ul>
     </article>
   );
 };

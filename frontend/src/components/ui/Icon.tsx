@@ -47,6 +47,7 @@ import {
   LogOut,
   Phone,
   Send,
+  Mail,
 } from "lucide-react";
 import type { LucideProps } from "lucide-react";
 
@@ -146,6 +147,7 @@ const icons = {
   Github,
   Phone,
   Send,
+  Mail,
 };
 
 export type IconName = keyof typeof icons;

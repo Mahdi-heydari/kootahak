@@ -13,7 +13,7 @@ const DeveloperSocials = ({
           key={social.label}
           className="flex items-center justify-between gap-x-3 gap-y-1"
         >
-          <span className="inline-flex items-center gap-x-1.5 font-token-normal text-token-sm text-muted-foreground">
+          <span className="inline-flex shrink-0 items-center gap-x-1.5 text-token-sm font-token-normal text-muted-foreground">
             <GetIcon name={social.icon} size={14} />
             {social.label}
           </span>
@@ -22,7 +22,7 @@ const DeveloperSocials = ({
             dir="ltr"
             target={social.external ? "_blank" : undefined}
             rel={social.external ? "noopener noreferrer" : undefined}
-            className="font-token-normal text-token-sm text-foreground hover:text-brand transition-colors"
+            className="min-w-0 truncate text-left text-token-sm font-token-normal text-foreground transition-colors duration-token-normal hover:text-brand"
           >
             {social.value}
           </a>

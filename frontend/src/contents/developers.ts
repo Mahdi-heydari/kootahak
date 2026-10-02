@@ -1,47 +1,39 @@
 import { DevelopersContent } from "@/types";
 
-// مقدار href و value شبکه‌ها و شماره را با اطلاعات واقعی عوض کنید.
+// آدرس ایمیل‌ها نمونه است؛ با ایمیل واقعی عوض شود.
 export const developersContent: DevelopersContent = {
   heading: {
-    before: "کوتاهک را",
-    highlight: "دو نفر",
-    after: "می‌سازند",
-    description:
-      "یکی حواسش به هر فریم رابط است، یکی به هر درخواستی که از سرور رد می‌شود. سرعت از فرانت شروع می‌شود و در بک‌اند تمام.",
+    before: "توسعه دهندگان",
+    highlight: "کوتاهک‌",
+    after: "",
+    description: "از یک پروژه تفریحی تا یک ابزار کاربردی",
   },
   developers: [
     {
       id: "erfan",
       name: "عرفان طلوع",
       role: "فرانت‌اند دولوپر",
-      avatar: "/developers/erfan.svg",
+      avatar: "/developers/erfan.jpg",
       socials: [
         {
-          label: "لینکدین",
-          value: "erfan-tolou",
-          href: "https://www.linkedin.com/in/erfan-tolou",
-          icon: "Linkedin",
-          external: true,
-        },
-        {
           label: "گیت‌هاب",
-          value: "erfan-tolou",
-          href: "https://github.com/erfan-tolou",
+          value: "erfantolou00",
+          href: "https://github.com/erfantolou00",
           icon: "Github",
           external: true,
         },
         {
-          label: "تلگرام",
-          value: "@erfan_tolou",
-          href: "https://t.me/erfan_tolou",
-          icon: "Send",
-          external: true,
+          label: "ایمیل",
+          value: "erfantolou@gmail.com",
+          href: "mailto:erfantolou@gmail.com",
+          icon: "Mail",
         },
         {
-          label: "شماره",
-          value: "۰۹۰۰ ۰۰۰ ۰۰۰۱",
-          href: "tel:+989000000001",
-          icon: "Phone",
+          label: "لینکدین",
+          value: "erfan-tolou",
+          href: "https://www.linkedin.com/in/erfanTolouAsl",
+          icon: "Linkedin",
+          external: true,
         },
       ],
     },
@@ -49,15 +41,8 @@ export const developersContent: DevelopersContent = {
       id: "mahdi",
       name: "مهدی حیدری",
       role: "بک‌اند دولوپر و لید",
-      avatar: "/developers/mahdi.svg",
+      avatar: "/developers/mahdi.jpg",
       socials: [
-        {
-          label: "لینکدین",
-          value: "mahdi-heydari",
-          href: "https://www.linkedin.com/in/mahdi-heydari",
-          icon: "Linkedin",
-          external: true,
-        },
         {
           label: "گیت‌هاب",
           value: "Mahdi-heydari",
@@ -66,17 +51,17 @@ export const developersContent: DevelopersContent = {
           external: true,
         },
         {
-          label: "تلگرام",
-          value: "@mahdi_heydari",
-          href: "https://t.me/mahdi_heydari",
-          icon: "Send",
-          external: true,
+          label: "ایمیل",
+          value: "mahdi.funlife@gmail.com",
+          href: "mailto:mahdi.funlife@gmail.com",
+          icon: "Mail",
         },
         {
-          label: "شماره",
-          value: "۰۹۰۰ ۰۰۰ ۰۰۰۲",
-          href: "tel:+989000000002",
-          icon: "Phone",
+          label: "لینکدین",
+          value: "mahdi-heydarii",
+          href: "https://www.linkedin.com/in/mahdi-heydarii",
+          icon: "Linkedin",
+          external: true,
         },
       ],
     },
