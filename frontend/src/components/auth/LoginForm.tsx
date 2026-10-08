@@ -213,9 +213,9 @@ export function LoginForm() {
           <span className="block size-2 bg-brand" />
           <p className="mt-6 select-none text-token-sm font-token-normal text-muted-foreground">
             ورود شما به معنای پذیرش{" "}
-            <a href="#" className="text-brand underline">
+            <Link href="/terms" className="text-brand underline">
               قوانین
-            </a>{" "}
+            </Link>{" "}
             و شرایط کوتاهک است .
           </p>
         </div>
