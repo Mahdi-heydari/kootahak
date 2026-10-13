@@ -6,6 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import GetIcon from "@/components/ui/Icon";
 
 import Button from "@/components/ui/Button";
+import { toDatetimeLocalValue } from "@/lib/links/datetime";
+import { shortLinkOrigin } from "@/lib/links/short-url";
 import {
   updateLinkSchema,
   type UpdateLinkFormValues,
@@ -15,17 +17,11 @@ import type { Link } from "@/types/links";
 const inputClassName =
   "h-12 w-full rounded-token-md border border-border bg-card px-4 text-token-sm text-foreground shadow-token-sm transition-colors duration-token-normal placeholder:text-muted-foreground focus:border-brand/30 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60";
 
-export interface EditLinkSubmitPayload {
-  title?: string;
-  shortCode?: string;
-  originalUrl?: string;
-}
-
 interface EditLinkModalProps {
   open: boolean;
   link: Link | null;
   onClose: () => void;
-  onSubmit: (data: EditLinkSubmitPayload) => void;
+  onSubmit: (data: UpdateLinkFormValues) => void;
   /** از والد میاد — تا وقتی mutation در جریانه، دکمه‌ها disabled بمونن */
   isSubmitting?: boolean;
 }
@@ -48,6 +44,7 @@ export default function EditLinkModal({
       originalUrl: "",
       title: "",
       shortCode: "",
+      expiresAt: "",
     },
   });
 
@@ -59,6 +56,7 @@ export default function EditLinkModal({
       originalUrl: link.originalUrl,
       title: link.title,
       shortCode: link.shortCode,
+      expiresAt: toDatetimeLocalValue(link.expiresAt),
     });
   }, [open, link, reset]);
 
@@ -77,14 +75,7 @@ export default function EditLinkModal({
   }, [open, onClose, isSubmitting]);
 
   const handleFormSubmit = (data: UpdateLinkFormValues) => {
-    // توجه: اینجا onClose() صدا زده نمی‌شه.
-    // والد (LinkCard) بعد از موفقیت mutation، setEditOpen(false) رو اجرا می‌کنه.
-    // اگه بکند 409 برگردونه، مودال باز می‌مونه تا کاربر بتونه اصلاح کنه.
-    onSubmit({
-      title: data.title,
-      shortCode: data.shortCode?.trim().toLowerCase(),
-      originalUrl: data.originalUrl,
-    });
+    onSubmit(data);
   };
 
   if (!open || !link) return null;
@@ -159,7 +150,7 @@ export default function EditLinkModal({
 
           <div className="space-y-2">
             <label className="label block text-foreground" htmlFor="edit-title">
-              عنوان <span className="text-muted-foreground">(اختیاری)</span>
+              عنوان
             </label>
             <input
               id="edit-title"
@@ -182,28 +173,58 @@ export default function EditLinkModal({
               className="label block text-foreground"
               htmlFor="edit-shortCode"
             >
-              نام کوتاه
+              کد کوتاه
             </label>
             <div className="flex items-center">
               <input
-                id="shortCode"
+                id="edit-shortCode"
                 type="text"
                 dir="ltr"
-                placeholder="my-link"
+                placeholder="xc2z9"
+                disabled={isSubmitting}
                 className="h-12 w-full rounded-token-md rounded-l-none border border-border bg-card px-4 text-token-sm text-foreground shadow-token-sm transition-colors duration-token-normal placeholder:text-muted-foreground focus:border-brand/30 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
                 aria-invalid={Boolean(errors.shortCode)}
                 {...register("shortCode")}
               />
               <span
-                className="grid place-items-center px-4 rounded-token-md rounded-r-none h-12 shrink-0 text-token-sm text-muted-foreground bg-background"
+                className="grid h-12 shrink-0 place-items-center rounded-token-md rounded-r-none bg-background px-4 text-token-sm text-muted-foreground"
                 dir="ltr"
               >
-                https://kootahak.ir/
+                {shortLinkOrigin()}/
               </span>
             </div>
             {errors.shortCode && (
               <p className="text-token-xs font-token-medium text-error">
                 {errors.shortCode.message}
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <label
+              className="label block text-foreground"
+              htmlFor="edit-expiresAt"
+            >
+              تاریخ انقضا{" "}
+              <span className="text-muted-foreground">(اختیاری)</span>
+            </label>
+            <input
+              id="edit-expiresAt"
+              type="datetime-local"
+              dir="ltr"
+              disabled={isSubmitting}
+              className={inputClassName}
+              aria-invalid={Boolean(errors.expiresAt)}
+              {...register("expiresAt")}
+            />
+            {link.expiresAt && (
+              <p className="text-token-xs text-muted-foreground">
+                خالی کردن این فیلد تاریخ انقضای فعلی را حذف نمی‌کند.
+              </p>
+            )}
+            {errors.expiresAt && (
+              <p className="text-token-xs font-token-medium text-error">
+                {errors.expiresAt.message}
               </p>
             )}
           </div>

@@ -6,21 +6,13 @@ import { toast } from "sonner";
 
 import { useLinks } from "@/hooks/links/use-links";
 import { useCreateLink } from "@/hooks/links/use-link-mutations";
+import { buildCreateLinkPayload } from "@/lib/api/links";
 import { parseLinksQuery, toLinksListParams } from "@/lib/links/query-params";
 import type { CreateLinkFormValues } from "@/lib/validations/link";
 import LinksToolbar from "./LinksToolbar";
 import LinksList from "./LinksList";
 import LinkPagination from "./LinkPagination";
 import CreateLinkModal from "./CreateLinkModal";
-
-function defaultTitleFromUrl(url: string): string {
-  try {
-    const { hostname } = new URL(url);
-    return hostname.replace(/^www\./, "");
-  } catch {
-    return "لینک جدید";
-  }
-}
 
 export default function LinksPage() {
   const searchParams = useSearchParams();
@@ -43,14 +35,8 @@ export default function LinksPage() {
     parsed.expired !== undefined;
 
   function handleCreate(data: CreateLinkFormValues) {
-    // title اگه خالی بود از URL مشتق کن — چون بکند title رو اجباری می‌گیره
-    const title = data.title?.trim() || defaultTitleFromUrl(data.originalUrl);
-
-    // UI اسمش shortCode ئه، بکند تو create اسمش suggestedCode ئه — تو لایه API map می‌کنیم
-    const suggestedCode = data.shortCode?.trim().toLowerCase() || undefined;
-
     createMutation.mutate(
-      { originalUrl: data.originalUrl, title, suggestedCode },
+      buildCreateLinkPayload(data),
       {
         onSuccess: () => {
           toast.success("لینک ساخته شد");
