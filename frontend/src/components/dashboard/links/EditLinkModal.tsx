@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import GetIcon from "@/components/ui/Icon";
 
 import Button from "@/components/ui/Button";
+import JalaliDateTimePicker from "@/components/ui/JalaliDateTimePicker";
 import { toDatetimeLocalValue } from "@/lib/links/datetime";
 import { shortLinkOrigin } from "@/lib/links/short-url";
 import {
@@ -35,6 +36,7 @@ export default function EditLinkModal({
 }: EditLinkModalProps) {
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors },
@@ -86,7 +88,7 @@ export default function EditLinkModal({
       onClick={() => !isSubmitting && onClose()}
     >
       <div
-        className="surface max-h-[92dvh] w-full overflow-y-auto rounded-t-token-xl p-5 shadow-token-md scrollbar-thin sm:max-w-lg sm:rounded-token-xl sm:p-6"
+        className="surface max-h-[92dvh] w-full overflow-visible rounded-t-token-xl p-5 shadow-token-md sm:max-w-2xl sm:rounded-token-xl sm:p-7"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -118,12 +120,39 @@ export default function EditLinkModal({
           </button>
         </div>
 
+        <dl className="mb-5 grid grid-cols-2 gap-3 rounded-token-lg bg-muted/50 p-4 text-token-sm sm:grid-cols-4">
+          <div>
+            <dt className="text-token-xs text-muted-foreground">شناسه</dt>
+            <dd className="mt-1 font-token-medium">{link.id}</dd>
+          </div>
+          <div>
+            <dt className="text-token-xs text-muted-foreground">وضعیت</dt>
+            <dd className="mt-1 font-token-medium">
+              {link.isActive ? "فعال" : "غیرفعال"}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-token-xs text-muted-foreground">تاریخ ایجاد</dt>
+            <dd className="mt-1 font-token-medium">
+              {new Intl.DateTimeFormat("fa-IR", { dateStyle: "medium" }).format(
+                new Date(link.createdAt),
+              )}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-token-xs text-muted-foreground">پین</dt>
+            <dd className="mt-1 font-token-medium">
+              {link.isPin ? "پین شده" : "عادی"}
+            </dd>
+          </div>
+        </dl>
+
         <form
-          className="space-y-4"
+          className="grid gap-4 sm:grid-cols-2"
           onSubmit={handleSubmit(handleFormSubmit)}
           noValidate
         >
-          <div className="space-y-2">
+          <div className="space-y-2 sm:col-span-2">
             <label
               className="label block text-foreground"
               htmlFor="edit-originalUrl"
@@ -200,7 +229,7 @@ export default function EditLinkModal({
             )}
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2 sm:col-span-2">
             <label
               className="label block text-foreground"
               htmlFor="edit-expiresAt"
@@ -208,14 +237,18 @@ export default function EditLinkModal({
               تاریخ انقضا{" "}
               <span className="text-muted-foreground">(اختیاری)</span>
             </label>
-            <input
-              id="edit-expiresAt"
-              type="datetime-local"
-              dir="ltr"
-              disabled={isSubmitting}
-              className={inputClassName}
-              aria-invalid={Boolean(errors.expiresAt)}
-              {...register("expiresAt")}
+            <Controller
+              name="expiresAt"
+              control={control}
+              render={({ field }) => (
+                <JalaliDateTimePicker
+                  id="edit-expiresAt"
+                  value={field.value ?? ""}
+                  onChange={field.onChange}
+                  disabled={isSubmitting}
+                  invalid={Boolean(errors.expiresAt)}
+                />
+              )}
             />
             {link.expiresAt && (
               <p className="text-token-xs text-muted-foreground">
@@ -229,7 +262,7 @@ export default function EditLinkModal({
             )}
           </div>
 
-          <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
+          <div className="flex flex-col-reverse gap-3 pt-2 sm:col-span-2 sm:flex-row sm:justify-end">
             <Button
               type="button"
               variant="outline"
