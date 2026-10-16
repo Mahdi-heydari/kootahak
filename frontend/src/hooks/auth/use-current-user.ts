@@ -9,7 +9,7 @@ export function useCurrentUser() {
   return useQuery({
     queryKey: currentUserQueryKey,
     queryFn: getInitialData,
-    select: (response) => response.data,
+    select: (response) => response?.data ?? null,
     staleTime: 5 * 60 * 1000, // 5 min
     retry: false,
   });

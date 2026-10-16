@@ -3,7 +3,6 @@ import type { LinkSortBy, LinksListParams, SortOrder } from "@/types/links";
 export const DEFAULT_LIMIT = 10;
 export const MIN_LIMIT = 1;
 export const MAX_LIMIT = 50;
-export const DEFAULT_SORT_BY: LinkSortBy = "createdAt";
 export const DEFAULT_SORT_ORDER: SortOrder = "desc";
 
 export interface ParsedLinksQuery {
@@ -11,9 +10,9 @@ export interface ParsedLinksQuery {
   isActive?: boolean;
   isPin?: boolean;
   expired?: boolean;
-  sortBy: LinkSortBy;
-  sortOrder: SortOrder;
-  /** 1-based — UI only */
+  sortBy?: LinkSortBy;
+  sortOrder?: SortOrder;
+  /** 1-based — UI only. The API uses offset. */
   page: number;
   limit: number;
 }
@@ -37,12 +36,14 @@ export function parseLinksQuery(params: URLSearchParams): ParsedLinksQuery {
   const sortOrder = params.get("sortOrder");
 
   return {
-    search: params.get("search")?.trim() ?? "",
+    search: (params.get("search")?.trim() ?? "").slice(0, 255),
     isActive: parseBoolean(params.get("isActive")),
     isPin: parseBoolean(params.get("isPin")),
     expired: parseBoolean(params.get("expired")),
-    sortBy: sortBy === "expiresAt" ? "expiresAt" : DEFAULT_SORT_BY,
-    sortOrder: sortOrder === "asc" ? "asc" : DEFAULT_SORT_ORDER,
+    sortBy:
+      sortBy === "createdAt" || sortBy === "expiresAt" ? sortBy : undefined,
+    sortOrder:
+      sortOrder === "asc" || sortOrder === "desc" ? sortOrder : undefined,
     page,
     limit,
   };
@@ -52,14 +53,18 @@ export function toLinksListParams(q: ParsedLinksQuery): LinksListParams {
   const params: LinksListParams = {
     limit: q.limit,
     offset: (q.page - 1) * q.limit,
-    sortBy: q.sortBy,
-    sortOrder: q.sortOrder,
   };
 
   if (q.search) params.search = q.search;
   if (q.isActive !== undefined) params.isActive = q.isActive;
   if (q.isPin !== undefined) params.isPin = q.isPin;
   if (q.expired !== undefined) params.expired = q.expired;
+  if (q.sortBy) {
+    params.sortBy = q.sortBy;
+    params.sortOrder = q.sortOrder ?? DEFAULT_SORT_ORDER;
+  } else if (q.sortOrder) {
+    params.sortOrder = q.sortOrder;
+  }
 
   return params;
 }
