@@ -73,6 +73,7 @@ export function RegisterForm() {
     registerMutation.mutate(payload, {
       onSuccess: () => {
         router.push("/dashboard");
+        router.refresh();
       },
       onError: (error) => {
         if (error?.response?.status === 409) {

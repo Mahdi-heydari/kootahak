@@ -20,6 +20,7 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV PORT=8000
+ENV TZ=Asia/Tehran
 
 RUN addgroup --system --gid 1001 nestjs && \
     adduser --system --uid 1001 nestjs

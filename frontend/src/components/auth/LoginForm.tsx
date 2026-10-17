@@ -43,6 +43,7 @@ export function LoginForm() {
     loginMutation.mutate(data, {
       onSuccess: () => {
         router.push("/dashboard");
+        router.refresh();
       },
       onError: (error) => {
         const status = error?.response?.status;

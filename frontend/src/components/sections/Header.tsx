@@ -4,9 +4,49 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import GetIcon from "@/components/ui/Icon";
 import { useScroll } from "@/hooks/use-scroll";
+import { useCurrentUser } from "@/hooks/auth/use-current-user";
 import ThemeToggle from "@/components/ui/theme-toggle";
 import Button from "@/components/ui/Button";
 import { navLinks } from "@/contents/landing";
+
+function AuthActions({
+  className,
+  onNavigate,
+}: {
+  className?: string;
+  onNavigate?: () => void;
+}) {
+  const { data: user, isLoading } = useCurrentUser();
+
+  if (isLoading) {
+    return (
+      <div
+        className={`h-12 w-40 animate-pulse rounded-token-sm bg-muted ${className ?? ""}`}
+      />
+    );
+  }
+
+  if (user) {
+    return (
+      <Link href="/dashboard" onClick={onNavigate} className={className}>
+        <Button variant="outline" size="md" className="w-full gap-2">
+          <span>ورود به پنل</span>
+          <span className="max-w-32 truncate font-token-semibold">
+            {user.name}
+          </span>
+        </Button>
+      </Link>
+    );
+  }
+
+  return (
+    <Link href="/register" onClick={onNavigate} className={className}>
+      <Button variant="outline" size="md" className="w-full">
+        ورود | ثبت نام
+      </Button>
+    </Link>
+  );
+}
 
 function Header(): React.JSX.Element {
   const [isMenuOpen, setMenuOpen] = useState<boolean>(false);
@@ -84,11 +124,7 @@ function Header(): React.JSX.Element {
           <div className="hidden md:flex items-center gap-3">
             <ThemeToggle />
 
-            <Link href="/register">
-              <Button variant="outline" size="md">
-                ورود | ثبت نام
-              </Button>
-            </Link>
+            <AuthActions />
           </div>
 
           <button
@@ -132,11 +168,7 @@ function Header(): React.JSX.Element {
             </ul>
 
             <div className="flex flex-col items-center justify-between gap-2 w-full pt-2 border-t border-border">
-              <Link href="/login" onClick={handleCloseMenu} className="w-full">
-                <Button variant="outline" size="md" className="w-full">
-                  ورود | ثبت نام
-                </Button>
-              </Link>
+              <AuthActions className="w-full" onNavigate={handleCloseMenu} />
 
               <ThemeToggle />
             </div>

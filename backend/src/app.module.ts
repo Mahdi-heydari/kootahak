@@ -11,6 +11,7 @@ import { ShortCodeModule } from "./short-code/short-code.module";
 import { RedisModule } from "./redis/redis.module";
 import { BullMqModule } from "./bullmq/bullMq.module";
 import { VisitsModule } from "./visits/visits.module";
+import { AnalyticsModule } from "./analytics/analytics.module";
 import { APP_FILTER, APP_GUARD } from "@nestjs/core";
 import { ThrottlerGuard } from "@nestjs/throttler";
 import { throttlerConfig } from "./redis/throttler.provider";
@@ -46,6 +47,7 @@ import { AllExceptionsFilter } from "./common/all-exceptions.filter";
     RedisModule,
     BullMqModule,
     VisitsModule,
+    AnalyticsModule,
     throttlerConfig,
   ],
   controllers: [AppController],

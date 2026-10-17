@@ -1,11 +1,7 @@
+import axios from "axios";
 import { apiClient } from "./client";
 
-import type {
-  AuthResponse,
-  LoginPayload,
-  RegisterPayload,
-  AuthUser,
-} from "@/types";
+import type { AuthResponse, LoginPayload, RegisterPayload } from "@/types";
 
 export const register = async (
   payload: RegisterPayload,
@@ -27,7 +23,19 @@ export const login = async (payload: LoginPayload): Promise<AuthResponse> => {
   return data;
 };
 
-export const getInitialData = async (): Promise<AuthResponse> => {
-  const { data } = await apiClient.get<AuthResponse>("/api/auth/initialData");
-  return data;
+export const getInitialData = async (): Promise<AuthResponse | null> => {
+  try {
+    const { data } = await apiClient.get<AuthResponse>("/api/auth/initialData");
+    return data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
+      return null;
+    }
+
+    throw error;
+  }
+};
+
+export const logout = async (): Promise<void> => {
+  await apiClient.post("/api/auth/logout");
 };

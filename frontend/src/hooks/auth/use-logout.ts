@@ -1,37 +1,23 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { logout as logoutRequest } from "@/lib/api/auth";
 import { currentUserQueryKey } from "@/hooks/auth/use-current-user";
-
-async function logoutRequest(): Promise<void> {
-  const res = await fetch("/api/auth/logout", {
-    method: "POST",
-    credentials: "include",
-  });
-
-  if (!res.ok) {
-    throw new Error("logout failed");
-  }
-}
 
 export function useLogout() {
   const qc = useQueryClient();
-  const router = useRouter();
 
   return useMutation({
     mutationFn: logoutRequest,
     onSuccess: () => {
       qc.removeQueries({ queryKey: currentUserQueryKey });
       qc.removeQueries({ queryKey: ["links"] });
-
-      router.push("/login");
-      router.refresh();
+      toast.success("از حساب خارج شدید");
+      window.location.assign("/");
     },
     onError: () => {
-      qc.removeQueries({ queryKey: currentUserQueryKey });
-      qc.removeQueries({ queryKey: ["links"] });
-      router.push("/login");
+      toast.error("خروج از حساب انجام نشد");
     },
   });
 }
