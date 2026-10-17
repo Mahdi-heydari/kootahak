@@ -6,6 +6,9 @@ import { toast } from "sonner";
 
 import GetIcon from "@/components/ui/Icon";
 import Button from "@/components/ui/Button";
+import { buildUpdateLinkPayload } from "@/lib/api/links";
+import { shortLinkUrl } from "@/lib/links/short-url";
+import type { UpdateLinkFormValues } from "@/lib/validations/link";
 import type { Link as LinkItem } from "@/types/links";
 import {
   useDeleteLink,
@@ -39,9 +42,10 @@ export default function LinkCard({ link }: LinkCardProps) {
     pinMutation.isPending ||
     updateMutation.isPending;
 
-  const shortUrl = `kootahak.ir/${link.shortCode}`;
-  const fullShortUrl = `https://${shortUrl}`;
-  const visitCount = link._count?.visits;
+  const fullShortUrl = shortLinkUrl(link.shortCode);
+  const shortUrl = fullShortUrl.replace(/^https?:\/\//, "");
+  const expiresAt = link.expiresAt ? new Date(link.expiresAt) : null;
+  const isExpired = expiresAt !== null && expiresAt.getTime() <= Date.now();
 
   const formattedDate = new Intl.DateTimeFormat("fa-IR", {
     dateStyle: "medium",
@@ -121,18 +125,9 @@ export default function LinkCard({ link }: LinkCardProps) {
     );
   };
 
-  const handleUpdate = (data: {
-    title?: string;
-    shortCode?: string;
-    originalUrl?: string;
-  }) => {
+  const handleUpdate = (data: UpdateLinkFormValues) => {
     updateMutation.mutate(
-      {
-        linkId: link.id,
-        title: data.title,
-        shortCode: data.shortCode,
-        originalUrl: data.originalUrl,
-      },
+      buildUpdateLinkPayload(link.id, data),
       {
         onSuccess: () => {
           toast.success("لینک به‌روزرسانی شد");
@@ -305,15 +300,16 @@ export default function LinkCard({ link }: LinkCardProps) {
           }`}
         >
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-token-xs text-muted-foreground">
-            {/* اگه بکند _count برنگردونه، این بلوک مخفی می‌مونه */}
-            {visitCount !== undefined && (
-              <span className="flex items-center gap-1.5">
-                <GetIcon name="Eye" className="size-3.5" />
-                {visitCount} بازدید
+            <span>ساخته شده در : {formattedDate}</span>
+            {expiresAt && (
+              <span className={isExpired ? "text-error" : undefined}>
+                {isExpired ? "منقضی شده" : "انقضا"}:{" "}
+                {new Intl.DateTimeFormat("fa-IR", {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                }).format(expiresAt)}
               </span>
             )}
-
-            <span>ساخته شده در : {formattedDate}</span>
           </div>
 
           <div className="flex items-center justify-between gap-3 sm:justify-end">

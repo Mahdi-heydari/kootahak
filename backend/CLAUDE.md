@@ -171,6 +171,7 @@ The main dashboard page (after login) has two parts:
 **This means:**
 - The list-links endpoint (`GET /api/links`) must support query params for search, filter, pagination, and sort.
 - The link-details endpoint (`GET /api/links/:id`) must return both the link's own info and its related stats/visits.
+- Per-link chart data lives in `AnalyticsModule` (`src/analytics/`), one endpoint per chart under `GET /api/links/:linkId/analytics/...`, JWT-protected, 404 if the link is not the caller's or is deleted: `hourly` (24 buckets, last 24h), `daily` (one bucket per day of the current Jalali month), `weekly` (4 buckets: days 1-7, 8-14, 15-21, 22-end), `browsers` and `devices` (all-time `{ name, count }[]`, desc). Bucketed responses are `{ id, value, count }[]`, zero-filled. Jalali dates use `jalaali-js` via `src/common/helper` and rely on `TZ=Asia/Tehran` (set in the `Dockerfile` and `.env.example`).
 
 > Note on prefixes: all dashboard/CRUD endpoints live under the `api` prefix (`/api/links`, ...), declared explicitly as `"api/..."` on each controller's `@Controller()` decorator (not via `setGlobalPrefix`). The **only** exception is the public redirect route `GET /:shortCode` (section 4), which is deliberately mounted at the root.
 
@@ -236,8 +237,10 @@ backend/
 │   ├── redis/            ← REDIS_CLIENT provider (cache-aside) + throttler.provider.ts (rate-limit config)
 │   ├── bullmq/            ← VISIT_QUEUE (Queue) + VISIT_WORKER (Worker), both for the "visit" queue
 │   ├── visits/             ← VisitsService (UA parsing, geo-IP, SourceType, Visit creation)
+│   ├── analytics/          ← AnalyticsController (GET /api/links/:linkId/analytics/*), per-link chart data
 │   ├── prismaClient/        ← PrismaService
 │   ├── common/               ← cross-cutting concerns, not tied to one feature
+│   │   ├── helper/              ← Jalali date helpers (jalaali-js)
 │   │   ├── config/              ← env.validation.ts (Joi schema, checked at boot)
 │   │   └── all-exceptions.filter.ts  ← global error handler (see section 15)
 │   └── main.ts

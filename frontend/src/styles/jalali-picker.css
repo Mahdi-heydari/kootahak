@@ -1,0 +1,11 @@
+.jalali-picker .rmdp-container {
+  width: 100%;
+}
+
+.jalali-picker .rmdp-input {
+  width: 100% !important;
+}
+
+.rmdp-wrapper {
+  z-index: 80;
+}

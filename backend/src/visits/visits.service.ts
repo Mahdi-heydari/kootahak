@@ -74,7 +74,7 @@ export class VisitsService {
         source: referInfo,
         ipAddress: ipInfo.ip,
         browser: browser.name,
-        device: device.type,
+        device: device.type ?? "desktop",
       },
     });
 

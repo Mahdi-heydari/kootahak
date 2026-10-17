@@ -7,6 +7,7 @@ import GetIcon from "@/components/ui/Icon";
 
 import Button from "@/components/ui/Button";
 import { readUrlFromClipboard } from "@/lib/dashboard/clipboard-url";
+import { shortLinkOrigin } from "@/lib/links/short-url";
 import {
   createLinkSchema,
   type CreateLinkFormValues,
@@ -37,7 +38,8 @@ export default function CreateLinkModal({
     defaultValues: {
       originalUrl: "",
       title: "",
-      shortCode: "",
+      suggestedCode: "",
+      expiresAt: "",
     },
   });
 
@@ -45,7 +47,7 @@ export default function CreateLinkModal({
   useEffect(() => {
     if (!open) return;
 
-    reset({ originalUrl: "", title: "", shortCode: "" });
+    reset({ originalUrl: "", title: "", suggestedCode: "", expiresAt: "" });
 
     readUrlFromClipboard().then((url) => {
       if (url) {
@@ -72,12 +74,7 @@ export default function CreateLinkModal({
   };
 
   const handleFormSubmit = (data: CreateLinkFormValues) => {
-    // onClose() رو صدا نمی‌زنیم — والد بعد از موفقیت mutation می‌بنده
-    // اگه سرور 409 بده، مودال باز می‌مونه و کاربر می‌تونه اصلاح کنه
-    onSubmit({
-      ...data,
-      shortCode: data.shortCode?.trim().toLowerCase(),
-    });
+    onSubmit(data);
   };
 
   if (!open) return null;
@@ -165,7 +162,7 @@ export default function CreateLinkModal({
           {/* title */}
           <div className="space-y-2">
             <label className="label block text-foreground" htmlFor="title">
-              عنوان <span className="text-muted-foreground">(اختیاری)</span>
+              عنوان
             </label>
             <input
               id="title"
@@ -183,31 +180,56 @@ export default function CreateLinkModal({
             )}
           </div>
 
-          {/* shortCode */}
           <div className="space-y-2">
-            <label className="label block text-foreground" htmlFor="shortCode">
-              نام کوتاه <span className="text-muted-foreground">(اختیاری)</span>
+            <label
+              className="label block text-foreground"
+              htmlFor="suggestedCode"
+            >
+              کد پیشنهادی{" "}
+              <span className="text-muted-foreground">(اختیاری)</span>
             </label>
             <div className="flex items-center">
               <input
-                id="shortCode"
+                id="suggestedCode"
                 type="text"
                 dir="ltr"
-                placeholder="my-link"
+                placeholder="xc2z9"
+                disabled={isSubmitting}
                 className="h-12 w-full rounded-token-md rounded-l-none border border-border bg-card px-4 text-token-sm text-foreground shadow-token-sm transition-colors duration-token-normal placeholder:text-muted-foreground focus:border-brand/30 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
-                aria-invalid={Boolean(errors.shortCode)}
-                {...register("shortCode")}
+                aria-invalid={Boolean(errors.suggestedCode)}
+                {...register("suggestedCode")}
               />
               <span
-                className="grid place-items-center px-4 rounded-token-md rounded-r-none h-12 shrink-0 text-token-sm text-muted-foreground bg-background"
+                className="grid h-12 shrink-0 place-items-center rounded-token-md rounded-r-none bg-background px-4 text-token-sm text-muted-foreground"
                 dir="ltr"
               >
-                https://kootahak.ir/
+                {shortLinkOrigin()}/
               </span>
             </div>
-            {errors.shortCode && (
+            {errors.suggestedCode && (
               <p className="text-token-xs font-token-medium text-error">
-                {errors.shortCode.message}
+                {errors.suggestedCode.message}
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <label className="label block text-foreground" htmlFor="expiresAt">
+              تاریخ انقضا{" "}
+              <span className="text-muted-foreground">(اختیاری)</span>
+            </label>
+            <input
+              id="expiresAt"
+              type="datetime-local"
+              dir="ltr"
+              disabled={isSubmitting}
+              className="h-12 w-full rounded-token-md border border-border bg-card px-4 text-token-sm text-foreground shadow-token-sm transition-colors duration-token-normal placeholder:text-muted-foreground focus:border-brand/30 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+              aria-invalid={Boolean(errors.expiresAt)}
+              {...register("expiresAt")}
+            />
+            {errors.expiresAt && (
+              <p className="text-token-xs font-token-medium text-error">
+                {errors.expiresAt.message}
               </p>
             )}
           </div>

@@ -1,7 +1,6 @@
 export type LinkSortBy = "createdAt" | "expiresAt";
 export type SortOrder = "asc" | "desc";
 
-
 export interface Link {
   id: number;
   createdAt: string;
@@ -14,7 +13,6 @@ export interface Link {
   isPin: boolean;
   deletedAt: string | null;
   authorId: number;
-  _count?: { visits: number };
 }
 
 export interface LinksListResponse {
@@ -34,4 +32,29 @@ export interface LinksListParams {
   sortBy?: LinkSortBy;
   sortOrder?: SortOrder;
   search?: string;
+}
+
+export interface CreateLinkPayload {
+  originalUrl: string;
+  title: string;
+  suggestedCode?: string;
+  expiresAt?: string;
+}
+
+export interface UpdateLinkPayload {
+  linkId: number;
+  title?: string;
+  shortCode?: string;
+  originalUrl?: string;
+  expiresAt?: string;
+}
+
+export interface SetPinLinkPayload {
+  linkId: number;
+  isPin: boolean;
+}
+
+export interface SetActiveLinkPayload {
+  linkId: number;
+  isActive: boolean;
 }

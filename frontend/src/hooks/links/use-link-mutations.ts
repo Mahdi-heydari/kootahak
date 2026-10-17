@@ -7,9 +7,13 @@ import {
   setLinkActive,
   setLinkPin,
   updateLink,
-  type CreateLinkPayload,
-  type UpdateLinkPayload,
 } from "@/lib/api/links";
+import type {
+  CreateLinkPayload,
+  SetActiveLinkPayload,
+  SetPinLinkPayload,
+  UpdateLinkPayload,
+} from "@/types/links";
 
 function invalidateLinks(qc: ReturnType<typeof useQueryClient>) {
   qc.invalidateQueries({ queryKey: ["links"] });
@@ -42,8 +46,7 @@ export function useDeleteLink() {
 export function useTogglePin() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ linkId, isPin }: { linkId: number; isPin: boolean }) =>
-      setLinkPin(linkId, isPin),
+    mutationFn: (payload: SetPinLinkPayload) => setLinkPin(payload),
     onSuccess: () => invalidateLinks(qc),
   });
 }
@@ -51,8 +54,7 @@ export function useTogglePin() {
 export function useToggleActive() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ linkId, isActive }: { linkId: number; isActive: boolean }) =>
-      setLinkActive(linkId, isActive),
+    mutationFn: (payload: SetActiveLinkPayload) => setLinkActive(payload),
     onSuccess: () => invalidateLinks(qc),
   });
 }
