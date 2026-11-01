@@ -13,7 +13,7 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "has": [{ "type": "host", "value": "c7j.ir" }],
+      "has": [{ "type": "host", "value": "www.c7j.ir" }],
       "destination": {
         "service": "backend"
       }
